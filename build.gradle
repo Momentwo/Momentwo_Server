@@ -14,10 +14,7 @@ plugins {
 
 group = 'cord.eoeo'
 version = '0.0.1-SNAPSHOT'
-
-java {
-    sourceCompatibility = '22'
-}
+sourceCompatibility = '11'
 
 configurations {
     compileOnly {
