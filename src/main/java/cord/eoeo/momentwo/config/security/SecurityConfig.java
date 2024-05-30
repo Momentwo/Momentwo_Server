@@ -5,6 +5,7 @@ import cord.eoeo.momentwo.config.security.handler.CustomLogoutSuccessHandler;
 import cord.eoeo.momentwo.config.security.handler.JWTAccessDeniedHandler;
 import cord.eoeo.momentwo.config.security.jwt.JWTSecurityConfig;
 import cord.eoeo.momentwo.config.security.jwt.TokenProvider;
+import cord.eoeo.momentwo.config.security.jwt.port.out.JWTBlackList;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -20,12 +21,14 @@ import org.springframework.security.web.SecurityFilterChain;
 @Configuration
 public class SecurityConfig {
     private final TokenProvider tokenProvider;
+    private final JWTBlackList jwtBlackList;
     private final JWTAccessDeniedHandler jwtAccessDeniedHandler;
     private final AuthenticationEntryPointHandler authenticationEntryPointHandler;
     private final CustomLogoutSuccessHandler customLogoutSuccessHandler;
     private static final String[] WHITE_LIST = {
-            "/sign-up",
-            "/sign-in"
+            "/signup",
+            "/signin",
+            "/signout"
     };
 
     @Bean
@@ -56,7 +59,7 @@ public class SecurityConfig {
                 .anyRequest().authenticated()
 
                 .and()
-                .apply(new JWTSecurityConfig(tokenProvider));
+                .apply(new JWTSecurityConfig(tokenProvider, jwtBlackList));
         return httpSecurity.build();
     }
 }
