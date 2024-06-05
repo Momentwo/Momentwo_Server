@@ -34,12 +34,12 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public Optional<User> existsByUsername(String username) {
+    public boolean existsByUsername(String username) {
         return userJpaRepository.existsByUsername(username);
     }
 
     @Override
-    public Optional<User> existsByNickname(String nickname) {
+    public boolean existsByNickname(String nickname) {
         return userJpaRepository.existsByNickname(nickname);
     }
 }

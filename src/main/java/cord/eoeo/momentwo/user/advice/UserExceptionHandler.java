@@ -23,15 +23,15 @@ public class UserExceptionHandler {
         return "비밀번호가 일치하지 않습니다.";
     }
 
-    @ExceptionHandler(DuplicateNicknameException.class)
+    @ExceptionHandler(DuplicateUsernameException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public String duplicateNicknameException() {
+    public String duplicateUsernameException() {
         return "이미 등록된 이메일입니다.";
     }
 
-    @ExceptionHandler(DuplicateUsernameException.class)
+    @ExceptionHandler(DuplicateNicknameException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public String duplicateUserException() {
+    public String duplicateNicknameException() {
         return "이미 등록된 별명입니다.";
     }
 }
