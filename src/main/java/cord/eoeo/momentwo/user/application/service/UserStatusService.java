@@ -26,7 +26,7 @@ public class UserStatusService implements UserStatusUseCase {
     private final TokenProvider tokenProvider;
     private final JWTBlackList jwtBlackList;
 
-    @Transactional
+    @Transactional(readOnly = true)
     @Override
     public TokenResponseDto signIn(UserLoginRequestDto userLoginRequestDto) {
         // 아이디 확인
