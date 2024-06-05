@@ -13,7 +13,7 @@ public interface UserRepository {
 
     void delete(User user);
 
-    Optional<User> existsByUsername(String username);
+    boolean existsByUsername(String username);
 
-    Optional<User> existsByNickname(String nickname);
+    boolean existsByNickname(String nickname);
 }
