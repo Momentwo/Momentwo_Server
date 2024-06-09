@@ -35,9 +35,6 @@ public class User {
     @Column(nullable = false)
     private String phone;
 
-    @Column(nullable = false)
-    private String address;
-
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private RoleUserGrade roleUserGrade;
@@ -51,14 +48,12 @@ public class User {
         this.roleUserGrade = RoleUserGrade.ROLE_COMMON_MEMBER;
     }
 
-    public User(String name, String username, String password, String nickname, String birthday, String phone,
-                String address){
+    public User(String name, String username, String password, String nickname, String birthday, String phone){
         this.name = name;
         this.username = username;
         this.password = password;
         this.nickname = nickname;
         this.birthday = birthday;
         this.phone = phone;
-        this.address = address;
     }
 }
