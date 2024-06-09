@@ -31,8 +31,7 @@ public class UserRegisterService implements UserRegisterUseCase {
                 passwordEncoder.encoder(userRegisterRequestDto.getPassword()),
                 userRegisterRequestDto.getNickname(),
                 userRegisterRequestDto.getBirthday(),
-                userRegisterRequestDto.getPhone(),
-                userRegisterRequestDto.getAddress()
+                userRegisterRequestDto.getPhone()
         );
         userRepository.save(newUser);
     }

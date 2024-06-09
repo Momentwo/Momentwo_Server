@@ -33,7 +33,4 @@ public class UserRegisterRequestDto {
     @NotBlank(message = "연락처를 입력해주세요.")
     @Pattern(regexp = "\\d{2,3}-\\d{3,4}-\\d{4}", message = "연락처는 0x-xxx-xxxx 또는 0xx-xxxx-xxxx의 형식을 지켜주세요.")
     private String phone;
-
-    @NotBlank(message = "주소를 입력해주세요.")
-    private String address;
 }
