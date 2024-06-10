@@ -18,7 +18,6 @@ public class UserRegisterAsyncImpl implements UserRegisterAsync {
     @Override
     @Async("userTaskExecutor")
     public CompletableFuture<Void> checkUsernameDuplicate(String username) {
-        System.out.println("[username] :: " + Thread.currentThread().getName());
         return CompletableFuture.runAsync(() -> {
             if(userRepository.existsByUsername(username)) {
                 throw new DuplicateUsernameException();
@@ -29,7 +28,6 @@ public class UserRegisterAsyncImpl implements UserRegisterAsync {
     @Override
     @Async("userTaskExecutor")
     public CompletableFuture<Void> checkUserNicknameDuplicate(String nickname) {
-        System.out.println("[nickname] :: " + Thread.currentThread().getName());
         return CompletableFuture.runAsync(() -> {
             if(userRepository.existsByNickname(nickname)) {
                 throw new DuplicateNicknameException();

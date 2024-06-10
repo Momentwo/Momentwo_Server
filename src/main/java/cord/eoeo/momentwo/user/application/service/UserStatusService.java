@@ -12,10 +12,14 @@ import cord.eoeo.momentwo.user.application.port.out.PasswordEncoder;
 import cord.eoeo.momentwo.user.application.port.out.UserRepository;
 import cord.eoeo.momentwo.user.domain.User;
 import lombok.RequiredArgsConstructor;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CompletionException;
 
 @Service
 @RequiredArgsConstructor
@@ -28,22 +32,25 @@ public class UserStatusService implements UserStatusUseCase {
 
     @Transactional(readOnly = true)
     @Override
-    public TokenResponseDto signIn(UserLoginRequestDto userLoginRequestDto) {
-        // 아이디 확인
-        User user = userRepository.findByUsername(userLoginRequestDto.getUsername()).orElseThrow(() -> {
-            throw new NotFoundUserException();
-        });
-        // 비밀번호 확인
-        if(!passwordEncoder.matches(userLoginRequestDto.getPassword(), user.getPassword())) {
-            throw new PasswordMisMatchException();
-        }
-        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
-                userLoginRequestDto.getUsername(),
-                userLoginRequestDto.getPassword()
-        );
-        Authentication authentication = authenticationManager.getAuthentication(authenticationToken);
+    @Async
+    public CompletableFuture<TokenResponseDto> signIn(UserLoginRequestDto userLoginRequestDto) {
+        return CompletableFuture.supplyAsync(() -> {
+            // 아이디 확인
+            User user = userRepository.findByUsername(userLoginRequestDto.getUsername()).orElseThrow(() -> {
+                throw new CompletionException(new NotFoundUserException());
+            });
+            // 비밀번호 확인
+            if(!passwordEncoder.matches(userLoginRequestDto.getPassword(), user.getPassword())) {
+                throw new CompletionException(new PasswordMisMatchException());
+            }
+            UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
+                    userLoginRequestDto.getUsername(),
+                    userLoginRequestDto.getPassword()
+            );
+            Authentication authentication = authenticationManager.getAuthentication(authenticationToken);
 
-        return tokenProvider.createToken(authentication);
+            return tokenProvider.createToken(authentication);
+        });
     }
 
     @Override
