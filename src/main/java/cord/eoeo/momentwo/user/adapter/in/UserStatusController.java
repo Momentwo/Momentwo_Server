@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.concurrent.CompletableFuture;
 
 @RestController
 @RequiredArgsConstructor
@@ -18,7 +19,7 @@ public class UserStatusController {
     // 로그인
     @PostMapping("/signin")
     @ResponseStatus(HttpStatus.OK)
-    public TokenResponseDto signIn(@RequestBody @Valid UserLoginRequestDto userLoginRequestDto) {
+    public CompletableFuture<TokenResponseDto> signIn(@RequestBody @Valid UserLoginRequestDto userLoginRequestDto) {
         return userStatusUseCase.signIn(userLoginRequestDto);
     }
 
