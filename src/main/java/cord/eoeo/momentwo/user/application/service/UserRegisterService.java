@@ -1,6 +1,8 @@
 package cord.eoeo.momentwo.user.application.service;
 
 import cord.eoeo.momentwo.user.adapter.dto.in.UserRegisterRequestDto;
+import cord.eoeo.momentwo.user.advice.exception.DuplicateNicknameException;
+import cord.eoeo.momentwo.user.advice.exception.DuplicateUsernameException;
 import cord.eoeo.momentwo.user.application.port.in.UserRegisterUseCase;
 import cord.eoeo.momentwo.user.application.port.out.PasswordEncoder;
 import cord.eoeo.momentwo.user.application.port.out.UserRegisterAsync;
@@ -11,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CompletionException;
 
 @Service
 @RequiredArgsConstructor
@@ -33,7 +36,18 @@ public class UserRegisterService implements UserRegisterUseCase {
         // 두 중복 체크가 정상적으로 통과한 경우
         // join() -> 작업이 정상적으로 동작했을 때 결과를 반환한다.
         // 예외 시 CompletionException 을 발생시킨다.
-        CompletableFuture.allOf(checkUsernameFuture, checkNicknameFuture).join();
+        // allOf 함수는 try - catch 로 즉각적인 예외처리를 해야한다.
+        try {
+            CompletableFuture.allOf(checkUsernameFuture, checkNicknameFuture).join();
+        } catch (CompletionException ex) {
+            Throwable cause = ex.getCause();
+            if(cause instanceof DuplicateUsernameException){
+                throw new DuplicateUsernameException();
+            }
+            else if(cause instanceof DuplicateNicknameException){
+                throw new DuplicateNicknameException();
+            }
+        }
         User newUser = new User(
                 userRegisterRequestDto.getName(),
                 userRegisterRequestDto.getUsername(),
