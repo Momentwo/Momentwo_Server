@@ -1,8 +1,8 @@
 package cord.eoeo.momentwo.user.application.service;
 
+import cord.eoeo.momentwo.user.adapter.dto.in.EmailAvailabilityDto;
+import cord.eoeo.momentwo.user.adapter.dto.in.NicknameAvailabilityDto;
 import cord.eoeo.momentwo.user.adapter.dto.in.UserRegisterRequestDto;
-import cord.eoeo.momentwo.user.advice.exception.DuplicateNicknameException;
-import cord.eoeo.momentwo.user.advice.exception.DuplicateUsernameException;
 import cord.eoeo.momentwo.user.application.port.in.UserRegisterUseCase;
 import cord.eoeo.momentwo.user.application.port.out.PasswordEncoder;
 import cord.eoeo.momentwo.user.application.port.out.UserRegisterAsync;
@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.CompletionException;
 
 @Service
 @RequiredArgsConstructor
@@ -25,29 +24,6 @@ public class UserRegisterService implements UserRegisterUseCase {
     @Transactional
     @Override
     public void register(UserRegisterRequestDto userRegisterRequestDto) {
-        // 유저 이메일(Id) 중복체크
-        CompletableFuture<Void> checkUsernameFuture = userRegisterAsync
-                .checkUsernameDuplicate(userRegisterRequestDto.getUsername());
-
-        // 유저 닉네임 중복 체크
-        CompletableFuture<Void> checkNicknameFuture = userRegisterAsync
-                .checkUserNicknameDuplicate(userRegisterRequestDto.getNickname());
-
-        // 두 중복 체크가 정상적으로 통과한 경우
-        // join() -> 작업이 정상적으로 동작했을 때 결과를 반환한다.
-        // 예외 시 CompletionException 을 발생시킨다.
-        // allOf 함수는 try - catch 로 즉각적인 예외처리를 해야한다.
-        try {
-            CompletableFuture.allOf(checkUsernameFuture, checkNicknameFuture).join();
-        } catch (CompletionException ex) {
-            Throwable cause = ex.getCause();
-            if(cause instanceof DuplicateUsernameException){
-                throw new DuplicateUsernameException();
-            }
-            else if(cause instanceof DuplicateNicknameException){
-                throw new DuplicateNicknameException();
-            }
-        }
         User newUser = new User(
                 userRegisterRequestDto.getName(),
                 userRegisterRequestDto.getUsername(),
@@ -57,5 +33,19 @@ public class UserRegisterService implements UserRegisterUseCase {
                 userRegisterRequestDto.getPhone()
         );
         userRepository.save(newUser);
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public CompletableFuture<Void> checkEmailAvailability(EmailAvailabilityDto emailAvailabilityDto) {
+        // 유저 이메일(Id) 중복체크
+        return userRegisterAsync.checkUsernameDuplicate(emailAvailabilityDto.getUsername());
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public CompletableFuture<Void> checkNicknameAvailability(NicknameAvailabilityDto nicknameAvailabilityDto) {
+        // 유저 닉네임 중복 체크
+        return userRegisterAsync.checkUserNicknameDuplicate(nicknameAvailabilityDto.getNickname());
     }
 }
