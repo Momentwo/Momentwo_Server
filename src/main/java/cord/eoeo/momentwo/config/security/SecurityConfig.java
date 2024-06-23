@@ -57,7 +57,7 @@ public class SecurityConfig {
                 .and()
                 .authorizeRequests()
                 .antMatchers(HttpMethod.POST, WHITE_LIST).permitAll()
-                .antMatchers("/**").access("hasRole(\"ROLE_MEMBER\")")
+                .antMatchers("/**").access("hasRole(\"ROLE_COMMON_MEMBER\")")
                 .anyRequest().authenticated()
 
                 .and()
