@@ -42,4 +42,9 @@ public class UserRepositoryImpl implements UserRepository {
     public boolean existsByNickname(String nickname) {
         return userJpaRepository.existsByNickname(nickname);
     }
+
+    @Override
+    public Optional<User> findByNickname(String nickname) {
+        return userJpaRepository.findByNickname(nickname);
+    }
 }
