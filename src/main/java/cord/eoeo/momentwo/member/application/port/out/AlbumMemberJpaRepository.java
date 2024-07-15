@@ -9,8 +9,8 @@ import java.util.List;
 import java.util.Optional;
 
 public interface AlbumMemberJpaRepository extends JpaRepository<Member, Long> {
-    @Query("SELECT u.nickname FROM Member m JOIN m.user u JOIN m.album a WHERE a.id = :albumId")
-    List<String> findNicknameByAlbum(long albumId);
+    @Query("SELECT m FROM Member m JOIN m.user u JOIN m.album a WHERE a.id = :albumId")
+    List<Member> findMemberByAlbum(long albumId);
 
     @Query("SELECT m FROM Member m JOIN m.user u JOIN m.album a WHERE a.id = :albumId and u.id = :userId")
     Optional<Member> findMemberGradeByAlbumIdAndUserId(long albumId, long userId);
