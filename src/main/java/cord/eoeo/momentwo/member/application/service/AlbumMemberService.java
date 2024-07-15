@@ -19,6 +19,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -38,10 +39,16 @@ public class AlbumMemberService implements AlbumMemberUseCase {
         // 이미 앨범에 포함된 멤버
         List<String> existMember = getAlbumInfo.getAlbumMemberList(albumId);
 
+        List<User> inviteList = new ArrayList<>();
+
         // 요청 보내기
         inviteMembersRequestDto.getInviteUsernames().forEach(nickname -> {
             User inviteUser = getMemberInfo.getUserInfoByNickname(nickname).join();
-            doInvite(album, inviteUser, existMember);
+            inviteList.add(inviteUser);
+        });
+
+        inviteList.forEach(user -> {
+            doInvite(album, user, existMember);
         });
     }
 

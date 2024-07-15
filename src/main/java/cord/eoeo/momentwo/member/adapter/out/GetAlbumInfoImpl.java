@@ -65,7 +65,8 @@ public class GetAlbumInfoImpl implements GetAlbumInfo {
         Member targetMember = getAlbumMemberInfo(albumId, target.getId());
 
         // 우선순위 비교
-        if(ownerMember.getRules().getPriority() <= MemberAlbumGrade.findMemberAlbumGrade(rules).getPriority()) {
+        if(ownerMember.getRules().getPriority() >= MemberAlbumGrade.findMemberAlbumGrade(rules).getPriority() ||
+        ownerMember.getRules().getPriority() == targetMember.getRules().getPriority()) {
             throw new NotChangeSameAndUpGradeRulesException();
         }
 
