@@ -7,7 +7,7 @@ import java.util.List;
 public interface AlbumMemberRepository {
     void save(Member member);
 
-    List<String> findNicknameByAlbum(long albumId);
+    List<Member> findMemberByAlbum(long albumId);
 
     Member findMemberGradeByAlbumIdAndUserId(long albumId, long userId);
 

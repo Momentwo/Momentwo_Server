@@ -55,7 +55,15 @@ public class AlbumMemberService implements AlbumMemberUseCase {
     @Override
     @Transactional(readOnly = true)
     public AlbumMemberResponseDto getMembers(long albumId) {
-        return new AlbumMemberResponseDto().toDo(albumMemberRepository.findNicknameByAlbum(albumId));
+        User user = getMemberInfo.getUserInfoByNickname(getAuthentication.getAuthentication().getName()).join();
+
+        if(!getAlbumInfo.getAlbumMemberList(albumId).contains(user.getNickname())) {
+            throw new NotFoundAccessException();
+        }
+
+        return new AlbumMemberResponseDto().toDo(
+                albumMemberRepository.findMemberByAlbum(albumId)
+        );
     }
 
     @Override

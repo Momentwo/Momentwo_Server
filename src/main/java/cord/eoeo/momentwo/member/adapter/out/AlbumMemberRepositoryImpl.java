@@ -20,8 +20,8 @@ public class AlbumMemberRepositoryImpl implements AlbumMemberRepository {
     }
 
     @Override
-    public List<String> findNicknameByAlbum(long albumId) {
-        return albumMemberJpaRepository.findNicknameByAlbum(albumId);
+    public List<Member> findMemberByAlbum(long albumId) {
+        return albumMemberJpaRepository.findMemberByAlbum(albumId);
     }
 
     @Override
