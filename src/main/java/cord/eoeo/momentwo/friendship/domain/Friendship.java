@@ -1,6 +1,9 @@
 package cord.eoeo.momentwo.friendship.domain;
 
 import cord.eoeo.momentwo.user.domain.User;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -9,6 +12,9 @@ import javax.persistence.*;
 import java.time.LocalDate;
 
 @Entity
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class Friendship {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
