@@ -3,6 +3,7 @@ package cord.eoeo.momentwo.friendship.application.service;
 import cord.eoeo.momentwo.friendship.adapter.in.dto.RequestFriendshipDto;
 import cord.eoeo.momentwo.friendship.adapter.in.dto.ResponseFriendshipDto;
 import cord.eoeo.momentwo.friendship.advice.exception.AlreadyFriendshipRequestException;
+import cord.eoeo.momentwo.friendship.advice.exception.SelfRequestException;
 import cord.eoeo.momentwo.friendship.application.port.in.FriendshipUseCase;
 import cord.eoeo.momentwo.friendship.application.port.out.FriendshipProcess;
 import cord.eoeo.momentwo.user.advice.exception.NotFoundUserException;
@@ -27,6 +28,9 @@ public class FriendshipService implements FriendshipUseCase {
         User fromUser = userRepository.findByNickname(getAuthentication.getAuthentication().getName()).orElseThrow(
                 NotFoundUserException::new
         );
+        if(fromUser.getNickname().equals(requestFriendshipDto.getNickname())) {
+            throw new SelfRequestException();
+        }
         // 사용자 조회
         User toUser = userRepository.findByNickname(requestFriendshipDto.getNickname()).orElseThrow(
                 NotFoundUserException::new
@@ -61,5 +65,18 @@ public class FriendshipService implements FriendshipUseCase {
                 requestUser,
                 responseFriendshipDto.getAccept()
         );
+    }
+
+    @Override
+    public void requestFriendshipCancel(RequestFriendshipDto requestFriendshipDto) {
+        User fromUser = userRepository.findByNickname(getAuthentication.getAuthentication().getName()).orElseThrow(
+                NotFoundUserException::new
+        );
+        // 사용자 조회
+        User toUser = userRepository.findByNickname(requestFriendshipDto.getNickname()).orElseThrow(
+                NotFoundUserException::new
+        );
+
+        friendshipProcess.requestCancel(fromUser, toUser);
     }
 }
