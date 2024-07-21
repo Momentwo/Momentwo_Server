@@ -33,4 +33,9 @@ public class FriendshipRepositoryImpl implements FriendshipRepository {
     public Friendship findByToUserAndFromUser(User toUser, User fromUser) {
         return friendshipJpaRepository.findByToUserAndFromUser(toUser, fromUser);
     }
+
+    @Override
+    public Optional<Friendship> findBySelfJoin(User fromUser, User toUser) {
+        return friendshipJpaRepository.findBySelfJoin(fromUser, toUser);
+    }
 }

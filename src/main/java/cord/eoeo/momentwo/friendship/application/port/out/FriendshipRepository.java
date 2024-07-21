@@ -15,4 +15,6 @@ public interface FriendshipRepository {
     void deleteByFromUserAndToUser(User fromUser, User toUser);
 
     Friendship findByToUserAndFromUser(User toUser, User fromUser);
+
+    Optional<Friendship> findBySelfJoin(User fromUser, User toUser);
 }
