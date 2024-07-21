@@ -60,6 +60,13 @@ public class FriendshipProcessImpl implements FriendshipProcess {
         return false;
     }
 
+    @Override
+    @Transactional
+    public void requestCancel(User fromUser, User toUser) {
+        friendshipRepository.findBySelfJoin(fromUser, toUser).orElseThrow(NotFoundFriendshipRequestException::new);
+        friendshipRepository.deleteByFromUserAndToUser(fromUser, toUser);
+    }
+
     @Transactional
     public void deleteFriendship(User responseUser, User requestUser) {
         friendshipRepository.deleteByFromUserAndToUser(requestUser, responseUser);

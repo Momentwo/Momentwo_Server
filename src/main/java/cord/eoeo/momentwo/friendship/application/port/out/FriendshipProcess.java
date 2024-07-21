@@ -8,4 +8,6 @@ public interface FriendshipProcess {
     void responseProcess(User responseUser, User requestUser, Boolean accept);
 
     boolean isRequestFriends(User from, User to);
+
+    void requestCancel(User from, User to);
 }
