@@ -2,6 +2,7 @@ package cord.eoeo.momentwo.friendship.application.service;
 
 import cord.eoeo.momentwo.friendship.adapter.in.dto.RequestFriendshipDto;
 import cord.eoeo.momentwo.friendship.adapter.in.dto.ResponseFriendshipDto;
+import cord.eoeo.momentwo.friendship.advice.exception.AlreadyFriendshipRequestException;
 import cord.eoeo.momentwo.friendship.application.port.in.FriendshipUseCase;
 import cord.eoeo.momentwo.friendship.application.port.out.FriendshipProcess;
 import cord.eoeo.momentwo.user.advice.exception.NotFoundUserException;
@@ -19,7 +20,6 @@ public class FriendshipService implements FriendshipUseCase {
     private final GetAuthentication getAuthentication;
     private final FriendshipProcess friendshipProcess;
 
-    // TODO 이미 친구 요청이 된 상태라면 친구 요청이 진행되면 안된다. -> 예외처리 필요
     // 친구요청
     @Override
     @Transactional
@@ -31,6 +31,11 @@ public class FriendshipService implements FriendshipUseCase {
         User toUser = userRepository.findByNickname(requestFriendshipDto.getNickname()).orElseThrow(
                 NotFoundUserException::new
         );
+
+        // 친구요청을 보냈었는지 확인
+        if(!friendshipProcess.isRequestFriends(fromUser, toUser)) {
+            throw new AlreadyFriendshipRequestException();
+        }
 
         // from -> to (true)
         // to -> from (false)
