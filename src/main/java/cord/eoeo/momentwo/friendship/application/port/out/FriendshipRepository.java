@@ -13,4 +13,6 @@ public interface FriendshipRepository {
 
     // 유저 정보로 테이블 삭제
     void deleteByFromUserAndToUser(User fromUser, User toUser);
+
+    Friendship findByToUserAndFromUser(User toUser, User fromUser);
 }

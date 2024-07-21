@@ -19,4 +19,7 @@ public interface FriendshipJpaRepository extends JpaRepository<Friendship, Long>
     @Query("DELETE Friendship f WHERE (f.fromUser.id = :fromUserId AND f.toUser.id = :toUserId) OR" +
             "(f.fromUser.id = :toUserId AND f.toUser.id = :fromUserId)")
     void deleteByFromUserAndToUser(long fromUserId, long toUserId);
+
+    @Query("SELECT f FROM Friendship f WHERE f.fromUser = :toUser AND f.toUser = :fromUser")
+    Friendship findByToUserAndFromUser(User toUser, User fromUser);
 }
