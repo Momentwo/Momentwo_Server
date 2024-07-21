@@ -28,4 +28,14 @@ public class FriendshipRepositoryImpl implements FriendshipRepository {
     public void deleteByFromUserAndToUser(User fromUser, User toUser) {
         friendshipJpaRepository.deleteByFromUserAndToUser(fromUser.getId(), toUser.getId());
     }
+
+    @Override
+    public Friendship findByToUserAndFromUser(User toUser, User fromUser) {
+        return friendshipJpaRepository.findByToUserAndFromUser(toUser, fromUser);
+    }
+
+    @Override
+    public Optional<Friendship> findBySelfJoin(User fromUser, User toUser) {
+        return friendshipJpaRepository.findBySelfJoin(fromUser, toUser);
+    }
 }

@@ -7,4 +7,6 @@ public interface FriendshipUseCase {
     void requestFriendship(RequestFriendshipDto requestFriendshipDto);
 
     void responseFriendship(ResponseFriendshipDto responseFriendshipDto);
+
+    void requestFriendshipCancel(RequestFriendshipDto requestFriendshipDto);
 }

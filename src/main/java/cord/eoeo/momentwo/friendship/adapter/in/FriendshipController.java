@@ -27,4 +27,10 @@ public class FriendshipController {
     public void responseFriendship(@RequestBody @Valid ResponseFriendshipDto responseFriendshipDto) {
         friendshipUseCase.responseFriendship(responseFriendshipDto);
     }
+
+    @DeleteMapping("/friendship/request/cancel")
+    @ResponseStatus(HttpStatus.OK)
+    public void requestFriendshipCancel(@ModelAttribute @Valid RequestFriendshipDto requestFriendshipDto) {
+        friendshipUseCase.requestFriendshipCancel(requestFriendshipDto);
+    }
 }
