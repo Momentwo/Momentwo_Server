@@ -3,6 +3,7 @@ package cord.eoeo.momentwo.friendship.application.port.out;
 import cord.eoeo.momentwo.friendship.domain.Friendship;
 import cord.eoeo.momentwo.user.domain.User;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface FriendshipRepository {
@@ -17,4 +18,10 @@ public interface FriendshipRepository {
     Friendship findByToUserAndFromUser(User toUser, User fromUser);
 
     Optional<Friendship> findBySelfJoin(User fromUser, User toUser);
+
+    List<Friendship> findAllFriendsByUser(User owner);
+
+    List<Friendship> findSendFriendsByUser(User owner);
+
+    List<Friendship> findReceiveFriendsByUser(User owner);
 }

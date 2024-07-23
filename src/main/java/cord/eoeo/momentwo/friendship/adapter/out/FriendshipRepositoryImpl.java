@@ -7,6 +7,7 @@ import cord.eoeo.momentwo.user.domain.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @RequiredArgsConstructor
@@ -37,5 +38,20 @@ public class FriendshipRepositoryImpl implements FriendshipRepository {
     @Override
     public Optional<Friendship> findBySelfJoin(User fromUser, User toUser) {
         return friendshipJpaRepository.findBySelfJoin(fromUser, toUser);
+    }
+
+    @Override
+    public List<Friendship> findAllFriendsByUser(User owner) {
+        return friendshipJpaRepository.findAllFriendsByUser(owner);
+    }
+
+    @Override
+    public List<Friendship> findSendFriendsByUser(User owner) {
+        return friendshipJpaRepository.findSendFriendsByUser(owner);
+    }
+
+    @Override
+    public List<Friendship> findReceiveFriendsByUser(User owner) {
+        return friendshipJpaRepository.findReceiveFriendsByUser(owner);
     }
 }

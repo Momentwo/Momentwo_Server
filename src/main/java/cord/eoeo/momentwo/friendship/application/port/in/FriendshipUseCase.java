@@ -1,7 +1,6 @@
 package cord.eoeo.momentwo.friendship.application.port.in;
 
-import cord.eoeo.momentwo.friendship.adapter.in.dto.RequestFriendshipDto;
-import cord.eoeo.momentwo.friendship.adapter.in.dto.ResponseFriendshipDto;
+import cord.eoeo.momentwo.friendship.adapter.in.dto.*;
 
 public interface FriendshipUseCase {
     void requestFriendship(RequestFriendshipDto requestFriendshipDto);
@@ -9,4 +8,10 @@ public interface FriendshipUseCase {
     void responseFriendship(ResponseFriendshipDto responseFriendshipDto);
 
     void requestFriendshipCancel(RequestFriendshipDto requestFriendshipDto);
+
+    FriendshipAllListResponseDto getFriendship();
+
+    FriendshipSendListResponseDto getFriendshipSend();
+
+    FriendshipReceiveListResponseDto getFriendshipReceive();
 }

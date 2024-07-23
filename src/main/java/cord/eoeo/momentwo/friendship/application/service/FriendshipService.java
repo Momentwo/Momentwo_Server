@@ -1,7 +1,6 @@
 package cord.eoeo.momentwo.friendship.application.service;
 
-import cord.eoeo.momentwo.friendship.adapter.in.dto.RequestFriendshipDto;
-import cord.eoeo.momentwo.friendship.adapter.in.dto.ResponseFriendshipDto;
+import cord.eoeo.momentwo.friendship.adapter.in.dto.*;
 import cord.eoeo.momentwo.friendship.advice.exception.AlreadyFriendshipRequestException;
 import cord.eoeo.momentwo.friendship.advice.exception.SelfRequestException;
 import cord.eoeo.momentwo.friendship.application.port.in.FriendshipUseCase;
@@ -67,6 +66,7 @@ public class FriendshipService implements FriendshipUseCase {
         );
     }
 
+    // 친구 요청 취소
     @Override
     public void requestFriendshipCancel(RequestFriendshipDto requestFriendshipDto) {
         User fromUser = userRepository.findByNickname(getAuthentication.getAuthentication().getName()).orElseThrow(
@@ -78,5 +78,32 @@ public class FriendshipService implements FriendshipUseCase {
         );
 
         friendshipProcess.requestCancel(fromUser, toUser);
+    }
+
+    // 친구목록 조회
+    @Override
+    @Transactional
+    public FriendshipAllListResponseDto getFriendship() {
+        User owner = userRepository.findByNickname(getAuthentication.getAuthentication().getName())
+                .orElseThrow(NotFoundUserException::new);
+        return friendshipProcess.getFriendship(owner);
+    }
+
+    // 보낸 친구목록 조회
+    @Override
+    @Transactional
+    public FriendshipSendListResponseDto getFriendshipSend() {
+        User owner = userRepository.findByNickname(getAuthentication.getAuthentication().getName())
+                .orElseThrow(NotFoundUserException::new);
+        return friendshipProcess.getFriendshipSend(owner);
+    }
+
+    // 받은 친구목록 조회
+    @Override
+    @Transactional
+    public FriendshipReceiveListResponseDto getFriendshipReceive() {
+        User owner = userRepository.findByNickname(getAuthentication.getAuthentication().getName())
+                .orElseThrow(NotFoundUserException::new);
+        return friendshipProcess.getFriendshipReceive(owner);
     }
 }
