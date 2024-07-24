@@ -11,6 +11,6 @@ import lombok.NoArgsConstructor;
 public class FriendshipSendListDto {
     private String nickname;
     public FriendshipSendListDto toDo(Friendship friendship) {
-        return new FriendshipSendListDto(friendship.fromUser.getNickname());
+        return new FriendshipSendListDto(friendship.getToUser().getNickname());
     }
 }
