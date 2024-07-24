@@ -28,4 +28,15 @@ public class AlbumMemberInviteImpl implements AlbumMemberInvite {
             albumMemberRepository.save(newMember);
         });
     }
+
+    // 멤버 초대하기 (초대하면서 권한을 부여하고 싶을 때)
+    @Override
+    @Transactional
+    @Async
+    public CompletableFuture<Void> invite(Album album, User invitedUser, MemberAlbumGrade rules) {
+        return CompletableFuture.runAsync(() -> {
+            Member member = new Member(invitedUser, album, rules);
+            albumMemberRepository.save(member);
+        });
+    }
 }
