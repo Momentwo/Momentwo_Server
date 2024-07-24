@@ -42,7 +42,7 @@ public class AlbumMemberService implements AlbumMemberUseCase {
         List<User> inviteList = new ArrayList<>();
 
         // 요청 보내기
-        inviteMembersRequestDto.getInviteUsernames().forEach(nickname -> {
+        inviteMembersRequestDto.getInviteNicknames().forEach(nickname -> {
             User inviteUser = getMemberInfo.getUserInfoByNickname(nickname).join();
             inviteList.add(inviteUser);
         });

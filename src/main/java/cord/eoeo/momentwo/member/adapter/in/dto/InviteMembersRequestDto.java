@@ -12,5 +12,5 @@ import java.util.List;
 @NoArgsConstructor
 public class InviteMembersRequestDto {
     @NotEmpty(message = "초대할 유저 닉네임을 하나이상 입력해주세요.")
-    private List<String> inviteUsernames;
+    private List<String> inviteNicknames;
 }
