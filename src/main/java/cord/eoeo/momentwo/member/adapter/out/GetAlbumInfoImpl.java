@@ -110,4 +110,11 @@ public class GetAlbumInfoImpl implements GetAlbumInfo {
         int albumOut = albumMemberRepository.deleteByAlbumIdAndUserId(albumId, selfUser.getId());
         return albumOut > 0;
     }
+
+    // 유저 중 관리자 권한을 가진 앨범 찾기
+    @Override
+    @Transactional(readOnly = true)
+    public List<Long> getAlbumIdByAdminUser(User user) {
+        return albumMemberRepository.findAlbumIdByAdminUser(user);
+    }
 }
