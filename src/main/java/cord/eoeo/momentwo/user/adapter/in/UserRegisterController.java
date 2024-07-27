@@ -24,13 +24,13 @@ public class UserRegisterController {
 
     @PostMapping("/check_email")
     @ResponseStatus(HttpStatus.OK)
-    public CompletableFuture<Void> checkEmailAvailability(@RequestBody @Valid EmailAvailabilityDto emailAvailabilityDto) {
+    public CompletableFuture<Void> checkEmailAvailability(@ModelAttribute @Valid EmailAvailabilityDto emailAvailabilityDto) {
         return userRegisterUseCase.checkEmailAvailability(emailAvailabilityDto);
     }
 
     @PostMapping("/check_nickname")
     @ResponseStatus(HttpStatus.OK)
-    public CompletableFuture<Void> checkNicknameAvailability(@RequestBody @Valid NicknameAvailabilityDto nicknameAvailabilityDto) {
+    public CompletableFuture<Void> checkNicknameAvailability(@ModelAttribute @Valid NicknameAvailabilityDto nicknameAvailabilityDto) {
         return userRegisterUseCase.checkNicknameAvailability(nicknameAvailabilityDto);
     }
 }

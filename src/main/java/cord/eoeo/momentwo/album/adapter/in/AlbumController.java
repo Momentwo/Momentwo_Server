@@ -25,7 +25,7 @@ public class AlbumController {
     @PutMapping("/albums/edit/{id}")
     @ResponseStatus(HttpStatus.OK)
     public void editAlbumsTitle(@PathVariable long id,
-                                @RequestBody @Valid AlbumTitleEditRequestDto albumTitleEditRequestDto) {
+                                @ModelAttribute @Valid AlbumTitleEditRequestDto albumTitleEditRequestDto) {
         albumUseCase.editAlbumsTitle(id, albumTitleEditRequestDto);
     }
 

@@ -51,7 +51,7 @@ public class AlbumMemberController {
     // 관리자 권한 넘겨주기
     @PutMapping("/{albumId}/members/assign/admin")
     public void assignAdmin(@PathVariable long albumId,
-                            @RequestBody @Valid AssignAdminRequestDto assignAdminRequestDto) {
+                            @ModelAttribute @Valid AssignAdminRequestDto assignAdminRequestDto) {
         albumMemberUseCase.assignAdmin(albumId, assignAdminRequestDto);
     }
 
