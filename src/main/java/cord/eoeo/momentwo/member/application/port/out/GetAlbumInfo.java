@@ -28,4 +28,6 @@ public interface GetAlbumInfo {
     void assignAdmin(long albumId, User changeUser, MemberAlbumGrade rules);
 
     boolean isAlbumOut(long albumId, User selfUser);
+
+    List<Long> getAlbumIdByAdminUser(User user);
 }

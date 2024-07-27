@@ -1,6 +1,7 @@
 package cord.eoeo.momentwo.user.adapter.in;
 
 import cord.eoeo.momentwo.config.security.jwt.adapter.out.TokenResponseDto;
+import cord.eoeo.momentwo.user.adapter.dto.in.SignOutRequestDto;
 import cord.eoeo.momentwo.user.adapter.dto.in.UserLoginRequestDto;
 import cord.eoeo.momentwo.user.application.port.in.UserStatusUseCase;
 import lombok.RequiredArgsConstructor;
@@ -24,10 +25,17 @@ public class UserStatusController {
     }
 
     // 로그아웃
-    @PostMapping("/signout")
+    @PostMapping("/logout")
     @ResponseStatus(HttpStatus.OK)
-    public void signOut(@RequestHeader("Authorization") String token) {
+    public void logout(@RequestHeader("Authorization") String token) {
         String jwtToken = token.substring(7);
         userStatusUseCase.blackListToken(jwtToken);
+    }
+
+    // 회원 탈퇴
+    @DeleteMapping("/signout")
+    @ResponseStatus(HttpStatus.OK)
+    public void signOut(@ModelAttribute @Valid SignOutRequestDto signOutRequestDto) {
+        userStatusUseCase.signOut(signOutRequestDto);
     }
 }

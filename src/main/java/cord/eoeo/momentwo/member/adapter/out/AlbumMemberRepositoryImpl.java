@@ -4,6 +4,7 @@ import cord.eoeo.momentwo.member.advice.exception.NotFoundAccessException;
 import cord.eoeo.momentwo.member.application.port.out.AlbumMemberJpaRepository;
 import cord.eoeo.momentwo.member.application.port.out.AlbumMemberRepository;
 import cord.eoeo.momentwo.member.domain.Member;
+import cord.eoeo.momentwo.user.domain.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -42,5 +43,10 @@ public class AlbumMemberRepositoryImpl implements AlbumMemberRepository {
     @Override
     public int deleteByAlbumIdAndUserId(long albumId, long userId) {
         return albumMemberJpaRepository.deleteByAlbumIdAndUserId(albumId, userId);
+    }
+
+    @Override
+    public List<Long> findAlbumIdByAdminUser(User user) {
+        return albumMemberJpaRepository.findAlbumIdByAdminUser(user);
     }
 }
