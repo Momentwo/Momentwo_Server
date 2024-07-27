@@ -1,6 +1,7 @@
 package cord.eoeo.momentwo.member.application.port.out;
 
 import cord.eoeo.momentwo.member.domain.Member;
+import cord.eoeo.momentwo.user.domain.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -23,4 +24,7 @@ public interface AlbumMemberJpaRepository extends JpaRepository<Member, Long> {
     @Modifying
     @Query("DELETE FROM Member m WHERE m.album.id = :albumId AND m.user.id = :userId")
     int deleteByAlbumIdAndUserId(long albumId, long userId);
+
+    @Query("SELECT m.album.id FROM Member m WHERE m.user = :user AND m.rules = 'ROLE_ALBUM_ADMIN'")
+    List<Long> findAlbumIdByAdminUser(User user);
 }
