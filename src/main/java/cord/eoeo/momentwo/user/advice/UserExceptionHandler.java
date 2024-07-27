@@ -1,9 +1,6 @@
 package cord.eoeo.momentwo.user.advice;
 
-import cord.eoeo.momentwo.user.advice.exception.DuplicateNicknameException;
-import cord.eoeo.momentwo.user.advice.exception.DuplicateUsernameException;
-import cord.eoeo.momentwo.user.advice.exception.NotFoundUserException;
-import cord.eoeo.momentwo.user.advice.exception.PasswordMisMatchException;
+import cord.eoeo.momentwo.user.advice.exception.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -33,5 +30,11 @@ public class UserExceptionHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public String duplicateNicknameException() {
         return "이미 등록된 별명입니다.";
+    }
+
+    @ExceptionHandler(NotInviteUserException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public String notInviteUserException() {
+        return "친구 초대 목록에 존재하지 않는 유저가 포함되어 있습니다.";
     }
 }
