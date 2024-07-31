@@ -2,6 +2,7 @@ package cord.eoeo.momentwo.album.application.service;
 
 import cord.eoeo.momentwo.album.adapter.dto.AlbumCreateRequestDto;
 import cord.eoeo.momentwo.album.adapter.dto.AlbumTitleEditRequestDto;
+import cord.eoeo.momentwo.album.advice.exception.NotDeleteAlbumException;
 import cord.eoeo.momentwo.album.application.port.in.AlbumUseCase;
 import cord.eoeo.momentwo.album.application.port.out.AlbumManager;
 import cord.eoeo.momentwo.album.domain.Album;
@@ -53,7 +54,12 @@ public class AlbumService implements AlbumUseCase {
     @Transactional
     @Override
     public void deleteAlbums(long id) {
-        albumManager.albumDelete(getMemberInfo(id));
+        Member member = getMemberInfo(id);
+        // 관리자이면서 앨범 속 멤버가 한명 이상인 경우 예외
+        if(getAlbumInfo.isCheckAlbumAdmin(member) && !getAlbumInfo.isCheckAlbumOneMember(id)) {
+            throw new NotDeleteAlbumException();
+        }
+        albumManager.albumDelete(member);
     }
 
     @Transactional(readOnly = true)
