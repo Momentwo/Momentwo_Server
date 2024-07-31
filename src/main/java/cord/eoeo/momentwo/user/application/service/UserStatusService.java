@@ -1,10 +1,11 @@
 package cord.eoeo.momentwo.user.application.service;
 
+import cord.eoeo.momentwo.album.application.port.out.AlbumManager;
 import cord.eoeo.momentwo.config.security.jwt.TokenProvider;
 import cord.eoeo.momentwo.config.security.jwt.adapter.out.TokenResponseDto;
 import cord.eoeo.momentwo.member.advice.exception.AdminAlbumOutException;
 import cord.eoeo.momentwo.member.application.port.out.GetAlbumInfo;
-import cord.eoeo.momentwo.member.domain.MemberAlbumGrade;
+import cord.eoeo.momentwo.member.domain.Member;
 import cord.eoeo.momentwo.user.adapter.dto.in.SignOutRequestDto;
 import cord.eoeo.momentwo.user.adapter.dto.in.UserLoginRequestDto;
 import cord.eoeo.momentwo.user.advice.exception.NotFoundUserException;
@@ -36,6 +37,7 @@ public class UserStatusService implements UserStatusUseCase {
     private final JWTBlackList jwtBlackList;
     private final GetAuthentication getAuthentication;
     private final GetAlbumInfo getAlbumInfo;
+    private final AlbumManager albumManager;
 
     @Transactional(readOnly = true)
     @Override
@@ -79,10 +81,14 @@ public class UserStatusService implements UserStatusUseCase {
         // 회원 탈퇴 시 앨범 관리자이면서 멤버를 보유한 경우 회원탈퇴 불가
         // 관리자 권한을 넘기면 탈퇴 가능
         getAlbumInfo.getAlbumIdByAdminUser(user).forEach(albumId -> {
-            if(getAlbumInfo.getAlbumMemberInfo(albumId,
-                    user.getId()).getRules().equals(MemberAlbumGrade.ROLE_ALBUM_ADMIN) &&
-                    !getAlbumInfo.getAlbumMemberList(albumId).isEmpty()) {
+            Member member = getAlbumInfo.getAlbumMemberInfo(albumId, user.getId());
+            // 멤버가 존재하는 앨범에 관리자로 있는 경우 삭제 불가 예외
+            if(getAlbumInfo.isCheckAlbumAdmin(member) && !getAlbumInfo.isCheckAlbumOneMember(albumId)) {
                 throw new AdminAlbumOutException();
+            }
+            // 관리자 일 때, 회원탈퇴를 할 경우 앨범 테이블 정보 삭제
+            if(getAlbumInfo.isCheckAlbumAdmin(member) && getAlbumInfo.isCheckAlbumOneMember(albumId)) {
+                albumManager.albumDelete(member);
             }
         });
 
