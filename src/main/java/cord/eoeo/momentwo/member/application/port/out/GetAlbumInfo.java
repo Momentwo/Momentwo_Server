@@ -30,4 +30,8 @@ public interface GetAlbumInfo {
     boolean isAlbumOut(long albumId, User selfUser);
 
     List<Long> getAlbumIdByAdminUser(User user);
+
+    boolean isCheckAlbumAdmin(Member member);
+
+    boolean isCheckAlbumOneMember(long albumId);
 }

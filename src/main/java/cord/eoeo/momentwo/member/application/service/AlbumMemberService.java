@@ -1,5 +1,6 @@
 package cord.eoeo.momentwo.member.application.service;
 
+import cord.eoeo.momentwo.album.application.port.out.AlbumManager;
 import cord.eoeo.momentwo.album.domain.Album;
 import cord.eoeo.momentwo.member.adapter.in.dto.AssignAdminRequestDto;
 import cord.eoeo.momentwo.member.adapter.in.dto.EditGradeListRequestDto;
@@ -12,6 +13,7 @@ import cord.eoeo.momentwo.member.application.port.out.AlbumMemberInvite;
 import cord.eoeo.momentwo.member.application.port.out.AlbumMemberRepository;
 import cord.eoeo.momentwo.member.application.port.out.GetAlbumInfo;
 import cord.eoeo.momentwo.member.application.port.out.GetMemberInfo;
+import cord.eoeo.momentwo.member.domain.Member;
 import cord.eoeo.momentwo.member.domain.MemberAlbumGrade;
 import cord.eoeo.momentwo.user.application.port.out.GetAuthentication;
 import cord.eoeo.momentwo.user.domain.User;
@@ -30,6 +32,7 @@ public class AlbumMemberService implements AlbumMemberUseCase {
     private final GetAlbumInfo getAlbumInfo;
     private final GetMemberInfo getMemberInfo;
     private final GetAuthentication getAuthentication;
+    private final AlbumManager albumManager;
 
     @Override
     @Transactional
@@ -128,12 +131,11 @@ public class AlbumMemberService implements AlbumMemberUseCase {
     @Transactional
     public void outAlbum(long albumId) {
         User selfUser = getMemberInfo.getUserInfoByNickname(getAuthentication.getAuthentication().getName()).join();
+        Member member = getAlbumInfo.getAlbumMemberInfo(albumId, selfUser.getId());
 
         // 앨범 관리자가 나갈 경우 멤버가 존재한다면 나갈 수 없음
         // 하지만 멤버가 없을 경우 나갈 수 있음
-        if(getAlbumInfo.getAlbumMemberInfo(albumId,
-                selfUser.getId()).getRules().equals(MemberAlbumGrade.ROLE_ALBUM_ADMIN) &&
-                !getAlbumInfo.getAlbumMemberList(albumId).isEmpty()) {
+        if(getAlbumInfo.isCheckAlbumAdmin(member) && !getAlbumInfo.isCheckAlbumOneMember(albumId)) {
             throw new AdminAlbumOutException();
         }
 
@@ -141,6 +143,12 @@ public class AlbumMemberService implements AlbumMemberUseCase {
         // 삭제 된 행이 있으면 true, 없으면 false 반환
         if(!getAlbumInfo.isAlbumOut(albumId, selfUser)) {
             throw new MemberNotInAlbumException();
+        }
+
+        // 관리자만 있는 앨범에서 관리자가 나갈 경우
+        // 앨범도 같이 삭제 되어야 한다.
+        if(getAlbumInfo.isCheckAlbumAdmin(member) && getAlbumInfo.isCheckAlbumOneMember(albumId)) {
+            albumManager.albumDelete(member);
         }
     }
 

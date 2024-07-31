@@ -1,6 +1,7 @@
 package cord.eoeo.momentwo.member.adapter.out;
 
 import cord.eoeo.momentwo.album.advice.exception.NotFoundAlbumException;
+import cord.eoeo.momentwo.album.application.aop.annotation.CheckAlbumAdmin;
 import cord.eoeo.momentwo.album.application.port.out.AlbumRepository;
 import cord.eoeo.momentwo.album.domain.Album;
 import cord.eoeo.momentwo.member.advice.exception.NotChangeSameAndUpGradeRulesException;
@@ -116,5 +117,15 @@ public class GetAlbumInfoImpl implements GetAlbumInfo {
     @Transactional(readOnly = true)
     public List<Long> getAlbumIdByAdminUser(User user) {
         return albumMemberRepository.findAlbumIdByAdminUser(user);
+    }
+
+    @Override
+    public boolean isCheckAlbumAdmin(Member member) {
+        return member.getRules().equals(MemberAlbumGrade.ROLE_ALBUM_ADMIN);
+    }
+
+    @Override
+    public boolean isCheckAlbumOneMember(long albumId) {
+        return getAlbumMemberList(albumId).size() <= 1;
     }
 }
