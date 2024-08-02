@@ -47,4 +47,14 @@ public class UserRepositoryImpl implements UserRepository {
     public Optional<User> findByNickname(String nickname) {
         return userJpaRepository.findByNickname(nickname);
     }
+
+    @Override
+    public Optional<User> findByNameAndPhone(String name, String phone) {
+        return userJpaRepository.findByNameAndPhone(name, phone);
+    }
+
+    @Override
+    public Optional<User> findByUsernameAndPhone(String username, String phone) {
+        return userJpaRepository.findByUsernameAndPhone(username, phone);
+    }
 }
