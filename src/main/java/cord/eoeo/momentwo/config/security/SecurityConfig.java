@@ -30,7 +30,9 @@ public class SecurityConfig {
             "/signin",
             "/signout",
             "/check_email",
-            "/check_nickname"
+            "/check_nickname",
+            "/search/username",
+            "/temp/password"
     };
 
     @Bean
