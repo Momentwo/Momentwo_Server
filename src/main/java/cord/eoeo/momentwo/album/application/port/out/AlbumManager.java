@@ -16,4 +16,8 @@ public interface AlbumManager {
     void albumEdit(Member member, String editTitle);
 
     void albumDelete(Member member);
+
+    String getBaseImage();
+
+    String getSubTitle();
 }
