@@ -1,6 +1,7 @@
 package cord.eoeo.momentwo.album.advice;
 
 import cord.eoeo.momentwo.album.advice.exception.NotAlbumAdminException;
+import cord.eoeo.momentwo.album.advice.exception.NotCreateAlbumException;
 import cord.eoeo.momentwo.album.advice.exception.NotDeleteAlbumException;
 import cord.eoeo.momentwo.album.advice.exception.NotFoundAlbumException;
 import org.springframework.http.HttpStatus;
@@ -26,5 +27,11 @@ public class AlbumExceptionHandler {
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public String notDeleteAlbumException() {
         return "멤버가 존재하는 앨범은 삭제할 수 없습니다.";
+    }
+
+    @ExceptionHandler(NotCreateAlbumException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public String notCreateAlbumException() {
+        return "앨범이 20개 이기 때문에 앨범을 만들 수 없습니다.";
     }
 }

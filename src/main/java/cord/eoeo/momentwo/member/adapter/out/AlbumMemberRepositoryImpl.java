@@ -49,4 +49,9 @@ public class AlbumMemberRepositoryImpl implements AlbumMemberRepository {
     public List<Long> findAlbumIdByAdminUser(User user) {
         return albumMemberJpaRepository.findAlbumIdByAdminUser(user);
     }
+
+    @Override
+    public List<Member> getAlbumSize(User user) {
+        return albumMemberJpaRepository.getAlbumSize(user);
+    }
 }

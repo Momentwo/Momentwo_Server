@@ -16,6 +16,9 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 public class AlbumManagerImpl implements AlbumManager {
+    private static final String BASE_IMAGE = "";
+    private static final String SUB_TITLE = "";
+
     private final AlbumMemberInvite albumMemberInvite;
     private final AlbumRepository albumRepository;
 
@@ -56,5 +59,15 @@ public class AlbumManagerImpl implements AlbumManager {
     @Override
     public void albumDelete(Member member) {
         albumRepository.deleteAlbum(member.getAlbum().getId());
+    }
+
+    @Override
+    public String getBaseImage() {
+        return BASE_IMAGE;
+    }
+
+    @Override
+    public String getSubTitle() {
+        return SUB_TITLE;
     }
 }

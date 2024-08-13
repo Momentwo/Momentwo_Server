@@ -128,4 +128,11 @@ public class GetAlbumInfoImpl implements GetAlbumInfo {
     public boolean isCheckAlbumOneMember(long albumId) {
         return getAlbumMemberList(albumId).size() <= 1;
     }
+
+    // 본인이 속한 앨범의 크기에 따라 예외처리
+    @Override
+    @Transactional
+    public boolean isCheckAlbumSize(User user) {
+        return albumMemberRepository.getAlbumSize(user).size() > 20;
+    }
 }
