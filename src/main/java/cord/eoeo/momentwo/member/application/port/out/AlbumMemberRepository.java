@@ -19,4 +19,6 @@ public interface AlbumMemberRepository {
     int deleteByAlbumIdAndUserId(long albumId, long userId);
 
     List<Long> findAlbumIdByAdminUser(User user);
+
+    List<Member> getAlbumSize(User user);
 }
