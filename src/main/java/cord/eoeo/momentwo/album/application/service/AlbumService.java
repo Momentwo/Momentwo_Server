@@ -2,6 +2,7 @@ package cord.eoeo.momentwo.album.application.service;
 
 import cord.eoeo.momentwo.album.adapter.dto.AlbumCreateRequestDto;
 import cord.eoeo.momentwo.album.adapter.dto.AlbumTitleEditRequestDto;
+import cord.eoeo.momentwo.album.advice.exception.NotCreateAlbumException;
 import cord.eoeo.momentwo.album.advice.exception.NotDeleteAlbumException;
 import cord.eoeo.momentwo.album.application.port.in.AlbumUseCase;
 import cord.eoeo.momentwo.album.application.port.out.AlbumManager;
@@ -30,8 +31,18 @@ public class AlbumService implements AlbumUseCase {
     public void createAlbums(AlbumCreateRequestDto albumCreateRequestDto) {
         User admin = userRepository.findByNickname(getAuthentication.getAuthentication().getName())
                 .orElseThrow(NotFoundUserException::new);
+
+        // 계정당 속할 수 있는 앨범 20개
+        if(getAlbumInfo.isCheckAlbumSize(admin)) {
+            throw new NotCreateAlbumException();
+        }
+
         // 앨범 생성
-        Album newAlbum = new Album(albumCreateRequestDto.getCreateTitle());
+        Album newAlbum = new Album(
+                albumCreateRequestDto.getCreateTitle(),
+                albumManager.getSubTitle(),
+                albumManager.getBaseImage()
+        );
         albumManager.albumSave(newAlbum);
 
         // 앨범 생성자 관리자 권한 부여
