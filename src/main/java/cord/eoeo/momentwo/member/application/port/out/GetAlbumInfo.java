@@ -34,4 +34,6 @@ public interface GetAlbumInfo {
     boolean isCheckAlbumAdmin(Member member);
 
     boolean isCheckAlbumOneMember(long albumId);
+
+    boolean isCheckAlbumSize(User user);
 }
