@@ -5,59 +5,42 @@ import cord.eoeo.momentwo.album.application.port.out.AlbumManager;
 import cord.eoeo.momentwo.album.application.port.out.AlbumProfile;
 import cord.eoeo.momentwo.album.application.port.out.AlbumRepository;
 import cord.eoeo.momentwo.album.domain.Album;
+import cord.eoeo.momentwo.image.advice.exception.NotFoundImageException;
+import cord.eoeo.momentwo.image.application.port.out.ImageManager;
+import cord.eoeo.momentwo.image.path.ImagePath;
 import cord.eoeo.momentwo.member.domain.Member;
 import lombok.RequiredArgsConstructor;
-import lombok.SneakyThrows;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import java.time.LocalDate;
-import java.util.UUID;
 
 @Configuration
 @RequiredArgsConstructor
 public class AlbumProfileImpl implements AlbumProfile {
     private final AlbumRepository albumRepository;
     private final AlbumManager albumManager;
+    private final ImageManager imageManager;
 
-    @SneakyThrows
     @Override
     @Transactional
     @CheckAlbumAdmin
     public void profileUpload(Member member, MultipartFile image) {
-        Album album = member.getAlbum();
+        try {
+            Album album = member.getAlbum();
 
-        // 파일 이름과 확장자를 분리
-        String originalFilename = image.getOriginalFilename();
-        String fileExtension = originalFilename.substring(originalFilename.lastIndexOf("."));
+            // 이미지 업로드 후 저장된 이름 가져오기
+            String newFilename = imageManager.imageUpload(image, ImagePath.SERVER_PROFILE_PATH.getPath()).get();
+            // 이미지 삭제(현재) -> 기존 이미지가 없다면 업로드한 이미지만 저장, 기존 이미지가 있다면 삭제 진행
+            imageManager.imageDelete(ImagePath.SERVER_PROFILE_PATH.getPath(), album.getProfileFilename());
 
-        // UUID 를 통한 고유한 이름 생성
-        String newFilename = UUID.randomUUID().toString() + fileExtension;
-
-        // 서버 이미지 저장 경로
-        String uploadDir = System.getProperty("user.home") + "\\Desktop\\momentwo\\profile\\";
-        Path uploadPath = Paths.get(uploadDir);
-
-        // 경로가 없다면 경로 생성
-        if(!Files.exists(uploadPath)) {
-            Files.createDirectories(uploadPath);
+            // 데이터 베이스에 이름 저장
+            album.setProfileFilename(newFilename);
+            albumRepository.save(album);
+        } catch (Exception e) {
+            throw new NotFoundImageException();
         }
-
-        // 해당 이미지를 저장 경로에 복사
-        try (InputStream inputStream = image.getInputStream()) {
-            Path filePath = uploadPath.resolve(newFilename);
-            Files.copy(inputStream, filePath, StandardCopyOption.REPLACE_EXISTING);
-        }
-
-        // 데이터 베이스에 이름 저장
-        album.setProfileFilename(newFilename);
-        albumRepository.save(album);
     }
 
     @Override
