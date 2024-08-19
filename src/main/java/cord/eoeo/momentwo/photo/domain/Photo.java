@@ -1,6 +1,7 @@
 package cord.eoeo.momentwo.photo.domain;
 
 import cord.eoeo.momentwo.album.domain.Album;
+import cord.eoeo.momentwo.like.domain.ImageLike;
 import cord.eoeo.momentwo.user.domain.User;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -41,9 +42,14 @@ public class Photo {
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(nullable = false, name = "user_id")
+    @JoinColumn(nullable = false, name = "album_id")
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Album album;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(nullable = false, name = "like_id")
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    private ImageLike like;
 
     public Photo(String imageName, String format) {
         this.imageName = imageName;
