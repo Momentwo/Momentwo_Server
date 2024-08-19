@@ -9,8 +9,12 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        // /profiles/ 경로로 들어오는 요청을 로컬 파일 경로로 매핑
+        registry.addResourceHandler("/profiles/**")
+                .addResourceLocations("file:///C:/Users/qkqkt/Desktop/momentwo/profiles/");
+
         // /images/ 경로로 들어오는 요청을 로컬 파일 경로로 매핑
-        registry.addResourceHandler("/profile/**")
-                .addResourceLocations("file:///C:/Users/qkqkt/Desktop/momentwo/profile/");
+        registry.addResourceHandler("/images/**")
+                .addResourceLocations("file:///C:/Users/qkqkt/Desktop/momentwo/images/");
     }
 }
