@@ -1,8 +1,8 @@
 package cord.eoeo.momentwo.image.path;
 
 public enum ImagePath {
-    SERVER_PROFILE_PATH(System.getProperty("user.home") + "\\Desktop\\momentwo\\profile\\"),
-    SERVER_IMAGE_PATH(System.getProperty("user.home") + "\\Desktop\\momentwo\\image\\");
+    SERVER_PROFILE_PATH(System.getProperty("user.home") + "\\Desktop\\momentwo\\profiles\\"),
+    SERVER_IMAGE_PATH(System.getProperty("user.home") + "\\Desktop\\momentwo\\images\\");
 
     private String path;
 
