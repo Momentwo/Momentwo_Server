@@ -15,7 +15,7 @@ public enum PhotoFormat {
 
     public static PhotoFormat findPhotoType(String keyCode){
         return Arrays.stream(PhotoFormat.values())
-                .filter(type -> type.name().equals(keyCode))
+                .filter(type -> type.getType().equals(keyCode))
                 .findAny()
                 .orElseThrow();
     }
