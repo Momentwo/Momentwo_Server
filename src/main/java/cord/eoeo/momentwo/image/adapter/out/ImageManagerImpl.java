@@ -1,14 +1,14 @@
 package cord.eoeo.momentwo.image.adapter.out;
 
+import cord.eoeo.momentwo.image.adapter.dto.ImageDownLoadResponseDto;
+import cord.eoeo.momentwo.image.advice.exception.ImageDownloadFailException;
+import cord.eoeo.momentwo.image.advice.exception.NotFoundFileImageException;
 import cord.eoeo.momentwo.image.advice.exception.NotFoundImageException;
 import cord.eoeo.momentwo.image.application.port.out.ImageManager;
 import cord.eoeo.momentwo.image.path.ImagePath;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
@@ -67,57 +67,58 @@ public class ImageManagerImpl implements ImageManager {
 
     @Override
     @Async
-    public CompletableFuture<ResponseEntity<Resource>> imageDownload(Path path) {
+    public CompletableFuture<ImageDownLoadResponseDto> imageDownload(Path path) {
         return CompletableFuture.supplyAsync(() -> {
             try {
                 Resource resource = new UrlResource(path.toUri());
 
                 // 파일이 존재하지 않으면 해당 리턴
                 if (!resource.exists()) {
-                    return ResponseEntity.notFound().build();
+                    throw new NotFoundFileImageException();
                 }
 
-                // 헤더에 다운로드로 유도하게 전송
-                return ResponseEntity.ok()
-                        .header(HttpHeaders.CONTENT_DISPOSITION,
-                                "attachment; filename=\"" + resource.getFilename() + "\"")
-                        .body(resource);
+                return new ImageDownLoadResponseDto().toDo(resource.getFilename());
             } catch (Exception e) {
-                return ResponseEntity.status(500).build();
+                throw new ImageDownloadFailException();
             }
         });
     }
 
     @Override
     @Async
-    public CompletableFuture<ResponseEntity<Resource>> imageView(String filename) {
-        return CompletableFuture.supplyAsync(() -> {
+    public CompletableFuture<Void> profileFileSearch(String filename) {
+        return CompletableFuture.runAsync(() -> {
+            try {
+                Path path = Paths.get(ImagePath.SERVER_PROFILE_PATH.getPath()).resolve(filename).normalize();
+
+                Resource resource = new UrlResource(path.toUri());
+                if(!resource.exists()) {
+                    throw new NotFoundFileImageException();
+                }
+
+            } catch (Exception e) {
+                throw new NotFoundImageException();
+            }
+        });
+    }
+
+    @Override
+    @Async
+    public CompletableFuture<Void> imageFileSearch(String filename) {
+        return CompletableFuture.runAsync(() -> {
             try {
                 Path path = Paths.get(ImagePath.SERVER_IMAGE_PATH.getPath()).resolve(filename).normalize();
 
                 Resource resource = new UrlResource(path.toUri());
                 if(!resource.exists()) {
-                    return ResponseEntity.notFound().build();
+                    throw new NotFoundFileImageException();
                 }
-
-                String contentType = "image/jpeg"; // 기본 이미지 확장자 설정
-                if(filename.endsWith(".png")) {
-                    contentType = "image/png";
-                } else if (filename.endsWith(".gif")) {
-                    contentType = "image/gif";
-                }
-
-                // 이미지 반환
-                return ResponseEntity.ok()
-                        .contentType(MediaType.parseMediaType(contentType))
-                        .body(resource);
 
             } catch (Exception e) {
-                return ResponseEntity.status(500).build();
+                throw new NotFoundImageException();
             }
         });
     }
-
 
     private void deleteImage(Path path) {
         try {
