@@ -1,5 +1,6 @@
 package cord.eoeo.momentwo.image.adapter.out;
 
+import cord.eoeo.momentwo.album.application.port.out.AlbumManager;
 import cord.eoeo.momentwo.image.adapter.dto.ImageDownLoadResponseDto;
 import cord.eoeo.momentwo.image.advice.exception.ImageDownloadFailException;
 import cord.eoeo.momentwo.image.advice.exception.NotFoundFileImageException;
@@ -26,6 +27,8 @@ import java.util.concurrent.CompletableFuture;
 @Component
 @RequiredArgsConstructor
 public class ImageManagerImpl implements ImageManager {
+    private final AlbumManager albumManager;
+
     @Override
     @Async
     public CompletableFuture<String> imageUpload(MultipartFile image, String path) {
@@ -86,16 +89,23 @@ public class ImageManagerImpl implements ImageManager {
 
     @Override
     @Async
-    public CompletableFuture<Void> profileFileSearch(String filename) {
-        return CompletableFuture.runAsync(() -> {
+    public CompletableFuture<Resource> profileFileSearch(String filename) {
+        return CompletableFuture.supplyAsync(() -> {
             try {
                 Path path = Paths.get(ImagePath.SERVER_PROFILE_PATH.getPath()).resolve(filename).normalize();
 
                 Resource resource = new UrlResource(path.toUri());
+
+                // 이미지가 저장되어 있지 않다면 기본 이미지로 반환
                 if(!resource.exists()) {
-                    throw new NotFoundFileImageException();
+                    return new UrlResource(
+                            Paths.get(ImagePath.SERVER_PROFILE_PATH.getPath())
+                                    .resolve(albumManager.getBaseImage())
+                                    .normalize().toUri()
+                    );
                 }
 
+                return resource;
             } catch (Exception e) {
                 throw new NotFoundImageException();
             }
@@ -104,16 +114,12 @@ public class ImageManagerImpl implements ImageManager {
 
     @Override
     @Async
-    public CompletableFuture<Void> imageFileSearch(String filename) {
-        return CompletableFuture.runAsync(() -> {
+    public CompletableFuture<Resource> imageFileSearch(String filename) {
+        return CompletableFuture.supplyAsync(() -> {
             try {
                 Path path = Paths.get(ImagePath.SERVER_IMAGE_PATH.getPath()).resolve(filename).normalize();
 
-                Resource resource = new UrlResource(path.toUri());
-                if(!resource.exists()) {
-                    throw new NotFoundFileImageException();
-                }
-
+                return new UrlResource(path.toUri());
             } catch (Exception e) {
                 throw new NotFoundImageException();
             }
