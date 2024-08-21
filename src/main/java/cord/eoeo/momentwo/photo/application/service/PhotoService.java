@@ -4,6 +4,7 @@ import cord.eoeo.momentwo.album.application.port.out.AlbumManager;
 import cord.eoeo.momentwo.album.domain.Album;
 import cord.eoeo.momentwo.image.application.port.out.ImageManager;
 import cord.eoeo.momentwo.image.path.ImagePath;
+import cord.eoeo.momentwo.member.advice.exception.NotFoundAccessException;
 import cord.eoeo.momentwo.photo.adapter.dto.PhotoDeleteRequestDto;
 import cord.eoeo.momentwo.photo.adapter.dto.PhotoUploadRequestDto;
 import cord.eoeo.momentwo.photo.adapter.dto.PhotoViewListResponseDto;
@@ -11,6 +12,7 @@ import cord.eoeo.momentwo.photo.advice.exception.NotDeleteImageException;
 import cord.eoeo.momentwo.photo.advice.exception.PhotoUploadFailException;
 import cord.eoeo.momentwo.photo.application.port.in.PhotoUseCase;
 import cord.eoeo.momentwo.photo.application.port.out.PhotoRepository;
+import cord.eoeo.momentwo.photo.application.port.out.PhotoRulesCheck;
 import cord.eoeo.momentwo.photo.domain.Photo;
 import cord.eoeo.momentwo.photo.domain.PhotoFormat;
 import cord.eoeo.momentwo.user.advice.exception.NotFoundUserException;
@@ -33,6 +35,7 @@ public class PhotoService implements PhotoUseCase {
     private final UserRepository userRepository;
     private final GetAuthentication getAuthentication;
     private final AlbumManager albumManager;
+    private final PhotoRulesCheck photoRulesCheck;
 
     @Override
     @Transactional
@@ -42,6 +45,11 @@ public class PhotoService implements PhotoUseCase {
             User user = userRepository.findByNickname(getAuthentication.getAuthentication().getName())
                     .orElseThrow(NotFoundUserException::new);
             Album album = albumManager.getAlbumInfo(photoUploadRequestDto.getAlbumId());
+
+            // 앨범에 해당하는 멤버인지 확인
+            if(!photoRulesCheck.isAlbumMember(album.getId(), user)) {
+                throw new NotFoundAccessException();
+            }
 
             // 이미지 이름 변환 UUID
             String newFilename = imageManager
@@ -65,6 +73,14 @@ public class PhotoService implements PhotoUseCase {
         if(photoDeleteRequestDto.getImagesId().isEmpty() || photoDeleteRequestDto.getImagesUrl().isEmpty()) {
             throw new NotDeleteImageException();
         }
+        User user = userRepository.findByNickname(getAuthentication.getAuthentication().getName())
+                .orElseThrow(NotFoundUserException::new);
+
+        // 앨범에 해당하는 멤버인지 확인
+        if(!photoRulesCheck.isAlbumMember(photoDeleteRequestDto.getAlbumId(), user)) {
+            throw new NotFoundAccessException();
+        }
+
         // 서버에서 삭제
         photoRepository.deleteAllByAlbumIdAndPhotoId(
                 photoDeleteRequestDto.getAlbumId(),
@@ -80,6 +96,14 @@ public class PhotoService implements PhotoUseCase {
     @Override
     @Transactional(readOnly = true)
     public PhotoViewListResponseDto photoView(long albumId) {
+        User user = userRepository.findByNickname(getAuthentication.getAuthentication().getName())
+                .orElseThrow(NotFoundUserException::new);
+
+        // 앨범에 해당하는 멤버인지 확인
+        if(!photoRulesCheck.isAlbumMember(albumId, user)) {
+            throw new NotFoundAccessException();
+        }
+
         List<Photo> photoList = photoRepository.findImageByAlbumId(albumId);
         List<Photo> imageSaveList = new ArrayList<>();
 
