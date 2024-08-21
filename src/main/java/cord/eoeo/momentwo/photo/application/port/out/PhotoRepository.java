@@ -8,4 +8,6 @@ public interface PhotoRepository {
     void save(Photo photo);
 
     List<Photo> findImageByAlbumId(long albumId);
+
+    void deleteAllByAlbumIdAndPhotoId(long albumId, List<Long> imageIds);
 }

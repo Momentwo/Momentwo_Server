@@ -22,4 +22,9 @@ public class PhotoRepositoryImpl implements PhotoRepository {
     public List<Photo> findImageByAlbumId(long albumId) {
         return photoJpaRepository.findImageByAlbumId(albumId);
     }
+
+    @Override
+    public void deleteAllByAlbumIdAndPhotoId(long albumId, List<Long> imageIds) {
+        photoJpaRepository.deleteAllByAlbumIdAndPhotoId(albumId, imageIds);
+    }
 }
