@@ -6,6 +6,8 @@ import cord.eoeo.momentwo.photo.domain.Photo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 @RequiredArgsConstructor
 public class PhotoRepositoryImpl implements PhotoRepository {
@@ -14,5 +16,10 @@ public class PhotoRepositoryImpl implements PhotoRepository {
     @Override
     public void save(Photo photo) {
         photoJpaRepository.save(photo);
+    }
+
+    @Override
+    public List<Photo> findImageByAlbumId(long albumId) {
+        return photoJpaRepository.findImageByAlbumId(albumId);
     }
 }
