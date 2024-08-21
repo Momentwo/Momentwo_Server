@@ -12,7 +12,7 @@ import javax.validation.Valid;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/photo")
+@RequestMapping("/photos")
 public class PhotoController {
     private final PhotoUseCase photoUseCase;
 
