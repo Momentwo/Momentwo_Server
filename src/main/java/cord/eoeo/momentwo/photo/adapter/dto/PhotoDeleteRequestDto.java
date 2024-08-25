@@ -10,7 +10,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class PhotoDeleteRequestDto {
-    private long albumId;
+    private long subAlbumId;
     private List<Long> imagesId;
     private List<String> imagesUrl;
 }
