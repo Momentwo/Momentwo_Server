@@ -19,12 +19,12 @@ public class PhotoRepositoryImpl implements PhotoRepository {
     }
 
     @Override
-    public List<Photo> findImageByAlbumId(long albumId) {
-        return photoJpaRepository.findImageByAlbumId(albumId);
+    public List<Photo> findImageBySubAlbumId(long subAlbumId) {
+        return photoJpaRepository.findImageBySubAlbumId(subAlbumId);
     }
 
     @Override
-    public void deleteAllByAlbumIdAndPhotoId(long albumId, List<Long> imageIds) {
-        photoJpaRepository.deleteAllByAlbumIdAndPhotoId(albumId, imageIds);
+    public void deleteAllBySubAlbumIdAndPhotoId(long subAlbumId, List<Long> imageIds) {
+        photoJpaRepository.deleteAllBySubAlbumIdAndPhotoId(subAlbumId, imageIds);
     }
 }
