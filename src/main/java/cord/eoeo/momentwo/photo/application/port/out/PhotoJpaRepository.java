@@ -8,10 +8,10 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.List;
 
 public interface PhotoJpaRepository extends JpaRepository<Photo, Long> {
-    @Query("SELECT p FROM Photo p WHERE p.album.id = :albumId")
-    List<Photo> findImageByAlbumId(long albumId);
+    @Query("SELECT p FROM Photo p WHERE p.subAlbum.id = :subAlbumId")
+    List<Photo> findImageBySubAlbumId(long subAlbumId);
 
     @Modifying
-    @Query("DELETE FROM Photo p WHERE p.album.id = :albumId AND p.id IN :imageIds")
-    void deleteAllByAlbumIdAndPhotoId(long albumId, List<Long> imageIds);
+    @Query("DELETE FROM Photo p WHERE p.subAlbum.id = :subAlbumId AND p.id IN :imageIds")
+    void deleteAllBySubAlbumIdAndPhotoId(long subAlbumId, List<Long> imageIds);
 }

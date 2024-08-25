@@ -7,7 +7,7 @@ import java.util.List;
 public interface PhotoRepository {
     void save(Photo photo);
 
-    List<Photo> findImageByAlbumId(long albumId);
+    List<Photo> findImageBySubAlbumId(long subAlbumId);
 
-    void deleteAllByAlbumIdAndPhotoId(long albumId, List<Long> imageIds);
+    void deleteAllBySubAlbumIdAndPhotoId(long subAlbumId, List<Long> imageIds);
 }
