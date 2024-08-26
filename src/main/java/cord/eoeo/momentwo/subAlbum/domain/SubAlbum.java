@@ -1,6 +1,7 @@
 package cord.eoeo.momentwo.subAlbum.domain;
 
 import cord.eoeo.momentwo.album.domain.Album;
+import cord.eoeo.momentwo.photo.domain.Photo;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -10,6 +11,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.List;
 
 @Entity
 @AllArgsConstructor
@@ -35,6 +37,9 @@ public class SubAlbum {
     @JoinColumn(nullable = false, name = "album_id")
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Album album;
+
+    @OneToMany(mappedBy = "subAlbum", fetch = FetchType.LAZY)
+    private List<Photo> photos;
 
     public SubAlbum(String subAlbumTitle, Album album) {
         this.subAlbumTitle = subAlbumTitle;
