@@ -6,6 +6,7 @@ import cord.eoeo.momentwo.subAlbum.domain.SubAlbum;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.Optional;
 
 @Component
@@ -21,5 +22,20 @@ public class SubAlbumRepositoryImpl implements SubAlbumRepository {
     @Override
     public Optional<SubAlbum> getSubAlbumInfo(long subAlbum) {
         return subAlbumJpaRepository.findById(subAlbum);
+    }
+
+    @Override
+    public List<SubAlbum> getSubAlbumListByAlbumId(long albumId) {
+        return subAlbumJpaRepository.getSubAlbumListByAlbumId(albumId);
+    }
+
+    @Override
+    public Optional<SubAlbum> findById(long subAlbumId) {
+        return subAlbumJpaRepository.findById(subAlbumId);
+    }
+
+    @Override
+    public void deleteBySubAlbumIds(List<Long> subAlbumIds) {
+        subAlbumJpaRepository.deleteBySubAlbumIds(subAlbumIds);
     }
 }
