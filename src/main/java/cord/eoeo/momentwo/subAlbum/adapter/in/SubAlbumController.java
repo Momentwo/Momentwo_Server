@@ -1,6 +1,9 @@
 package cord.eoeo.momentwo.subAlbum.adapter.in;
 
 import cord.eoeo.momentwo.subAlbum.adapter.dto.SubAlbumCreateRequestDto;
+import cord.eoeo.momentwo.subAlbum.adapter.dto.SubAlbumDeleteRequestDto;
+import cord.eoeo.momentwo.subAlbum.adapter.dto.SubAlbumEditTitleRequestDto;
+import cord.eoeo.momentwo.subAlbum.adapter.dto.SubAlbumListResponseDto;
 import cord.eoeo.momentwo.subAlbum.application.port.in.SubAlbumUseCase;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -19,5 +22,26 @@ public class SubAlbumController {
     @ResponseStatus(HttpStatus.OK)
     public void createSubAlbum(@RequestBody @Valid SubAlbumCreateRequestDto subAlbumCreateRequestDto) {
         subAlbumUseCase.createSubAlbum(subAlbumCreateRequestDto);
+    }
+
+    // 서브앨범 조회
+    @GetMapping("/sub/{albumId}")
+    @ResponseStatus(HttpStatus.OK)
+    public SubAlbumListResponseDto getSubAlbums(@PathVariable long albumId) {
+        return subAlbumUseCase.getSubAlbums(albumId);
+    }
+
+    // 서브앨범 수정
+    @PutMapping("/sub/edit")
+    @ResponseStatus(HttpStatus.OK)
+    public void editSubAlbumTitle(@RequestBody @Valid SubAlbumEditTitleRequestDto subAlbumEditTitleRequestDto) {
+        subAlbumUseCase.editSubAlbumTitle(subAlbumEditTitleRequestDto);
+    }
+
+    // 서브앨범 삭제
+    @DeleteMapping("/sub/delete")
+    @ResponseStatus(HttpStatus.OK)
+    public void deleteSubAlbums(@RequestBody @Valid SubAlbumDeleteRequestDto subAlbumDeleteRequestDto) {
+        subAlbumUseCase.deleteSubAlbums(subAlbumDeleteRequestDto);
     }
 }
