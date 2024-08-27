@@ -45,10 +45,16 @@ public class Photo {
     @OnDelete(action = OnDeleteAction.CASCADE)
     private SubAlbum subAlbum;
 
-    public Photo(String imageName, String format, User user, SubAlbum subAlbum) {
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(nullable = false, name = "subTitle_id")
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    private PhotoSubTitle photoSubTitle;
+
+    public Photo(String imageName, String format, User user, SubAlbum subAlbum, PhotoSubTitle photoSubTitle) {
         this.imageName = imageName;
         this.format = format;
         this.user = user;
         this.subAlbum = subAlbum;
+        this.photoSubTitle = photoSubTitle;
     }
 }
