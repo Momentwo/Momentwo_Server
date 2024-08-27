@@ -9,6 +9,8 @@ import org.springframework.web.multipart.MultipartFile;
 @AllArgsConstructor
 @NoArgsConstructor
 public class PhotoUploadRequestDto {
+    private long albumId;
     private long subAlbumId;
+    private long subTitleId;
     private MultipartFile images;
 }
