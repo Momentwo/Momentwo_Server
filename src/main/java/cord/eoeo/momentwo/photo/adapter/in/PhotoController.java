@@ -1,8 +1,9 @@
 package cord.eoeo.momentwo.photo.adapter.in;
 
+import cord.eoeo.momentwo.image.adapter.dto.ImageViewListResponseDto;
 import cord.eoeo.momentwo.photo.adapter.dto.PhotoDeleteRequestDto;
 import cord.eoeo.momentwo.photo.adapter.dto.PhotoUploadRequestDto;
-import cord.eoeo.momentwo.photo.adapter.dto.PhotoViewListResponseDto;
+import cord.eoeo.momentwo.photo.adapter.dto.PhotoViewRequestDto;
 import cord.eoeo.momentwo.photo.application.port.in.PhotoUseCase;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -31,9 +32,9 @@ public class PhotoController {
     }
 
     // 조회 (이미지 보기)
-    @GetMapping("/{albumId}/view")
+    @GetMapping("/view")
     @ResponseStatus(HttpStatus.OK)
-    public PhotoViewListResponseDto photoView(@PathVariable long albumId) {
-        return photoUseCase.photoView(albumId);
+    public ImageViewListResponseDto photoView(@RequestBody @Valid PhotoViewRequestDto photoViewRequestDto) {
+        return photoUseCase.photoView(photoViewRequestDto);
     }
 }

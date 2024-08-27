@@ -4,14 +4,10 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class PhotoDeleteRequestDto {
+public class PhotoViewRequestDto {
     private long albumId;
     private long subAlbumId;
-    private List<Long> imagesId;
-    private List<String> imagesUrl;
 }

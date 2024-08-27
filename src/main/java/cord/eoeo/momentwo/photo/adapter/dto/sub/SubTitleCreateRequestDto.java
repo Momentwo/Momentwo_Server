@@ -1,17 +1,14 @@
-package cord.eoeo.momentwo.photo.adapter.dto;
+package cord.eoeo.momentwo.photo.adapter.dto.sub;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class PhotoDeleteRequestDto {
+public class SubTitleCreateRequestDto {
     private long albumId;
     private long subAlbumId;
-    private List<Long> imagesId;
-    private List<String> imagesUrl;
+    private String subTitle;
 }
