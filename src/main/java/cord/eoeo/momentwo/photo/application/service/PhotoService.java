@@ -12,10 +12,8 @@ import cord.eoeo.momentwo.photo.advice.exception.NotDeleteImageException;
 import cord.eoeo.momentwo.photo.advice.exception.PhotoUploadFailException;
 import cord.eoeo.momentwo.photo.application.port.in.PhotoUseCase;
 import cord.eoeo.momentwo.photo.application.port.out.PhotoRepository;
-import cord.eoeo.momentwo.photo.application.port.out.PhotoSubTitleManager;
 import cord.eoeo.momentwo.photo.domain.Photo;
 import cord.eoeo.momentwo.photo.domain.PhotoFormat;
-import cord.eoeo.momentwo.photo.domain.PhotoSubTitle;
 import cord.eoeo.momentwo.subAlbum.application.aop.annotation.CheckAlbumAccessRules;
 import cord.eoeo.momentwo.subAlbum.application.port.out.SubAlbumManager;
 import cord.eoeo.momentwo.subAlbum.domain.SubAlbum;
@@ -41,7 +39,6 @@ public class PhotoService implements PhotoUseCase {
     private final SubAlbumManager subAlbumManager;
     private final AlbumManager albumManager;
     private final FilePathConnect filePathConnect;
-    private final PhotoSubTitleManager photoSubTitleManager;
 
     @Override
     @Transactional
@@ -53,9 +50,6 @@ public class PhotoService implements PhotoUseCase {
         albumManager.getAlbumInfo(photoUploadRequestDto.getAlbumId());
         SubAlbum subAlbum = subAlbumManager.getSubAlbumInfo(photoUploadRequestDto.getSubAlbumId());
 
-        PhotoSubTitle photoSubTitle = photoSubTitleManager
-                .getPhotoSubTitleInfo(photoUploadRequestDto.getSubTitleId());
-
         try {
             // 이미지 이름 변환 UUID
             String newFilename = imageManager
@@ -66,7 +60,7 @@ public class PhotoService implements PhotoUseCase {
             String type = PhotoFormat.findPhotoType(newFilename.split("\\.")[1].toUpperCase()).getType();
 
 
-            Photo newPhoto = new Photo(newFilename, type, user, subAlbum, photoSubTitle);
+            Photo newPhoto = new Photo(newFilename, type, user, subAlbum);
 
             photoRepository.save(newPhoto);
         } catch (Exception e) {
