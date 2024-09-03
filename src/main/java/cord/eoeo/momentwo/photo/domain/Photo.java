@@ -1,5 +1,6 @@
 package cord.eoeo.momentwo.photo.domain;
 
+import cord.eoeo.momentwo.album.domain.Album;
 import cord.eoeo.momentwo.subAlbum.domain.SubAlbum;
 import cord.eoeo.momentwo.user.domain.User;
 import lombok.AllArgsConstructor;
@@ -41,14 +42,20 @@ public class Photo {
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(nullable = false, name = "albumId")
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    private Album album;
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(nullable = false, name = "subAlbumId")
     @OnDelete(action = OnDeleteAction.CASCADE)
     private SubAlbum subAlbum;
 
-    public Photo(String imageName, String format, User user, SubAlbum subAlbum) {
+    public Photo(String imageName, String format, User user, Album album, SubAlbum subAlbum) {
         this.imageName = imageName;
         this.format = format;
         this.user = user;
+        this.album = album;
         this.subAlbum = subAlbum;
     }
 }
