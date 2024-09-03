@@ -1,5 +1,6 @@
 package cord.eoeo.momentwo.photo.adapter.out;
 
+import cord.eoeo.momentwo.album.domain.Album;
 import cord.eoeo.momentwo.photo.application.port.out.PhotoJpaRepository;
 import cord.eoeo.momentwo.photo.application.port.out.PhotoRepository;
 import cord.eoeo.momentwo.photo.domain.Photo;
@@ -21,5 +22,10 @@ public class PhotoRepositoryImpl implements PhotoRepository {
     @Override
     public void deleteAllBySubAlbumIdAndPhotoId(long subAlbumId, List<Long> imageIds) {
         photoJpaRepository.deleteAllBySubAlbumIdAndPhotoId(subAlbumId, imageIds);
+    }
+
+    @Override
+    public int getAlbumCount(Album album) {
+        return photoJpaRepository.getAlbumCount(album);
     }
 }
