@@ -9,8 +9,10 @@ import cord.eoeo.momentwo.photo.adapter.dto.PhotoDeleteRequestDto;
 import cord.eoeo.momentwo.photo.adapter.dto.PhotoUploadRequestDto;
 import cord.eoeo.momentwo.photo.adapter.dto.PhotoViewRequestDto;
 import cord.eoeo.momentwo.photo.advice.exception.NotDeleteImageException;
+import cord.eoeo.momentwo.photo.advice.exception.NotFoundPhotoException;
 import cord.eoeo.momentwo.photo.advice.exception.PhotoUploadFailException;
 import cord.eoeo.momentwo.photo.application.port.in.PhotoUseCase;
+import cord.eoeo.momentwo.photo.application.port.out.PhotoPageRepository;
 import cord.eoeo.momentwo.photo.application.port.out.PhotoRepository;
 import cord.eoeo.momentwo.photo.domain.Photo;
 import cord.eoeo.momentwo.photo.domain.PhotoFormat;
@@ -23,6 +25,8 @@ import cord.eoeo.momentwo.user.application.port.out.UserRepository;
 import cord.eoeo.momentwo.user.domain.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.Resource;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,6 +38,7 @@ import java.util.List;
 public class PhotoService implements PhotoUseCase {
     private final ImageManager imageManager;
     private final PhotoRepository photoRepository;
+    private final PhotoPageRepository photoPageRepository;
     private final UserRepository userRepository;
     private final GetAuthentication getAuthentication;
     private final SubAlbumManager subAlbumManager;
@@ -91,8 +96,16 @@ public class PhotoService implements PhotoUseCase {
     @Override
     @Transactional(readOnly = true)
     @CheckAlbumAccessRules
-    public ImageViewListResponseDto photoView(PhotoViewRequestDto photoViewRequestDto) {
-        List<Photo> photoList = photoRepository.findImageBySubAlbumId(photoViewRequestDto.getSubAlbumId());
+    public ImageViewListResponseDto photoView(PhotoViewRequestDto photoViewRequestDto, Pageable pageable) {
+        Page<Photo> photoList = photoPageRepository
+                .findQPhotoBySubAlbumIdCustomPaging(
+                        photoViewRequestDto.getSubAlbumId(),
+                        pageable,
+                        photoViewRequestDto.getCursor()
+                );
+        if(photoList.isEmpty()) {
+            throw new NotFoundPhotoException();
+        }
         List<Photo> imageSaveList = new ArrayList<>();
 
         photoList.forEach(photo -> {
@@ -104,6 +117,6 @@ public class PhotoService implements PhotoUseCase {
             }
         });
 
-        return new ImageViewListResponseDto().toDo(imageSaveList);
+        return new ImageViewListResponseDto().toDo(imageSaveList, imageSaveList.get(imageSaveList.size()-1).getId());
     }
 }
