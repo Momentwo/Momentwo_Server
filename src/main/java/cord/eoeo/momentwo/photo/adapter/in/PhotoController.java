@@ -6,6 +6,9 @@ import cord.eoeo.momentwo.photo.adapter.dto.PhotoUploadRequestDto;
 import cord.eoeo.momentwo.photo.adapter.dto.PhotoViewRequestDto;
 import cord.eoeo.momentwo.photo.application.port.in.PhotoUseCase;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,6 +18,7 @@ import javax.validation.Valid;
 @RequiredArgsConstructor
 @RequestMapping("/photos")
 public class PhotoController {
+    private static final int PAGE_SIZE = 50;
     private final PhotoUseCase photoUseCase;
 
     // 업로드
@@ -34,7 +38,8 @@ public class PhotoController {
     // 조회 (이미지 보기)
     @GetMapping("/view")
     @ResponseStatus(HttpStatus.OK)
-    public ImageViewListResponseDto photoView(@RequestBody @Valid PhotoViewRequestDto photoViewRequestDto) {
-        return photoUseCase.photoView(photoViewRequestDto);
+    public ImageViewListResponseDto photoView(@RequestBody @Valid PhotoViewRequestDto photoViewRequestDto,
+                  @PageableDefault(size = PAGE_SIZE, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
+        return photoUseCase.photoView(photoViewRequestDto, pageable);
     }
 }
