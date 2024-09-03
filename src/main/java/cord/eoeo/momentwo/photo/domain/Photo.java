@@ -36,12 +36,12 @@ public class Photo {
     private String format;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(nullable = false, name = "user_id")
+    @JoinColumn(nullable = false, name = "userId")
     @OnDelete(action = OnDeleteAction.CASCADE)
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(nullable = false, name = "subAlbum_id")
+    @JoinColumn(nullable = false, name = "subAlbumId")
     @OnDelete(action = OnDeleteAction.CASCADE)
     private SubAlbum subAlbum;
 
