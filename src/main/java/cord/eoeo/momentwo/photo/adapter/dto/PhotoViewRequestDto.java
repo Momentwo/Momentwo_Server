@@ -10,4 +10,5 @@ import lombok.NoArgsConstructor;
 public class PhotoViewRequestDto {
     private long albumId;
     private long subAlbumId;
+    private long cursor;
 }
