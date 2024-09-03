@@ -2,6 +2,7 @@ package cord.eoeo.momentwo.photo.advice;
 
 import cord.eoeo.momentwo.photo.advice.exception.NotDeleteImageException;
 import cord.eoeo.momentwo.photo.advice.exception.NotFoundPhotoException;
+import cord.eoeo.momentwo.photo.advice.exception.PhotoCapacityFullException;
 import cord.eoeo.momentwo.photo.advice.exception.PhotoUploadFailException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -26,5 +27,11 @@ public class PhotoExceptionHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public String notFoundPhotoException() {
         return "사진이 존재하지 않습니다.";
+    }
+
+    @ExceptionHandler(PhotoCapacityFullException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public String photoCapacityFullException() {
+        return "앨범이 가득찼습니다.";
     }
 }

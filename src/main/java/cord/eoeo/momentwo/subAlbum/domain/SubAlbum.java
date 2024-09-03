@@ -34,7 +34,7 @@ public class SubAlbum {
     }
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(nullable = false, name = "album_id")
+    @JoinColumn(nullable = false, name = "albumId")
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Album album;
 
