@@ -1,6 +1,7 @@
 package cord.eoeo.momentwo.photo.application.service;
 
 import cord.eoeo.momentwo.album.application.port.out.AlbumManager;
+import cord.eoeo.momentwo.album.domain.Album;
 import cord.eoeo.momentwo.config.file.FilePathConnect;
 import cord.eoeo.momentwo.image.adapter.dto.ImageViewListResponseDto;
 import cord.eoeo.momentwo.image.application.port.out.ImageManager;
@@ -10,6 +11,7 @@ import cord.eoeo.momentwo.photo.adapter.dto.PhotoUploadRequestDto;
 import cord.eoeo.momentwo.photo.adapter.dto.PhotoViewRequestDto;
 import cord.eoeo.momentwo.photo.advice.exception.NotDeleteImageException;
 import cord.eoeo.momentwo.photo.advice.exception.NotFoundPhotoException;
+import cord.eoeo.momentwo.photo.advice.exception.PhotoCapacityFullException;
 import cord.eoeo.momentwo.photo.advice.exception.PhotoUploadFailException;
 import cord.eoeo.momentwo.photo.application.port.in.PhotoUseCase;
 import cord.eoeo.momentwo.photo.application.port.out.PhotoPageRepository;
@@ -52,7 +54,12 @@ public class PhotoService implements PhotoUseCase {
         // 유저 정보 및 앨범 정보 가져오기
         User user = userRepository.findByNickname(getAuthentication.getAuthentication().getName())
                 .orElseThrow(NotFoundUserException::new);
-        albumManager.getAlbumInfo(photoUploadRequestDto.getAlbumId());
+
+        Album album = albumManager.getAlbumInfo(photoUploadRequestDto.getAlbumId());
+        if(photoRepository.getAlbumCount(album) >= 1000) {
+            throw new PhotoCapacityFullException();
+        }
+
         SubAlbum subAlbum = subAlbumManager.getSubAlbumInfo(photoUploadRequestDto.getSubAlbumId());
 
         try {
@@ -65,7 +72,7 @@ public class PhotoService implements PhotoUseCase {
             String type = PhotoFormat.findPhotoType(newFilename.split("\\.")[1].toUpperCase()).getType();
 
 
-            Photo newPhoto = new Photo(newFilename, type, user, subAlbum);
+            Photo newPhoto = new Photo(newFilename, type, user, album, subAlbum);
 
             photoRepository.save(newPhoto);
         } catch (Exception e) {
