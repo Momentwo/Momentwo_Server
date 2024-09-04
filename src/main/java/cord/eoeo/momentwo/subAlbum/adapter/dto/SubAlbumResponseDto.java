@@ -21,7 +21,7 @@ public class SubAlbumResponseDto {
         return new SubAlbumResponseDto(
                 subAlbum.getId(),
                 subAlbum.getSubAlbumTitle(),
-                subAlbum.getPhotos().stream().map(photo -> new ImageViewResponseDto().toDo(photo))
+                subAlbum.getPhotos().stream().map(photo -> new ImageViewResponseDto().toDo(photo)).limit(4)
                         .collect(Collectors.toList())
         );
     }
