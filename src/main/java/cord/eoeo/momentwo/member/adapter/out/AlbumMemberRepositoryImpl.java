@@ -1,5 +1,6 @@
 package cord.eoeo.momentwo.member.adapter.out;
 
+import cord.eoeo.momentwo.album.domain.Album;
 import cord.eoeo.momentwo.member.advice.exception.NotFoundAccessException;
 import cord.eoeo.momentwo.member.application.port.out.AlbumMemberJpaRepository;
 import cord.eoeo.momentwo.member.application.port.out.AlbumMemberRepository;
@@ -53,5 +54,10 @@ public class AlbumMemberRepositoryImpl implements AlbumMemberRepository {
     @Override
     public int getAlbumSize(User user) {
         return albumMemberJpaRepository.getAlbumSize(user);
+    }
+
+    @Override
+    public List<Album> findAlbumByUser(User user) {
+        return albumMemberJpaRepository.findAlbumByUser(user);
     }
 }

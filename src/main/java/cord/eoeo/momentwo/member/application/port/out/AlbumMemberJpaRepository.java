@@ -1,5 +1,6 @@
 package cord.eoeo.momentwo.member.application.port.out;
 
+import cord.eoeo.momentwo.album.domain.Album;
 import cord.eoeo.momentwo.member.domain.Member;
 import cord.eoeo.momentwo.user.domain.User;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -30,4 +31,7 @@ public interface AlbumMemberJpaRepository extends JpaRepository<Member, Long> {
 
     @Query("SELECT COUNT(m) FROM Member m WHERE m.user = :user")
     int getAlbumSize(User user);
+
+    @Query("SELECT m.album FROM Member m WHERE m.user = :user")
+    List<Album> findAlbumByUser(User user);
 }

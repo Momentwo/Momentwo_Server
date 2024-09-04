@@ -1,5 +1,6 @@
 package cord.eoeo.momentwo.member.application.port.out;
 
+import cord.eoeo.momentwo.album.domain.Album;
 import cord.eoeo.momentwo.member.domain.Member;
 import cord.eoeo.momentwo.user.domain.User;
 
@@ -21,4 +22,6 @@ public interface AlbumMemberRepository {
     List<Long> findAlbumIdByAdminUser(User user);
 
     int getAlbumSize(User user);
+
+    List<Album> findAlbumByUser(User user);
 }
