@@ -1,12 +1,15 @@
 package cord.eoeo.momentwo.album.application.service;
 
 import cord.eoeo.momentwo.album.adapter.dto.AlbumCreateRequestDto;
+import cord.eoeo.momentwo.album.adapter.dto.AlbumInfoListResponseDto;
 import cord.eoeo.momentwo.album.adapter.dto.AlbumTitleEditRequestDto;
 import cord.eoeo.momentwo.album.advice.exception.NotCreateAlbumException;
 import cord.eoeo.momentwo.album.advice.exception.NotDeleteAlbumException;
+import cord.eoeo.momentwo.album.advice.exception.NotFoundAlbumException;
 import cord.eoeo.momentwo.album.application.port.in.AlbumUseCase;
 import cord.eoeo.momentwo.album.application.port.out.AlbumManager;
 import cord.eoeo.momentwo.album.domain.Album;
+import cord.eoeo.momentwo.member.application.port.out.AlbumMemberRepository;
 import cord.eoeo.momentwo.member.application.port.out.GetAlbumInfo;
 import cord.eoeo.momentwo.member.domain.Member;
 import cord.eoeo.momentwo.user.advice.exception.NotFoundUserException;
@@ -18,6 +21,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class AlbumService implements AlbumUseCase {
@@ -25,6 +30,7 @@ public class AlbumService implements AlbumUseCase {
     private final GetAuthentication getAuthentication;
     private final GetAlbumInfo getAlbumInfo;
     private final AlbumManager albumManager;
+    private final AlbumMemberRepository albumMemberRepository;
 
     @Transactional
     @Override
@@ -71,6 +77,18 @@ public class AlbumService implements AlbumUseCase {
             throw new NotDeleteAlbumException();
         }
         albumManager.albumDelete(member);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public AlbumInfoListResponseDto getAlbums() {
+        User user = userRepository.findByNickname(getAuthentication.getAuthentication().getName())
+                .orElseThrow(NotFoundUserException::new);
+        List<Album> albums = albumMemberRepository.findAlbumByUser(user);
+        if(albums.isEmpty()) {
+            throw new NotFoundAlbumException();
+        }
+        return new AlbumInfoListResponseDto().toDo(albums);
     }
 
     @Transactional(readOnly = true)

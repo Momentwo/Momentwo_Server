@@ -1,6 +1,7 @@
 package cord.eoeo.momentwo.album.adapter.in;
 
 import cord.eoeo.momentwo.album.adapter.dto.AlbumCreateRequestDto;
+import cord.eoeo.momentwo.album.adapter.dto.AlbumInfoListResponseDto;
 import cord.eoeo.momentwo.album.adapter.dto.AlbumTitleEditRequestDto;
 import cord.eoeo.momentwo.album.application.port.in.AlbumUseCase;
 import lombok.RequiredArgsConstructor;
@@ -34,5 +35,11 @@ public class AlbumController {
     @ResponseStatus(HttpStatus.OK)
     public void deleteAlbums(@PathVariable long id) {
         albumUseCase.deleteAlbums(id);
+    }
+
+    @GetMapping("/albums")
+    @ResponseStatus(HttpStatus.OK)
+    public AlbumInfoListResponseDto getAlbums() {
+        return albumUseCase.getAlbums();
     }
 }
