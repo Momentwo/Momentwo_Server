@@ -133,6 +133,6 @@ public class GetAlbumInfoImpl implements GetAlbumInfo {
     @Override
     @Transactional
     public boolean isCheckAlbumSize(User user) {
-        return albumMemberRepository.getAlbumSize(user).size() > 20;
+        return albumMemberRepository.getAlbumSize(user) >= 20;
     }
 }
