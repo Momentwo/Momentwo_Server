@@ -10,8 +10,9 @@ import lombok.RequiredArgsConstructor;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
-import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.stereotype.Component;
+
+import java.lang.reflect.Field;
 
 @Component
 @Aspect
@@ -22,17 +23,23 @@ public class CheckAlbumAccessRulesAspect {
     private final GetAuthentication getAuthentication;
 
     @Before("@annotation(cord.eoeo.momentwo.subAlbum.application.aop.annotation.CheckAlbumAccessRules)")
-    public void checkAlbumAccessRules(JoinPoint joinPoint) {
-        MethodSignature methodSignature = (MethodSignature) joinPoint.getSignature();
-        String[] names = methodSignature.getParameterNames();
+    public void checkAlbumAccessRules(JoinPoint joinPoint) throws Exception{
         Object[] values = joinPoint.getArgs();
-
         long albumId = 0;
 
-        for(int i = 0; i < names.length; i++) {
-            if(names[i].equals("albumId")) {
+        for(int i = 0; i < values.length; i++) {
+            if(values[i] instanceof Long) {
                 albumId = (long) values[i];
                 break;
+            }
+
+            Field[] o = values[i].getClass().getDeclaredFields();
+            for (Field f : o) {
+                if (f.getName().equals("albumId")) {
+                    f.setAccessible(true);
+                    albumId = (long) f.get(values[i]);
+                    break;
+                }
             }
         }
         User user = userRepository.findByNickname(getAuthentication.getAuthentication().getName())
