@@ -20,5 +20,5 @@ public interface AlbumMemberRepository {
 
     List<Long> findAlbumIdByAdminUser(User user);
 
-    List<Member> getAlbumSize(User user);
+    int getAlbumSize(User user);
 }

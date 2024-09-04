@@ -28,6 +28,6 @@ public interface AlbumMemberJpaRepository extends JpaRepository<Member, Long> {
     @Query("SELECT m.album.id FROM Member m WHERE m.user = :user AND m.rules = 'ROLE_ALBUM_ADMIN'")
     List<Long> findAlbumIdByAdminUser(User user);
 
-    @Query("SELECT m FROM Member m WHERE m.user = :user")
-    List<Member> getAlbumSize(User user);
+    @Query("SELECT COUNT(m) FROM Member m WHERE m.user = :user")
+    int getAlbumSize(User user);
 }

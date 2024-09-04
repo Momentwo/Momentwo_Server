@@ -51,7 +51,7 @@ public class AlbumMemberRepositoryImpl implements AlbumMemberRepository {
     }
 
     @Override
-    public List<Member> getAlbumSize(User user) {
+    public int getAlbumSize(User user) {
         return albumMemberJpaRepository.getAlbumSize(user);
     }
 }
