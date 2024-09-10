@@ -1,6 +1,7 @@
 package cord.eoeo.momentwo.user.adapter.in;
 
 import cord.eoeo.momentwo.config.security.jwt.adapter.out.TokenResponseDto;
+import cord.eoeo.momentwo.user.adapter.dto.in.RefreshTokenRequestDto;
 import cord.eoeo.momentwo.user.adapter.dto.in.SignOutRequestDto;
 import cord.eoeo.momentwo.user.adapter.dto.in.UserLoginRequestDto;
 import cord.eoeo.momentwo.user.application.port.in.UserStatusUseCase;
@@ -37,5 +38,12 @@ public class UserStatusController {
     @ResponseStatus(HttpStatus.OK)
     public void signOut(@ModelAttribute @Valid SignOutRequestDto signOutRequestDto) {
         userStatusUseCase.signOut(signOutRequestDto);
+    }
+
+    // 토큰 재발급
+    @PostMapping("/reissue")
+    @ResponseStatus(HttpStatus.OK)
+    public TokenResponseDto reissue(@ModelAttribute @Valid RefreshTokenRequestDto refreshTokenRequestDto) {
+        return userStatusUseCase.reissue(refreshTokenRequestDto);
     }
 }

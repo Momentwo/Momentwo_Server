@@ -32,7 +32,8 @@ public class SecurityConfig {
             "/check_email",
             "/check_nickname",
             "/search/username",
-            "/temp/password"
+            "/temp/password",
+            "/reissue"
     };
 
     @Bean

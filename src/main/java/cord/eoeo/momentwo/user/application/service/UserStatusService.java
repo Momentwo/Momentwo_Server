@@ -6,21 +6,21 @@ import cord.eoeo.momentwo.config.security.jwt.adapter.out.TokenResponseDto;
 import cord.eoeo.momentwo.member.advice.exception.AdminAlbumOutException;
 import cord.eoeo.momentwo.member.application.port.out.GetAlbumInfo;
 import cord.eoeo.momentwo.member.domain.Member;
+import cord.eoeo.momentwo.user.adapter.dto.in.RefreshTokenRequestDto;
 import cord.eoeo.momentwo.user.adapter.dto.in.SignOutRequestDto;
 import cord.eoeo.momentwo.user.adapter.dto.in.UserLoginRequestDto;
 import cord.eoeo.momentwo.user.advice.exception.NotFoundUserException;
 import cord.eoeo.momentwo.user.advice.exception.PasswordMisMatchException;
 import cord.eoeo.momentwo.user.application.port.in.UserStatusUseCase;
-import cord.eoeo.momentwo.user.application.port.out.AuthenticationManager;
+import cord.eoeo.momentwo.user.application.port.out.*;
 import cord.eoeo.momentwo.config.security.jwt.port.out.JWTBlackList;
-import cord.eoeo.momentwo.user.application.port.out.GetAuthentication;
-import cord.eoeo.momentwo.user.application.port.out.PasswordEncoder;
-import cord.eoeo.momentwo.user.application.port.out.UserRepository;
 import cord.eoeo.momentwo.user.domain.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -38,6 +38,7 @@ public class UserStatusService implements UserStatusUseCase {
     private final GetAuthentication getAuthentication;
     private final GetAlbumInfo getAlbumInfo;
     private final AlbumManager albumManager;
+    private final UserDetailsService userDetailsService;
 
     @Transactional(readOnly = true)
     @Override
@@ -45,9 +46,8 @@ public class UserStatusService implements UserStatusUseCase {
     public CompletableFuture<TokenResponseDto> signIn(UserLoginRequestDto userLoginRequestDto) {
         return CompletableFuture.supplyAsync(() -> {
             // 아이디 확인
-            User user = userRepository.findByUsername(userLoginRequestDto.getUsername()).orElseThrow(() -> {
-                throw new CompletionException(new NotFoundUserException());
-            });
+            User user = userRepository.findByUsername(userLoginRequestDto.getUsername()).orElseThrow(
+                    () -> new CompletionException(new NotFoundUserException()));
             // 비밀번호 확인
             if(!passwordEncoder.matches(userLoginRequestDto.getPassword(), user.getPassword())) {
                 throw new CompletionException(new PasswordMisMatchException());
@@ -58,7 +58,7 @@ public class UserStatusService implements UserStatusUseCase {
             );
             Authentication authentication = authenticationManager.getAuthentication(authenticationToken);
 
-            return tokenProvider.createToken(authentication);
+            return tokenProvider.createToken(authentication, "");
         });
     }
 
@@ -93,5 +93,27 @@ public class UserStatusService implements UserStatusUseCase {
         });
 
         userRepository.delete(user);
+    }
+
+    // 서버에 저장했던 토큰을 갱신하는 방법을 찾아야 함,,,
+    // 현재 토큰을 재발급한 후 저장하는 코드에서 비교할 수가 없음,,
+    @Transactional
+    @Override
+    public TokenResponseDto reissue(RefreshTokenRequestDto refreshTokenRequestDto) {
+        // 리프레시 토큰 만료 여부 확인
+        if(!tokenProvider.validRefreshToken(refreshTokenRequestDto.getRefreshToken())) {
+            throw new IllegalArgumentException("토큰이 만료되어 재로그인 해야합니다.");
+        }
+        // 사용자 정보 추출
+        String username = tokenProvider.getUsernameFromRefreshToken(refreshTokenRequestDto.getRefreshToken());
+        UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+        Authentication authentication = new UsernamePasswordAuthenticationToken(
+                userDetails,
+                null,
+                userDetails.getAuthorities()
+        );
+
+        // 추출한 정보를 토대로 토큰 재발급
+        return tokenProvider.createToken(authentication, refreshTokenRequestDto.getRefreshToken());
     }
 }
