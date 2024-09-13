@@ -1,5 +1,6 @@
 package cord.eoeo.momentwo.user.application.service;
 
+import cord.eoeo.momentwo.elasticsearch.application.service.UserElasticSearchManager;
 import cord.eoeo.momentwo.user.adapter.dto.in.EmailAvailabilityDto;
 import cord.eoeo.momentwo.user.adapter.dto.in.NicknameAvailabilityDto;
 import cord.eoeo.momentwo.user.adapter.dto.in.UserRegisterRequestDto;
@@ -20,6 +21,7 @@ public class UserRegisterService implements UserRegisterUseCase {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final UserRegisterAsync userRegisterAsync;
+    private final UserElasticSearchManager userElasticSearchManager;
 
     @Transactional
     @Override
@@ -33,6 +35,7 @@ public class UserRegisterService implements UserRegisterUseCase {
                 userRegisterRequestDto.getPhone()
         );
         userRepository.save(newUser);
+        userElasticSearchManager.save(newUser);
     }
 
     @Transactional(readOnly = true)
