@@ -1,4 +1,4 @@
-package cord.eoeo.momentwo.elasticsearch.application.service;
+package cord.eoeo.momentwo.elasticsearch.adpater.out;
 
 import cord.eoeo.momentwo.elasticsearch.application.port.out.UserSearchRepository;
 import cord.eoeo.momentwo.elasticsearch.domain.UserDocument;
