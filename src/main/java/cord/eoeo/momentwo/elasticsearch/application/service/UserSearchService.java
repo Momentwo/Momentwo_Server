@@ -2,6 +2,7 @@ package cord.eoeo.momentwo.elasticsearch.application.service;
 
 import cord.eoeo.momentwo.elasticsearch.adpater.dto.in.UserSearchRequestDto;
 import cord.eoeo.momentwo.elasticsearch.adpater.dto.out.UserSearchListResponseDto;
+import cord.eoeo.momentwo.elasticsearch.adpater.out.UserElasticSearchManager;
 import cord.eoeo.momentwo.elasticsearch.application.port.in.UserSearchUseCase;
 import cord.eoeo.momentwo.user.advice.exception.NotFoundUserException;
 import cord.eoeo.momentwo.user.application.port.out.GetAuthentication;
