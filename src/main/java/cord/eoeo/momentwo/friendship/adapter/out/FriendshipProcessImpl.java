@@ -1,5 +1,6 @@
 package cord.eoeo.momentwo.friendship.adapter.out;
 
+import cord.eoeo.momentwo.elasticsearch.adpater.out.FriendsElasticSearchManager;
 import cord.eoeo.momentwo.friendship.adapter.in.dto.*;
 import cord.eoeo.momentwo.friendship.advice.exception.AlreadyFriendshipException;
 import cord.eoeo.momentwo.friendship.advice.exception.NotFoundFriendshipRequestException;
@@ -17,6 +18,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class FriendshipProcessImpl implements FriendshipProcess {
     private final FriendshipRepository friendshipRepository;
+    private final FriendsElasticSearchManager friendsElasticSearchManager;
 
     @Override
     @Transactional
@@ -45,6 +47,11 @@ public class FriendshipProcessImpl implements FriendshipProcess {
 
         friendship.setAccept(true);
         friendshipRepository.save(friendship);
+
+        // 친구요청 수락 시 친구 검색 목록에 추가
+        // 양방향으로 친구 검색 목록에 저장
+        friendsElasticSearchManager.save(responseUser.getId(), requestUser.getNickname());
+        friendsElasticSearchManager.save(requestUser.getId(), responseUser.getNickname());
     }
 
     @Override
