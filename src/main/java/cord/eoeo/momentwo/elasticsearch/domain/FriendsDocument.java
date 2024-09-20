@@ -14,10 +14,10 @@ public class FriendsDocument {
     private long id;
 
     @Field(type = FieldType.Keyword)
-    private String toNickname; // 친구 요청을 받은 사람
+    private String nickname; // 친구 요청을 받은 사람
 
-    public FriendsDocument(long id, String toNickname) {
+    public FriendsDocument(long id, String nickname) {
         this.id = id;
-        this.toNickname = toNickname;
+        this.nickname = nickname;
     }
 }

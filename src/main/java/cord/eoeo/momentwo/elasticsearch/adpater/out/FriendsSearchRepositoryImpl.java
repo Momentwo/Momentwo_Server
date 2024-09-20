@@ -6,8 +6,6 @@ import cord.eoeo.momentwo.elasticsearch.domain.FriendsDocument;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
-
 @Repository
 @RequiredArgsConstructor
 public class FriendsSearchRepositoryImpl implements FriendsSearchRepository {
@@ -16,10 +14,5 @@ public class FriendsSearchRepositoryImpl implements FriendsSearchRepository {
     @Override
     public void save(FriendsDocument friendsDocument) {
         friendsElasticSearchRepository.save(friendsDocument);
-    }
-
-    @Override
-    public List<FriendsDocument> getFriends(String nickname) {
-        return friendsElasticSearchRepository.getFriends(nickname);
     }
 }
