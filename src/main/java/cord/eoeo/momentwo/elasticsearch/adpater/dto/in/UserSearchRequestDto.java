@@ -9,4 +9,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class UserSearchRequestDto {
     private String nickname;
+    private int page;
+    private int size;
 }
