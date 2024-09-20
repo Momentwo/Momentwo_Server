@@ -15,7 +15,7 @@ public class FriendsSearchResponseDto {
     public FriendsSearchResponseDto toDo(FriendsDocument friendsDocument) {
         return new FriendsSearchResponseDto(
                 this.id = friendsDocument.getId(),
-                this.nickname = friendsDocument.getToNickname()
+                this.nickname = friendsDocument.getNickname()
         );
     }
 }
