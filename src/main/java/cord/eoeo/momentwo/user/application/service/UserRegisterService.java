@@ -1,6 +1,6 @@
 package cord.eoeo.momentwo.user.application.service;
 
-import cord.eoeo.momentwo.elasticsearch.adpater.out.UserElasticSearchManager;
+import cord.eoeo.momentwo.elasticsearch.application.port.out.UserElasticSearchManager;
 import cord.eoeo.momentwo.user.adapter.dto.in.EmailAvailabilityDto;
 import cord.eoeo.momentwo.user.adapter.dto.in.NicknameAvailabilityDto;
 import cord.eoeo.momentwo.user.adapter.dto.in.UserRegisterRequestDto;
