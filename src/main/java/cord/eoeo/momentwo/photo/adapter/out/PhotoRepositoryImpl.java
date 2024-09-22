@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
@@ -27,5 +28,10 @@ public class PhotoRepositoryImpl implements PhotoRepository {
     @Override
     public int getAlbumCount(Album album) {
         return photoJpaRepository.getAlbumCount(album);
+    }
+
+    @Override
+    public Optional<Photo> findById(long id) {
+        return photoJpaRepository.findById(id);
     }
 }
