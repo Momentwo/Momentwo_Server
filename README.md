@@ -135,7 +135,7 @@
 | Architecture | Hexagonal Architecture (adapter, port, usecase, domain, advice) |
 | Security | SpringSecurity |
 | Token | JWT (Json Web Token) |
-| RDBS | mySQL, queryDsl, JPA |
+| RDBMS | mySQL, queryDsl, JPA |
 | Asynchronous | @EnableAsync , ThreadPoolTaskExecutor |
 | Search Engine | ElasticSearch |
 | Others | Web, Valid, lombok, Docker |
