@@ -1,9 +1,6 @@
 package cord.eoeo.momentwo.photo.advice;
 
-import cord.eoeo.momentwo.photo.advice.exception.NotDeleteImageException;
-import cord.eoeo.momentwo.photo.advice.exception.NotFoundPhotoException;
-import cord.eoeo.momentwo.photo.advice.exception.PhotoCapacityFullException;
-import cord.eoeo.momentwo.photo.advice.exception.PhotoUploadFailException;
+import cord.eoeo.momentwo.photo.advice.exception.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -33,5 +30,11 @@ public class PhotoExceptionHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public String photoCapacityFullException() {
         return "앨범이 가득찼습니다.";
+    }
+
+    @ExceptionHandler(NotPhotoAccessException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public String notPhotoAccessException() {
+        return "사진이 존재하지 않거나 사진에 접근할 권한이 없습니다.";
     }
 }
