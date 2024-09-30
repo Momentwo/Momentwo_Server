@@ -4,6 +4,7 @@ import cord.eoeo.momentwo.album.domain.Album;
 import cord.eoeo.momentwo.photo.application.port.out.PhotoJpaRepository;
 import cord.eoeo.momentwo.photo.application.port.out.PhotoRepository;
 import cord.eoeo.momentwo.photo.domain.Photo;
+import cord.eoeo.momentwo.user.domain.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -33,5 +34,10 @@ public class PhotoRepositoryImpl implements PhotoRepository {
     @Override
     public Optional<Photo> findById(long id) {
         return photoJpaRepository.findById(id);
+    }
+
+    @Override
+    public Optional<Photo> findByIdAndUser(long id, User user) {
+        return photoJpaRepository.findByIdAndUser(id, user);
     }
 }
