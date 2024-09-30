@@ -4,13 +4,19 @@ import cord.eoeo.momentwo.description.adapter.dto.in.DescriptionCreateRequestDto
 import cord.eoeo.momentwo.description.adapter.dto.in.DescriptionEditRequestDto;
 import cord.eoeo.momentwo.description.adapter.dto.in.DescriptionRequestDto;
 import cord.eoeo.momentwo.description.adapter.dto.out.DescriptionResponseDto;
+import cord.eoeo.momentwo.description.advice.exception.NotCreateDescriptionException;
 import cord.eoeo.momentwo.description.advice.exception.NotFoundDescriptionException;
 import cord.eoeo.momentwo.description.application.port.out.DescriptionManager;
 import cord.eoeo.momentwo.description.application.port.out.DescriptionRepository;
 import cord.eoeo.momentwo.description.domain.Description;
 import cord.eoeo.momentwo.photo.advice.exception.NotFoundPhotoException;
+import cord.eoeo.momentwo.photo.advice.exception.NotPhotoAccessException;
 import cord.eoeo.momentwo.photo.application.port.out.PhotoRepository;
 import cord.eoeo.momentwo.photo.domain.Photo;
+import cord.eoeo.momentwo.user.advice.exception.NotFoundUserException;
+import cord.eoeo.momentwo.user.application.port.out.GetAuthentication;
+import cord.eoeo.momentwo.user.application.port.out.UserRepository;
+import cord.eoeo.momentwo.user.domain.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,18 +26,27 @@ import org.springframework.transaction.annotation.Transactional;
 public class DescriptionManagerImpl implements DescriptionManager {
     private final DescriptionRepository descriptionRepository;
     private final PhotoRepository photoRepository;
+    private final UserRepository userRepository;
+    private final GetAuthentication getAuthentication;
 
     @Override
     @Transactional
     public void createDescription(DescriptionCreateRequestDto descriptionCreateRequestDto) {
         Photo photo = getPhoto(descriptionCreateRequestDto.getPhotoId());
 
-        Description description = new Description(
-                descriptionCreateRequestDto.getDescription(),
-                photo
-        );
+        descriptionRepository.findByPhoto(photo).ifPresentOrElse(
+                description -> {
+                    throw new NotCreateDescriptionException();
+                },
+                () -> {
+                    Description description = new Description(
+                            descriptionCreateRequestDto.getDescription(),
+                            photo
+                    );
 
-        descriptionRepository.save(description);
+                    descriptionRepository.save(description);
+                }
+        );
     }
 
     @Override
@@ -66,7 +81,9 @@ public class DescriptionManagerImpl implements DescriptionManager {
     }
 
     private Photo getPhoto(long photoId) {
-        return photoRepository.findById(photoId)
-                .orElseThrow(NotFoundPhotoException::new);
+        User user = userRepository.findByNickname(getAuthentication.getAuthentication().getName())
+                .orElseThrow(NotFoundUserException::new);
+        return photoRepository.findByIdAndUser(photoId, user)
+                .orElseThrow(NotPhotoAccessException::new);
     }
 }
