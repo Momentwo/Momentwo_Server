@@ -1,5 +1,7 @@
 package cord.eoeo.momentwo.elasticsearch.adpater.out;
 
+import co.elastic.clients.elasticsearch.ElasticsearchClient;
+import co.elastic.clients.elasticsearch.core.DeleteByQueryRequest;
 import cord.eoeo.momentwo.elasticsearch.application.port.out.LikesElasticSearchManager;
 import cord.eoeo.momentwo.elasticsearch.application.port.out.LikesSearchRepository;
 import cord.eoeo.momentwo.elasticsearch.domain.LikesDocument;
@@ -19,6 +21,7 @@ import org.springframework.data.elasticsearch.core.query.NativeSearchQuery;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -27,6 +30,7 @@ import java.util.stream.Collectors;
 public class LikesElasticSearchManagerImpl implements LikesElasticSearchManager {
     private final LikesSearchRepository likesSearchRepository;
     private final ElasticsearchRestTemplate elasticsearchRestTemplate;
+    private final ElasticsearchClient elasticsearchClient;
 
     @Override
     @Transactional
@@ -99,5 +103,25 @@ public class LikesElasticSearchManagerImpl implements LikesElasticSearchManager 
                 .collect(Collectors.toList());
 
         return new PageImpl<>(likesDocuments);
+    }
+
+    @Override
+    @Transactional
+    public void deleteByWildNickname(String nickname) {
+        DeleteByQueryRequest request = DeleteByQueryRequest.of(
+                d -> d.index("likes")
+                        .query(q -> q
+                                .wildcard(w -> w
+                                        .field("id")  // _id 필드를 대상으로 쿼리
+                                        .value("*" + nickname)  // "테스터"로 끝나는 ID들 매칭
+                                )
+                        )
+        );
+        try {
+            elasticsearchClient.deleteByQuery(request);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
     }
 }
