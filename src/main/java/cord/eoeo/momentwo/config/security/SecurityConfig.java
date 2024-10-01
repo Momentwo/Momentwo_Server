@@ -28,7 +28,6 @@ public class SecurityConfig {
     private static final String[] WHITE_LIST = {
             "/signup",
             "/signin",
-            "/signout",
             "/check_email",
             "/check_nickname",
             "/search/username",
