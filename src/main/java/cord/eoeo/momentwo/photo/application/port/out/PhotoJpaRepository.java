@@ -15,7 +15,7 @@ public interface PhotoJpaRepository extends JpaRepository<Photo, Long> {
     @Query("DELETE FROM Photo p WHERE p.subAlbum.id = :subAlbumId AND p.id IN :imageIds")
     void deleteAllBySubAlbumIdAndPhotoId(long subAlbumId, List<Long> imageIds);
 
-    @Query("SELECT COUNT(p) FROM Photo p")
+    @Query("SELECT COUNT(p) FROM Photo p WHERE p.album = :album")
     int getAlbumCount(Album album);
 
     @Query("SELECT p FROM Photo p WHERE p.id = :id AND p.user = :user")
