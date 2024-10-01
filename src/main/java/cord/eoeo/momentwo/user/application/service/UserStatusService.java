@@ -3,6 +3,9 @@ package cord.eoeo.momentwo.user.application.service;
 import cord.eoeo.momentwo.album.application.port.out.AlbumManager;
 import cord.eoeo.momentwo.config.security.jwt.TokenProvider;
 import cord.eoeo.momentwo.config.security.jwt.adapter.out.TokenResponseDto;
+import cord.eoeo.momentwo.elasticsearch.application.port.out.FriendsElasticSearchManager;
+import cord.eoeo.momentwo.elasticsearch.application.port.out.LikesElasticSearchManager;
+import cord.eoeo.momentwo.elasticsearch.application.port.out.UserElasticSearchManager;
 import cord.eoeo.momentwo.member.advice.exception.AdminAlbumOutException;
 import cord.eoeo.momentwo.member.application.port.out.GetAlbumInfo;
 import cord.eoeo.momentwo.member.domain.Member;
@@ -39,6 +42,9 @@ public class UserStatusService implements UserStatusUseCase {
     private final GetAlbumInfo getAlbumInfo;
     private final AlbumManager albumManager;
     private final UserDetailsService userDetailsService;
+    private final UserElasticSearchManager userElasticSearchManager;
+    private final FriendsElasticSearchManager friendsElasticSearchManager;
+    private final LikesElasticSearchManager likesElasticSearchManager;
 
     @Transactional(readOnly = true)
     @Override
@@ -93,6 +99,9 @@ public class UserStatusService implements UserStatusUseCase {
         });
 
         userRepository.delete(user);
+        userElasticSearchManager.deleteById(user.getId());
+        friendsElasticSearchManager.deleteById(user.getId());
+        likesElasticSearchManager.deleteByWildNickname(user.getNickname());
     }
 
     // 서버에 저장했던 토큰을 갱신하는 방법을 찾아야 함,,,

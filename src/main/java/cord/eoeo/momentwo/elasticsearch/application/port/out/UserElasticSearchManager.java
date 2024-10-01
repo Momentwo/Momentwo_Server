@@ -8,4 +8,5 @@ import org.springframework.data.domain.Pageable;
 public interface UserElasticSearchManager {
     void save(User user);
     Page<UserDocument> getUsersPaging(String keyword, User user, Pageable pageable);
+    void deleteById(long id);
 }

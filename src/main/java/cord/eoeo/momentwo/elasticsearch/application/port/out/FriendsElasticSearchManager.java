@@ -8,4 +8,5 @@ import org.springframework.data.domain.Pageable;
 public interface FriendsElasticSearchManager {
     void save(long id, String toNickname);
     Page<FriendsDocument> getFriendsPaging(String keyword, User user, Pageable pageable);
+    void deleteById(long id);
 }

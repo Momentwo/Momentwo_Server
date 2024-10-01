@@ -13,8 +13,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.elasticsearch.core.ElasticsearchRestTemplate;
 import org.springframework.data.elasticsearch.core.SearchHit;
 import org.springframework.data.elasticsearch.core.SearchHits;
+import org.springframework.data.elasticsearch.core.mapping.IndexCoordinates;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQuery;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Objects;
@@ -27,12 +29,14 @@ public class FriendsElasticSearchManagerImpl implements FriendsElasticSearchMana
     private final ElasticsearchRestTemplate elasticsearchRestTemplate;
 
     @Override
+    @Transactional
     public void save(long id, String toNickname) {
         FriendsDocument friendsDocument = new FriendsDocument(id, toNickname);
         friendsSearchRepository.save(friendsDocument);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Page<FriendsDocument> getFriendsPaging(String keyword, User user, Pageable pageable) {
         // Wildcard 쿼리 + 페이징 적용
         NativeSearchQuery searchQuery = new NativeSearchQueryBuilder()
@@ -50,5 +54,12 @@ public class FriendsElasticSearchManagerImpl implements FriendsElasticSearchMana
                 .collect(Collectors.toList());
 
         return new PageImpl<>(friendsDocuments);
+    }
+
+    @Override
+    @Transactional
+    public void deleteById(long id) {
+        // 클라이언트를 통해 업데이트 요청 실행
+        elasticsearchRestTemplate.delete(String.valueOf(id), IndexCoordinates.of("friends"));
     }
 }
