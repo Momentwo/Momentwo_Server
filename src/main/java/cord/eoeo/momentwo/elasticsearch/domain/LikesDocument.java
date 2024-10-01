@@ -1,5 +1,6 @@
 package cord.eoeo.momentwo.elasticsearch.domain;
 
+import cord.eoeo.momentwo.photo.domain.Photo;
 import cord.eoeo.momentwo.user.domain.User;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -24,9 +25,17 @@ public class LikesDocument {
     @Field(type = FieldType.Keyword)
     private String nickname;
 
-    public LikesDocument(User user, long photoId) {
-        this.id = photoId + "_" + user.getNickname();
-        this.photoId = photoId;
+    @Field(type = FieldType.Keyword)
+    private long albumId;
+
+    @Field(type = FieldType.Keyword)
+    private long subAlbumId;
+
+    public LikesDocument(User user, Photo photo) {
+        this.id = photo.getId() + "_" + user.getNickname();
+        this.photoId = photo.getId();
         this.nickname = user.getNickname();
+        this.albumId = photo.getAlbum().getId();
+        this.subAlbumId = photo.getSubAlbum().getId();
     }
 }

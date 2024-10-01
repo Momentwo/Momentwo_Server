@@ -3,10 +3,10 @@ package cord.eoeo.momentwo.elasticsearch.adpater.out;
 import cord.eoeo.momentwo.elasticsearch.application.port.out.LikesElasticSearchManager;
 import cord.eoeo.momentwo.elasticsearch.application.port.out.LikesSearchRepository;
 import cord.eoeo.momentwo.elasticsearch.domain.LikesDocument;
+import cord.eoeo.momentwo.photo.domain.Photo;
 import cord.eoeo.momentwo.user.domain.User;
 import lombok.RequiredArgsConstructor;
 import org.elasticsearch.index.query.QueryBuilders;
-import org.elasticsearch.script.Script;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -17,7 +17,6 @@ import org.springframework.data.elasticsearch.core.SearchHits;
 import org.springframework.data.elasticsearch.core.mapping.IndexCoordinates;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQuery;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
-import org.springframework.data.elasticsearch.core.query.UpdateQuery;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -31,8 +30,8 @@ public class LikesElasticSearchManagerImpl implements LikesElasticSearchManager 
 
     @Override
     @Transactional
-    public void save(User user, long photoId) {
-        LikesDocument likesDocument = new LikesDocument(user, photoId);
+    public void save(User user, Photo photo) {
+        LikesDocument likesDocument = new LikesDocument(user, photo);
         likesSearchRepository.save(likesDocument);
     }
 
@@ -79,5 +78,26 @@ public class LikesElasticSearchManagerImpl implements LikesElasticSearchManager 
             return false;
         }
         return true;
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Page<LikesDocument> getPhotoLikesStatus(long subAlbumId, String nickname, Pageable pageable) {
+        NativeSearchQuery searchQuery = new NativeSearchQueryBuilder()
+                .withQuery(QueryBuilders.boolQuery()
+                        .must(QueryBuilders.matchQuery("subAlbumId", subAlbumId))
+                        .must(QueryBuilders.matchQuery("nickname", nickname)))
+                .withPageable(pageable)
+                .build();
+
+        // 검색 결과 가져오기
+        SearchHits<LikesDocument> searchHit = elasticsearchRestTemplate.search(searchQuery, LikesDocument.class);
+
+        // 검색된 데이터를 리스트로 변환
+        List<LikesDocument> likesDocuments = searchHit.getSearchHits().stream()
+                .map(SearchHit::getContent)
+                .collect(Collectors.toList());
+
+        return new PageImpl<>(likesDocuments);
     }
 }
