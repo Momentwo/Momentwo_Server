@@ -39,13 +39,13 @@ public class PhotoLikesManagerImpl implements PhotoLikesManager {
                         // 값이 존재하는 경우 수행할 작업
                         photoLike.setCount(photoLike.getCount() + 1);
                         photoLikesRepository.save(photoLike);
-                        likesElasticSearchManager.save(user, photoId);
+                        likesElasticSearchManager.save(user, photo);
                     },
                     () -> {
                         // 값이 존재하지 않는 경우 수행할 작업
                         PhotoLike photoLike = new PhotoLike(photo);
                         photoLikesRepository.save(photoLike);
-                        likesElasticSearchManager.save(user, photoId);
+                        likesElasticSearchManager.save(user, photo);
                     });
         }
     }
