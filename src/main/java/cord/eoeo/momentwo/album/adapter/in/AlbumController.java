@@ -1,8 +1,6 @@
 package cord.eoeo.momentwo.album.adapter.in;
 
-import cord.eoeo.momentwo.album.adapter.dto.AlbumCreateRequestDto;
-import cord.eoeo.momentwo.album.adapter.dto.AlbumInfoListResponseDto;
-import cord.eoeo.momentwo.album.adapter.dto.AlbumTitleEditRequestDto;
+import cord.eoeo.momentwo.album.adapter.dto.*;
 import cord.eoeo.momentwo.album.application.port.in.AlbumUseCase;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -41,5 +39,11 @@ public class AlbumController {
     @ResponseStatus(HttpStatus.OK)
     public AlbumInfoListResponseDto getAlbums() {
         return albumUseCase.getAlbums();
+    }
+
+    @GetMapping("/albums/rules")
+    @ResponseStatus(HttpStatus.OK)
+    public AlbumRulesResponseDto getAlbumsRules(@ModelAttribute @Valid AlbumRulesRequestDto albumRulesRequestDto) {
+        return albumUseCase.getAlbumsRules(albumRulesRequestDto);
     }
 }

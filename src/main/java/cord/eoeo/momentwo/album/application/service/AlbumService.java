@@ -1,8 +1,6 @@
 package cord.eoeo.momentwo.album.application.service;
 
-import cord.eoeo.momentwo.album.adapter.dto.AlbumCreateRequestDto;
-import cord.eoeo.momentwo.album.adapter.dto.AlbumInfoListResponseDto;
-import cord.eoeo.momentwo.album.adapter.dto.AlbumTitleEditRequestDto;
+import cord.eoeo.momentwo.album.adapter.dto.*;
 import cord.eoeo.momentwo.album.advice.exception.NotCreateAlbumException;
 import cord.eoeo.momentwo.album.advice.exception.NotDeleteAlbumException;
 import cord.eoeo.momentwo.album.advice.exception.NotFoundAlbumException;
@@ -89,6 +87,12 @@ public class AlbumService implements AlbumUseCase {
             throw new NotFoundAlbumException();
         }
         return new AlbumInfoListResponseDto().toDo(albums);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public AlbumRulesResponseDto getAlbumsRules(AlbumRulesRequestDto albumRulesRequestDto) {
+        return new AlbumRulesResponseDto().toDo(getMemberInfo(albumRulesRequestDto.getAlbumId()));
     }
 
     @Transactional(readOnly = true)

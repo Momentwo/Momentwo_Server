@@ -1,8 +1,6 @@
 package cord.eoeo.momentwo.album.application.port.in;
 
-import cord.eoeo.momentwo.album.adapter.dto.AlbumCreateRequestDto;
-import cord.eoeo.momentwo.album.adapter.dto.AlbumInfoListResponseDto;
-import cord.eoeo.momentwo.album.adapter.dto.AlbumTitleEditRequestDto;
+import cord.eoeo.momentwo.album.adapter.dto.*;
 
 public interface AlbumUseCase {
     void createAlbums(AlbumCreateRequestDto albumCreateRequestDto);
@@ -12,4 +10,6 @@ public interface AlbumUseCase {
     void deleteAlbums(long id);
 
     AlbumInfoListResponseDto getAlbums();
+
+    AlbumRulesResponseDto getAlbumsRules(AlbumRulesRequestDto albumRulesRequestDto);
 }
