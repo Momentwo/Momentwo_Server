@@ -10,6 +10,7 @@ import javax.validation.constraints.NotBlank;
 @AllArgsConstructor
 @NoArgsConstructor
 public class AssignAdminRequestDto {
+    private long albumId;
     @NotBlank(message = "별명을 입력해주세요.")
     private String nickname;
 }
