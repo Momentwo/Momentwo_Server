@@ -40,10 +40,13 @@ public class CommentController {
         commentUseCase.deleteComment(commentDeleteRequestDto);
     }
 
-    @GetMapping()
+    @GetMapping("/{albumId}/{photoId}")
     @ResponseStatus(HttpStatus.OK)
-    public CommentListResponseDto getComment(@RequestBody @Valid CommentGetRequestDto commentGetRequestDto,
-                 @PageableDefault(size = PAGE_SIZE, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
-        return commentUseCase.getComment(commentGetRequestDto, pageable);
+    public CommentListResponseDto getComment(
+            @PathVariable long albumId,
+            @PathVariable long photoId,
+            @RequestParam(required = false, defaultValue = "0") long cursor,
+            @PageableDefault(size = PAGE_SIZE, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
+        return commentUseCase.getComment(albumId, photoId, cursor, pageable);
     }
 }

@@ -11,5 +11,5 @@ public interface CommentUseCase {
     void createComment(CommentCreateRequestDto commentCreateRequestDto);
     void editComment(CommentEditRequestDto commentEditRequestDto);
     void deleteComment(CommentDeleteRequestDto commentDeleteRequestDto);
-    CommentListResponseDto getComment(CommentGetRequestDto commentGetRequestDto, Pageable pageable);
+    CommentListResponseDto getComment(long albumId, long photoId, long cursor, Pageable pageable);
 }

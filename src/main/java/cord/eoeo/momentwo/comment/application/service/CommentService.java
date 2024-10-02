@@ -43,11 +43,11 @@ public class CommentService implements CommentUseCase {
 
     @Override
     @CheckAlbumAccessRules
-    public CommentListResponseDto getComment(CommentGetRequestDto commentGetRequestDto, Pageable pageable) {
+    public CommentListResponseDto getComment(long albumId, long photoId, long cursor, Pageable pageable) {
         return commentManager.commentGet(
-                commentGetRequestDto.getPhotoId(),
+                photoId,
                 pageable,
-                commentGetRequestDto.getCursorId()
+                cursor
         );
     }
 }
