@@ -27,8 +27,8 @@ public class PhotoLikeService implements PhotoLikeUseCase {
 
     @Override
     @CheckAlbumAccessRules
-    public PhotoLikesResponseDto getLikes(PhotoLikesRequestDto photoLikesRequestDto) {
+    public PhotoLikesResponseDto getLikes(long albumId, long photoId) {
         return new PhotoLikesResponseDto()
-                .toDo(photoLikesManager.getLikes(photoLikesRequestDto.getPhotoId()));
+                .toDo(photoLikesManager.getLikes(photoId));
     }
 }
