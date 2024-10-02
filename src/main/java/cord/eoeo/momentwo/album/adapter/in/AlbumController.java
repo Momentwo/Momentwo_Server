@@ -10,40 +10,42 @@ import javax.validation.Valid;
 
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/albums")
 public class AlbumController {
     private final AlbumUseCase albumUseCase;
 
     // 앨범 생성
-    @PostMapping("/albums/create")
+    @PostMapping("/create")
     @ResponseStatus(HttpStatus.OK)
     public void createAlbums(@RequestBody @Valid AlbumCreateRequestDto albumCreateRequestDto) {
         albumUseCase.createAlbums(albumCreateRequestDto);
     }
 
     // 앨범 수정
-    @PutMapping("/albums/edit/{id}")
+    @PutMapping("/edit")
     @ResponseStatus(HttpStatus.OK)
-    public void editAlbumsTitle(@PathVariable long id,
-                                @ModelAttribute @Valid AlbumTitleEditRequestDto albumTitleEditRequestDto) {
-        albumUseCase.editAlbumsTitle(id, albumTitleEditRequestDto);
+    public void editAlbumsTitle(@RequestBody @Valid AlbumTitleEditRequestDto albumTitleEditRequestDto) {
+        albumUseCase.editAlbumsTitle(albumTitleEditRequestDto);
     }
 
     // 앨범 삭제
-    @DeleteMapping("/albums/delete/{id}")
+    @DeleteMapping("/delete")
     @ResponseStatus(HttpStatus.OK)
-    public void deleteAlbums(@PathVariable long id) {
-        albumUseCase.deleteAlbums(id);
+    public void deleteAlbums(@ModelAttribute @Valid AlbumDeleteRequestDto albumDeleteRequestDto) {
+        albumUseCase.deleteAlbums(albumDeleteRequestDto);
     }
 
-    @GetMapping("/albums")
+    // 앨범 전체 목록 조회
+    @GetMapping()
     @ResponseStatus(HttpStatus.OK)
     public AlbumInfoListResponseDto getAlbums() {
         return albumUseCase.getAlbums();
     }
 
-    @GetMapping("/albums/rules")
+    // 앨범 개인 권한 요청
+    @GetMapping("/rules/{albumId}")
     @ResponseStatus(HttpStatus.OK)
-    public AlbumRulesResponseDto getAlbumsRules(@ModelAttribute @Valid AlbumRulesRequestDto albumRulesRequestDto) {
-        return albumUseCase.getAlbumsRules(albumRulesRequestDto);
+    public AlbumRulesResponseDto getAlbumsRules(@PathVariable long albumId) {
+        return albumUseCase.getAlbumsRules(albumId);
     }
 }
