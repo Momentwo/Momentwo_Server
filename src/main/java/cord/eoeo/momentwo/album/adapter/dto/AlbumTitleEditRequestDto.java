@@ -8,5 +8,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class AlbumTitleEditRequestDto {
+    private long albumId;
     private String editTitle;
 }
