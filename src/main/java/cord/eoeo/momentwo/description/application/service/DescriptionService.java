@@ -35,7 +35,7 @@ public class DescriptionService implements DescriptionUseCase {
 
     @Override
     @CheckAlbumAccessRules
-    public DescriptionResponseDto getDescription(DescriptionRequestDto descriptionRequestDto) {
-        return descriptionManager.getDescription(descriptionRequestDto);
+    public DescriptionResponseDto getDescription(long albumId, long photoId) {
+        return descriptionManager.getDescription(photoId);
     }
 }
