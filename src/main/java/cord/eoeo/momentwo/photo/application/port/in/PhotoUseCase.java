@@ -9,5 +9,5 @@ import org.springframework.data.domain.Pageable;
 public interface PhotoUseCase {
     void photoUpload(PhotoUploadRequestDto photoUploadRequestDto);
     void photoDelete(PhotoDeleteRequestDto photoDeleteRequestDto);
-    ImageViewListResponseDto photoView(PhotoViewRequestDto photoViewRequestDto, Pageable pageable);
+    ImageViewListResponseDto photoView(long albumId, long subAlbumId, long cursor, Pageable pageable);
 }

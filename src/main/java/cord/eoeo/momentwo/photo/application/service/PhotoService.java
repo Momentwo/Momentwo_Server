@@ -103,12 +103,12 @@ public class PhotoService implements PhotoUseCase {
     @Override
     @Transactional(readOnly = true)
     @CheckAlbumAccessRules
-    public ImageViewListResponseDto photoView(PhotoViewRequestDto photoViewRequestDto, Pageable pageable) {
+    public ImageViewListResponseDto photoView(long albumId, long subAlbumId, long cursor, Pageable pageable) {
         Page<Photo> photoList = photoPageRepository
                 .findQPhotoBySubAlbumIdCustomPaging(
-                        photoViewRequestDto.getSubAlbumId(),
+                        subAlbumId,
                         pageable,
-                        photoViewRequestDto.getCursor()
+                        cursor
                 );
         if(photoList.isEmpty()) {
             throw new NotFoundPhotoException();
