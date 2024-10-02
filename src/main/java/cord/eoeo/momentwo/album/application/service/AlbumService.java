@@ -62,16 +62,17 @@ public class AlbumService implements AlbumUseCase {
 
     @Transactional
     @Override
-    public void editAlbumsTitle(long id, AlbumTitleEditRequestDto albumTitleEditRequestDto) {
-        albumManager.albumEdit(getMemberInfo(id), albumTitleEditRequestDto.getEditTitle());
+    public void editAlbumsTitle(AlbumTitleEditRequestDto albumTitleEditRequestDto) {
+        albumManager.albumEdit(getMemberInfo(albumTitleEditRequestDto.getAlbumId()), albumTitleEditRequestDto.getEditTitle());
     }
 
     @Transactional
     @Override
-    public void deleteAlbums(long id) {
-        Member member = getMemberInfo(id);
+    public void deleteAlbums(AlbumDeleteRequestDto albumDeleteRequestDto) {
+        Member member = getMemberInfo(albumDeleteRequestDto.getAlbumId());
         // 관리자이면서 앨범 속 멤버가 한명 이상인 경우 예외
-        if(getAlbumInfo.isCheckAlbumAdmin(member) && !getAlbumInfo.isCheckAlbumOneMember(id)) {
+        if(getAlbumInfo.isCheckAlbumAdmin(member)
+                && !getAlbumInfo.isCheckAlbumOneMember(albumDeleteRequestDto.getAlbumId())) {
             throw new NotDeleteAlbumException();
         }
         albumManager.albumDelete(member);
@@ -91,8 +92,8 @@ public class AlbumService implements AlbumUseCase {
 
     @Override
     @Transactional(readOnly = true)
-    public AlbumRulesResponseDto getAlbumsRules(AlbumRulesRequestDto albumRulesRequestDto) {
-        return new AlbumRulesResponseDto().toDo(getMemberInfo(albumRulesRequestDto.getAlbumId()));
+    public AlbumRulesResponseDto getAlbumsRules(long albumId) {
+        return new AlbumRulesResponseDto().toDo(getMemberInfo(albumId));
     }
 
     @Transactional(readOnly = true)

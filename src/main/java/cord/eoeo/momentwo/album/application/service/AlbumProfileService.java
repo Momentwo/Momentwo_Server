@@ -1,5 +1,6 @@
 package cord.eoeo.momentwo.album.application.service;
 
+import cord.eoeo.momentwo.album.adapter.dto.AlbumProfileRequestDto;
 import cord.eoeo.momentwo.album.adapter.dto.AlbumProfileUploadRequestDto;
 import cord.eoeo.momentwo.album.adapter.dto.AlbumSubTitleEditRequestDto;
 import cord.eoeo.momentwo.album.application.port.in.AlbumProfileUseCase;
@@ -33,8 +34,8 @@ public class AlbumProfileService implements AlbumProfileUseCase {
 
     @Override
     @Transactional
-    public void profileDelete(long albumId) {
-        albumProfile.profileDelete(getMember(albumId));
+    public void profileDelete(AlbumProfileRequestDto albumProfileRequestDto) {
+        albumProfile.profileDelete(getMember(albumProfileRequestDto.getAlbumId()));
     }
 
     @Override
@@ -48,8 +49,8 @@ public class AlbumProfileService implements AlbumProfileUseCase {
 
     @Override
     @Transactional
-    public void albumSubTitleDelete(long albumId) {
-        albumProfile.albumSubTitleDelete(getMember(albumId));
+    public void albumSubTitleDelete(AlbumProfileRequestDto albumProfileRequestDto) {
+        albumProfile.albumSubTitleDelete(getMember(albumProfileRequestDto.getAlbumId()));
     }
 
     @Transactional(readOnly = true)

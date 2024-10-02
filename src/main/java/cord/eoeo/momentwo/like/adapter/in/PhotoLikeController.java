@@ -27,9 +27,12 @@ public class PhotoLikeController {
         photoLikeUseCase.undoLikes(photoLikesRequestDto);
     }
 
-    @GetMapping()
+    @GetMapping("/{albumId}/{photoId}")
     @ResponseStatus(HttpStatus.OK)
-    public PhotoLikesResponseDto getLikes(@RequestBody @Valid PhotoLikesRequestDto photoLikesRequestDto) {
-        return photoLikeUseCase.getLikes(photoLikesRequestDto);
+    public PhotoLikesResponseDto getLikes(
+            @PathVariable long albumId,
+            @PathVariable long photoId
+    ) {
+        return photoLikeUseCase.getLikes(albumId, photoId);
     }
 }

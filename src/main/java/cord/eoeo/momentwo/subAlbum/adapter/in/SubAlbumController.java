@@ -13,33 +13,33 @@ import javax.validation.Valid;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/album")
+@RequestMapping("/album/sub")
 public class SubAlbumController {
     private final SubAlbumUseCase subAlbumUseCase;
 
     // 서브앨범 생성
-    @PostMapping("/sub/create")
+    @PostMapping("/create")
     @ResponseStatus(HttpStatus.OK)
     public void createSubAlbum(@RequestBody @Valid SubAlbumCreateRequestDto subAlbumCreateRequestDto) {
         subAlbumUseCase.createSubAlbum(subAlbumCreateRequestDto);
     }
 
     // 서브앨범 조회
-    @GetMapping("/sub/{albumId}")
+    @GetMapping("/{albumId}")
     @ResponseStatus(HttpStatus.OK)
     public SubAlbumListResponseDto getSubAlbums(@PathVariable long albumId) {
         return subAlbumUseCase.getSubAlbums(albumId);
     }
 
     // 서브앨범 수정
-    @PutMapping("/sub/edit")
+    @PutMapping("/edit")
     @ResponseStatus(HttpStatus.OK)
     public void editSubAlbumTitle(@RequestBody @Valid SubAlbumEditTitleRequestDto subAlbumEditTitleRequestDto) {
         subAlbumUseCase.editSubAlbumTitle(subAlbumEditTitleRequestDto);
     }
 
     // 서브앨범 삭제
-    @DeleteMapping("/sub/delete")
+    @DeleteMapping("/delete")
     @ResponseStatus(HttpStatus.OK)
     public void deleteSubAlbums(@RequestBody @Valid SubAlbumDeleteRequestDto subAlbumDeleteRequestDto) {
         subAlbumUseCase.deleteSubAlbums(subAlbumDeleteRequestDto);

@@ -10,34 +10,35 @@ import javax.validation.Valid;
 
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/albums")
 public class AlbumProfileController {
     private final AlbumProfileUseCase albumProfileUseCase;
 
     // 프로필 업로드 (변경)
-    @PutMapping("/albums/profile/image/upload")
+    @PutMapping("/profile/image/upload")
     @ResponseStatus(HttpStatus.OK)
     public void profileUpload(@ModelAttribute @Valid AlbumProfileUploadRequestDto uploadRequestDto) {
         albumProfileUseCase.profileUpload(uploadRequestDto);
     }
 
     // 프로필 삭제
-    @DeleteMapping("/albums/profile/image/{albumId}")
+    @DeleteMapping("/profile/image")
     @ResponseStatus(HttpStatus.OK)
-    public void profileDelete(@PathVariable long albumId) {
-        albumProfileUseCase.profileDelete(albumId);
+    public void profileDelete(@ModelAttribute @Valid AlbumProfileRequestDto albumProfileRequestDto) {
+        albumProfileUseCase.profileDelete(albumProfileRequestDto);
     }
 
     // 서브 타이틀 수정
-    @PutMapping("/albums/subtitle")
+    @PutMapping("/subtitle")
     @ResponseStatus(HttpStatus.OK)
     public void albumSubTitleEdit(@RequestBody @Valid AlbumSubTitleEditRequestDto subTitleEditRequestDto) {
         albumProfileUseCase.albumSubTitleEdit(subTitleEditRequestDto);
     }
 
     // 서브 타이틀 삭제
-    @DeleteMapping("/albums/subtitle/{albumId}")
+    @DeleteMapping("/subtitle")
     @ResponseStatus(HttpStatus.OK)
-    public void albumSubTitleDelete(@PathVariable long albumId) {
-        albumProfileUseCase.albumSubTitleDelete(albumId);
+    public void albumSubTitleDelete(@ModelAttribute @Valid AlbumProfileRequestDto albumProfileRequestDto) {
+        albumProfileUseCase.albumSubTitleDelete(albumProfileRequestDto);
     }
 }

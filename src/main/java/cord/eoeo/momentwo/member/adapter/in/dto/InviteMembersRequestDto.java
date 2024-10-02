@@ -11,6 +11,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class InviteMembersRequestDto {
+    private long albumId;
     @NotEmpty(message = "초대할 유저 닉네임을 하나이상 입력해주세요.")
     private List<String> inviteNicknames;
 }

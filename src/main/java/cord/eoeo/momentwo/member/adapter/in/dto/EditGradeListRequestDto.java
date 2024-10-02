@@ -11,6 +11,7 @@ import java.util.HashMap;
 @AllArgsConstructor
 @NoArgsConstructor
 public class EditGradeListRequestDto {
+    private long albumId;
     @NotEmpty(message = "권한 변경을 위한 입력이 올바르지 않습니다.")
     private HashMap<String, String> editMemberList;
 }

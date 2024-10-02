@@ -71,8 +71,8 @@ public class DescriptionManagerImpl implements DescriptionManager {
 
     @Override
     @Transactional(readOnly = true)
-    public DescriptionResponseDto getDescription(DescriptionRequestDto descriptionRequestDto) {
-        Photo photo = getPhoto(descriptionRequestDto.getPhotoId());
+    public DescriptionResponseDto getDescription(long photoId) {
+        Photo photo = photoRepository.findById(photoId).orElseThrow(NotFoundPhotoException::new);
 
         Description description = descriptionRepository.findByPhoto(photo)
                 .orElseThrow(NotFoundDescriptionException::new);

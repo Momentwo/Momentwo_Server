@@ -9,5 +9,5 @@ public interface DescriptionUseCase {
     void createDescription(DescriptionCreateRequestDto descriptionCreateRequestDto);
     void editDescription(DescriptionEditRequestDto descriptionEditRequestDto);
     void deleteDescription(DescriptionRequestDto descriptionRequestDto);
-    DescriptionResponseDto getDescription(DescriptionRequestDto descriptionRequestDto);
+    DescriptionResponseDto getDescription(long albumId, long photoId);
 }

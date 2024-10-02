@@ -9,5 +9,5 @@ public interface DescriptionManager {
     void createDescription(DescriptionCreateRequestDto descriptionCreateRequestDto);
     void editDescription(DescriptionEditRequestDto descriptionEditRequestDto);
     void deleteDescription(DescriptionRequestDto descriptionRequestDto);
-    DescriptionResponseDto getDescription(DescriptionRequestDto descriptionRequestDto);
+    DescriptionResponseDto getDescription(long photoId);
 }

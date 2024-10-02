@@ -10,5 +10,6 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class KickMembersRequestDto {
+    private long albumId;
     private List<String> kickMemberList;
 }

@@ -35,9 +35,12 @@ public class DescriptionController {
         descriptionUseCase.deleteDescription(descriptionRequestDto);
     }
 
-    @GetMapping()
+    @GetMapping("/{albumId}/{photoId}")
     @ResponseStatus(HttpStatus.OK)
-    public DescriptionResponseDto getDescription(@RequestBody @Valid DescriptionRequestDto descriptionRequestDto) {
-        return descriptionUseCase.getDescription(descriptionRequestDto);
+    public DescriptionResponseDto getDescription(
+            @PathVariable long albumId,
+            @PathVariable long photoId
+    ) {
+        return descriptionUseCase.getDescription(albumId, photoId);
     }
 }

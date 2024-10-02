@@ -7,7 +7,6 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class AlbumTitleEditRequestDto {
+public class AlbumDeleteRequestDto {
     private long albumId;
-    private String editTitle;
 }

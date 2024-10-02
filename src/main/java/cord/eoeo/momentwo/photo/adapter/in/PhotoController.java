@@ -36,10 +36,13 @@ public class PhotoController {
     }
 
     // 조회 (이미지 보기)
-    @GetMapping("/view")
+    @GetMapping("/view/{albumId}/{subAlbumId}")
     @ResponseStatus(HttpStatus.OK)
-    public ImageViewListResponseDto photoView(@RequestBody @Valid PhotoViewRequestDto photoViewRequestDto,
-                  @PageableDefault(size = PAGE_SIZE, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
-        return photoUseCase.photoView(photoViewRequestDto, pageable);
+    public ImageViewListResponseDto photoView(
+            @PathVariable long albumId,
+            @PathVariable long subAlbumId,
+            @RequestParam(required = false, defaultValue = "0") long cursor,
+            @PageableDefault(size = PAGE_SIZE, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
+        return photoUseCase.photoView(albumId, subAlbumId, cursor, pageable);
     }
 }
