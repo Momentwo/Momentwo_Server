@@ -9,4 +9,5 @@ public interface ImageManager {
     CompletableFuture<String> imageUpload(MultipartFile image, String path);
     CompletableFuture<Void> imageDelete(String filename);
     CompletableFuture<URL> imageFileSearch(String filename);
+    CompletableFuture<MultipartFile> makeMultipartFileByS3Image(String filename);
 }
