@@ -5,6 +5,7 @@ import cord.eoeo.momentwo.album.application.aop.annotation.CheckAlbumAdmin;
 import cord.eoeo.momentwo.album.application.port.out.AlbumManager;
 import cord.eoeo.momentwo.album.application.port.out.AlbumRepository;
 import cord.eoeo.momentwo.album.domain.Album;
+import cord.eoeo.momentwo.config.s3.S3Manager;
 import cord.eoeo.momentwo.member.application.port.out.AlbumMemberInvite;
 import cord.eoeo.momentwo.member.domain.Member;
 import cord.eoeo.momentwo.member.domain.MemberAlbumGrade;
@@ -16,11 +17,11 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 public class AlbumManagerImpl implements AlbumManager {
-    private static final String BASE_IMAGE = "";
     private static final String SUB_TITLE = "";
 
     private final AlbumMemberInvite albumMemberInvite;
     private final AlbumRepository albumRepository;
+    private final S3Manager s3Manager;
 
     @Override
     @Transactional(readOnly = true)
@@ -63,7 +64,7 @@ public class AlbumManagerImpl implements AlbumManager {
 
     @Override
     public String getBaseImage() {
-        return BASE_IMAGE;
+        return s3Manager.getProfileBaseImage();
     }
 
     @Override

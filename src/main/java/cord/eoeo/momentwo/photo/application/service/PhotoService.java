@@ -2,6 +2,7 @@ package cord.eoeo.momentwo.photo.application.service;
 
 import cord.eoeo.momentwo.album.application.port.out.AlbumManager;
 import cord.eoeo.momentwo.album.domain.Album;
+import cord.eoeo.momentwo.config.s3.S3Manager;
 import cord.eoeo.momentwo.image.adapter.dto.ImageViewListResponseDto;
 import cord.eoeo.momentwo.image.application.port.out.ImageManager;
 import cord.eoeo.momentwo.photo.adapter.dto.PhotoDeleteRequestDto;
@@ -23,7 +24,6 @@ import cord.eoeo.momentwo.user.application.port.out.GetAuthentication;
 import cord.eoeo.momentwo.user.application.port.out.UserRepository;
 import cord.eoeo.momentwo.user.domain.User;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -43,9 +43,7 @@ public class PhotoService implements PhotoUseCase {
     private final GetAuthentication getAuthentication;
     private final SubAlbumManager subAlbumManager;
     private final AlbumManager albumManager;
-
-    @Value("${cloud.aws.s3.images-path}")
-    private String imagesPath;
+    private final S3Manager s3Manager;
 
     @Override
     @Transactional
@@ -65,7 +63,7 @@ public class PhotoService implements PhotoUseCase {
         try {
             // 이미지 이름 변환 UUID
             String newFilename = imageManager
-                    .imageUpload(photoUploadRequestDto.getImages(), imagesPath)
+                    .imageUpload(photoUploadRequestDto.getImages(), s3Manager.getImagePath())
                     .get();
 
             // 타입 정보 찾기
@@ -96,7 +94,7 @@ public class PhotoService implements PhotoUseCase {
 
         // 이미지 저장소 삭제
         photoDeleteRequestDto.getImagesUrl().forEach(image -> {
-            imageManager.imageDelete(imagesPath + image).join();
+            imageManager.imageDelete(s3Manager.getImagePath() + image).join();
         });
     }
 
@@ -117,7 +115,7 @@ public class PhotoService implements PhotoUseCase {
         List<URL> imagesUrl = new ArrayList<>();
 
         photoList.forEach(photo -> {
-            imagesUrl.add(imageManager.imageFileSearch(imagesPath + photo.getImageName()).join());
+            imagesUrl.add(imageManager.imageFileSearch(s3Manager.getImagePath() + photo.getImageName()).join());
         });
 
         return new ImageViewListResponseDto().toDo(photoList, imagesUrl);

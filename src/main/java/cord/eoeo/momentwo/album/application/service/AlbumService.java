@@ -7,6 +7,8 @@ import cord.eoeo.momentwo.album.advice.exception.NotFoundAlbumException;
 import cord.eoeo.momentwo.album.application.port.in.AlbumUseCase;
 import cord.eoeo.momentwo.album.application.port.out.AlbumManager;
 import cord.eoeo.momentwo.album.domain.Album;
+import cord.eoeo.momentwo.config.s3.S3Manager;
+import cord.eoeo.momentwo.image.application.port.out.ImageManager;
 import cord.eoeo.momentwo.member.application.port.out.AlbumMemberRepository;
 import cord.eoeo.momentwo.member.application.port.out.GetAlbumInfo;
 import cord.eoeo.momentwo.member.domain.Member;
@@ -29,6 +31,8 @@ public class AlbumService implements AlbumUseCase {
     private final GetAlbumInfo getAlbumInfo;
     private final AlbumManager albumManager;
     private final AlbumMemberRepository albumMemberRepository;
+    private final ImageManager imageManager;
+    private final S3Manager s3Manager;
 
     @Transactional
     @Override
@@ -41,11 +45,18 @@ public class AlbumService implements AlbumUseCase {
             throw new NotCreateAlbumException();
         }
 
+        // S3 업로드
+        String baseImage = imageManager.imageUpload(
+                imageManager.makeMultipartFileByS3Image(
+                        s3Manager.getProfileBaseImagePath() + albumManager.getBaseImage()).join(),
+                s3Manager.getProfileAlbumPath()
+        ).join();
+
         // 앨범 생성
         Album newAlbum = new Album(
                 albumCreateRequestDto.getCreateTitle(),
                 albumManager.getSubTitle(),
-                albumManager.getBaseImage()
+                baseImage
         );
         albumManager.albumSave(newAlbum);
 
