@@ -1,25 +1,22 @@
 package cord.eoeo.momentwo.image.adapter.out;
 
-import cord.eoeo.momentwo.album.application.port.out.AlbumManager;
-import cord.eoeo.momentwo.image.adapter.dto.ImageDownLoadResponseDto;
-import cord.eoeo.momentwo.image.advice.exception.ImageDownloadFailException;
-import cord.eoeo.momentwo.image.advice.exception.NotFoundFileImageException;
 import cord.eoeo.momentwo.image.advice.exception.NotFoundImageException;
 import cord.eoeo.momentwo.image.application.port.out.ImageManager;
-import cord.eoeo.momentwo.image.path.ImagePath;
 import lombok.RequiredArgsConstructor;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.UrlResource;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
+import software.amazon.awssdk.core.sync.RequestBody;
+import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
+import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import java.util.Objects;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
@@ -27,7 +24,10 @@ import java.util.concurrent.CompletableFuture;
 @Component
 @RequiredArgsConstructor
 public class ImageManagerImpl implements ImageManager {
-    private final AlbumManager albumManager;
+    private final S3Client s3Client;
+
+    @Value("${cloud.aws.s3.bucket}")
+    private String bucketName;
 
     @Override
     @Async
@@ -41,19 +41,14 @@ public class ImageManagerImpl implements ImageManager {
                 // UUID 를 통한 고유한 이름 생성
                 String newFilename = UUID.randomUUID() + fileExtension;
 
-                // 서버 이미지 저장 경로
-                Path uploadPath = Paths.get(path);
+                // s3 이미지 저장 경로
+                String key = path + newFilename;
 
-                // 경로가 없다면 경로 생성
-                if (!Files.exists(uploadPath)) {
-                    Files.createDirectories(uploadPath);
-                }
-
-                // 해당 이미지를 저장 경로에 복사
+                // 해당 이미지를 s3 저장소에 저장
                 try (InputStream inputStream = image.getInputStream()) {
-                    Path filePath = uploadPath.resolve(newFilename);
-                    Files.copy(inputStream, filePath, StandardCopyOption.REPLACE_EXISTING);
+                    uploadFile(key, inputStream, image.getSize(), image.getContentType());
                 }
+
                 return newFilename;
             } catch (Exception e) {
                 throw new NotFoundImageException();
@@ -62,64 +57,28 @@ public class ImageManagerImpl implements ImageManager {
     }
 
     @Override
-    public void imageDelete(String path, String imageUrl) {
-        if(imageUrl != null && !imageUrl.isEmpty()) {
-            deleteImage(Paths.get(path, imageUrl));
-        }
-    }
-
-    @Override
     @Async
-    public CompletableFuture<ImageDownLoadResponseDto> imageDownload(Path path) {
-        return CompletableFuture.supplyAsync(() -> {
-            try {
-                Resource resource = new UrlResource(path.toUri());
+    public CompletableFuture<Void> imageDelete(String filename) {
+        return CompletableFuture.runAsync(() -> {
+            // S3에서 삭제 요청
+            DeleteObjectRequest deleteRequest = DeleteObjectRequest.builder()
+                    .bucket(bucketName)
+                    .key(filename) // 삭제할 파일의 키
+                    .build();
 
-                // 파일이 존재하지 않으면 해당 리턴
-                if (!resource.exists()) {
-                    throw new NotFoundFileImageException();
-                }
-
-                return new ImageDownLoadResponseDto().toDo(resource.getFilename());
-            } catch (Exception e) {
-                throw new ImageDownloadFailException();
-            }
+            // 객체 삭제
+            s3Client.deleteObject(deleteRequest);
         });
     }
 
     @Override
     @Async
-    public CompletableFuture<Resource> profileFileSearch(String filename) {
+    public CompletableFuture<URL> imageFileSearch(String filename) {
         return CompletableFuture.supplyAsync(() -> {
             try {
-                Path path = Paths.get(ImagePath.SERVER_PROFILE_PATH.getPath()).resolve(filename).normalize();
+                // 객체를 가져오고 URL을 생성
+                return s3Client.utilities().getUrl(b -> b.bucket(bucketName).key(filename));
 
-                Resource resource = new UrlResource(path.toUri());
-
-                // 이미지가 저장되어 있지 않다면 기본 이미지로 반환
-                if(!resource.exists()) {
-                    return new UrlResource(
-                            Paths.get(ImagePath.SERVER_PROFILE_PATH.getPath())
-                                    .resolve(albumManager.getBaseImage())
-                                    .normalize().toUri()
-                    );
-                }
-
-                return resource;
-            } catch (Exception e) {
-                throw new NotFoundImageException();
-            }
-        });
-    }
-
-    @Override
-    @Async
-    public CompletableFuture<Resource> imageFileSearch(String filename) {
-        return CompletableFuture.supplyAsync(() -> {
-            try {
-                Path path = Paths.get(ImagePath.SERVER_IMAGE_PATH.getPath()).resolve(filename).normalize();
-
-                return new UrlResource(path.toUri());
             } catch (Exception e) {
                 throw new NotFoundImageException();
             }
@@ -132,5 +91,16 @@ public class ImageManagerImpl implements ImageManager {
         } catch (IOException e) {
             throw new NotFoundImageException();
         }
+    }
+
+    private void uploadFile(String key, InputStream inputStream, long len, String type) {
+        PutObjectRequest putObjectRequest = PutObjectRequest.builder()
+                .bucket(bucketName)
+                .key(key)
+                .contentLength(len)
+                .contentType(type)
+                .build();
+
+        s3Client.putObject(putObjectRequest, RequestBody.fromInputStream(inputStream, len));
     }
 }
