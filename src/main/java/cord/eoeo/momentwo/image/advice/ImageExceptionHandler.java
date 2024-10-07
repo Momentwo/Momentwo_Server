@@ -1,6 +1,5 @@
 package cord.eoeo.momentwo.image.advice;
 
-import cord.eoeo.momentwo.image.advice.exception.ImageDownloadFailException;
 import cord.eoeo.momentwo.image.advice.exception.NotFoundFileImageException;
 import cord.eoeo.momentwo.image.advice.exception.NotFoundImageException;
 import org.springframework.http.HttpStatus;
@@ -14,12 +13,6 @@ public class ImageExceptionHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public String notFoundImageException() {
         return "이미지를 찾을 수 없습니다.";
-    }
-
-    @ExceptionHandler(ImageDownloadFailException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public String imageDownloadFailException() {
-        return "이미지 다운로드 실패";
     }
 
     @ExceptionHandler(NotFoundFileImageException.class)
