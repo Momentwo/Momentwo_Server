@@ -7,9 +7,9 @@ import cord.eoeo.momentwo.album.application.port.out.AlbumRepository;
 import cord.eoeo.momentwo.album.domain.Album;
 import cord.eoeo.momentwo.image.advice.exception.NotFoundImageException;
 import cord.eoeo.momentwo.image.application.port.out.ImageManager;
-import cord.eoeo.momentwo.image.path.ImagePath;
 import cord.eoeo.momentwo.member.domain.Member;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -23,6 +23,9 @@ public class AlbumProfileImpl implements AlbumProfile {
     private final AlbumManager albumManager;
     private final ImageManager imageManager;
 
+    @Value("${cloud.aws.s3.profiles-albums-path}")
+    private String profilesPath;
+
     @Override
     @Transactional
     @CheckAlbumAdmin
@@ -31,9 +34,9 @@ public class AlbumProfileImpl implements AlbumProfile {
             Album album = member.getAlbum();
 
             // 이미지 업로드 후 저장된 이름 가져오기
-            String newFilename = imageManager.imageUpload(image, ImagePath.SERVER_PROFILE_PATH.getPath()).get();
+            String newFilename = imageManager.imageUpload(image, profilesPath).get();
             // 이미지 삭제(현재) -> 기존 이미지가 없다면 업로드한 이미지만 저장, 기존 이미지가 있다면 삭제 진행
-            imageManager.imageDelete(ImagePath.SERVER_PROFILE_PATH.getPath(), album.getProfileFilename());
+            imageManager.imageDelete(profilesPath + album.getProfileFilename()).join();
 
             // 데이터 베이스에 이름 저장
             album.setProfileFilename(newFilename);
