@@ -1,16 +1,13 @@
 package cord.eoeo.momentwo.image.application.port.out;
 
-import cord.eoeo.momentwo.image.adapter.dto.ImageDownLoadResponseDto;
-import org.springframework.core.io.Resource;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.nio.file.Path;
+import java.net.URL;
 import java.util.concurrent.CompletableFuture;
 
 public interface ImageManager {
     CompletableFuture<String> imageUpload(MultipartFile image, String path);
-    void imageDelete(String Path, String imageUrl);
-    CompletableFuture<ImageDownLoadResponseDto> imageDownload(Path path);
-    CompletableFuture<Resource> profileFileSearch(String filename);
-    CompletableFuture<Resource> imageFileSearch(String filename);
+    CompletableFuture<Void> imageDelete(String filename);
+    CompletableFuture<URL> imageFileSearch(String filename);
+    CompletableFuture<MultipartFile> makeMultipartFileByS3Image(String filename);
 }

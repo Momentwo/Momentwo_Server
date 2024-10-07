@@ -12,7 +12,7 @@ public class ImageViewResponseDto {
     private long id;
     private String imageUrl;
 
-    public ImageViewResponseDto toDo(Photo photo) {
-        return new ImageViewResponseDto(photo.getId(), photo.getImageName());
+    public ImageViewResponseDto toDo(Photo photo, String imageUrl) {
+        return new ImageViewResponseDto(photo.getId(), imageUrl);
     }
 }
