@@ -6,8 +6,10 @@ import cord.eoeo.momentwo.subAlbum.application.port.out.SubAlbumManager;
 import cord.eoeo.momentwo.subAlbum.application.port.out.SubAlbumRepository;
 import cord.eoeo.momentwo.subAlbum.domain.SubAlbum;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+import software.amazon.awssdk.services.s3.S3Client;
 
 import java.util.List;
 
@@ -15,6 +17,13 @@ import java.util.List;
 @RequiredArgsConstructor
 public class SubAlbumManagerImpl implements SubAlbumManager {
     private final SubAlbumRepository subAlbumRepository;
+    private final S3Client s3Client;
+
+    @Value("${cloud.aws.s3.images-path}")
+    private String imagesPath;
+
+    @Value("${cloud.aws.s3.bucket}")
+    private String bucketName;
 
     @Override
     @Transactional(readOnly = true)
@@ -26,7 +35,7 @@ public class SubAlbumManagerImpl implements SubAlbumManager {
     @Transactional(readOnly = true)
     public SubAlbumListResponseDto getSubAlbumList(long albumId) {
         List<SubAlbum> subAlbumList = subAlbumRepository.getSubAlbumListByAlbumId(albumId);
-        return new SubAlbumListResponseDto().toDo(subAlbumList);
+        return new SubAlbumListResponseDto().toDo(subAlbumList, s3Client, bucketName, imagesPath);
     }
 
     @Override
