@@ -28,7 +28,7 @@ public class AlbumProfileService implements AlbumProfileUseCase {
     public void profileUpload(AlbumProfileUploadRequestDto uploadRequestDto) {
         albumProfile.profileUpload(
                 getMember(uploadRequestDto.getAlbumId()),
-                uploadRequestDto.getProfileImage()
+                uploadRequestDto.getFilename()
         );
     }
 
