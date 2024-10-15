@@ -12,7 +12,6 @@ import cord.eoeo.momentwo.member.domain.Member;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
 
@@ -27,17 +26,15 @@ public class AlbumProfileImpl implements AlbumProfile {
     @Override
     @Transactional
     @CheckAlbumAdmin
-    public void profileUpload(Member member, MultipartFile image) {
+    public void profileUpload(Member member, String filename) {
         try {
             Album album = member.getAlbum();
 
-            // 이미지 업로드 후 저장된 이름 가져오기
-            String newFilename = imageManager.imageUpload(image, s3Manager.getProfileAlbumPath()).get();
             // 이미지 삭제(현재) -> 기존 이미지가 없다면 업로드한 이미지만 저장, 기존 이미지가 있다면 삭제 진행
             imageManager.imageDelete(s3Manager.getProfileAlbumPath() + album.getProfileFilename()).join();
 
             // 데이터 베이스에 이름 저장
-            album.setProfileFilename(newFilename);
+            album.setProfileFilename(filename);
             albumRepository.save(album);
         } catch (Exception e) {
             throw new NotFoundImageException();
