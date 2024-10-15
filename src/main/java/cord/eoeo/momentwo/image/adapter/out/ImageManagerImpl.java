@@ -7,11 +7,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
-import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
 import software.amazon.awssdk.services.s3.model.GetObjectRequest;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
+import software.amazon.awssdk.services.s3.presigner.S3Presigner;
+import software.amazon.awssdk.services.s3.presigner.model.PresignedPutObjectRequest;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -19,7 +20,7 @@ import java.io.InputStream;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Objects;
+import java.time.Duration;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
@@ -28,32 +29,25 @@ import java.util.concurrent.CompletableFuture;
 public class ImageManagerImpl implements ImageManager {
     private final S3Client s3Client;
     private final S3Manager s3Manager;
+    private final S3Presigner s3Presigner;
+    private final int EXPIRATION_TIME = 10;
 
     @Override
-    @Async
-    public CompletableFuture<String> imageUpload(MultipartFile image, String path) {
-        return CompletableFuture.supplyAsync(() -> {
-            try {
-                String originalFilename = image.getOriginalFilename();
-                String fileExtension = Objects.requireNonNull(originalFilename)
-                        .substring(originalFilename.lastIndexOf("."));
+    public String getPresignedUrl(String imageExtension, String path) {
+        // UUID 를 통한 고유한 이름 생성
+        String newFilename = UUID.randomUUID() + imageExtension;
+        // s3 이미지 저장 경로
+        String key = path + newFilename;
+        // s3 요청 정보
+        PutObjectRequest objectRequest = uploadFile(key, imageExtension);
 
-                // UUID 를 통한 고유한 이름 생성
-                String newFilename = UUID.randomUUID() + fileExtension;
+        PresignedPutObjectRequest presignedPutObjectRequest = s3Presigner.presignPutObject(
+                presignedRequest ->
+                        presignedRequest.putObjectRequest(objectRequest)
+                                .signatureDuration(Duration.ofMinutes(EXPIRATION_TIME))
+        );
 
-                // s3 이미지 저장 경로
-                String key = path + newFilename;
-
-                // 해당 이미지를 s3 저장소에 저장
-                try (InputStream inputStream = image.getInputStream()) {
-                    uploadFile(key, inputStream, image.getSize(), image.getContentType());
-                }
-
-                return newFilename;
-            } catch (Exception e) {
-                throw new NotFoundImageException();
-            }
-        });
+        return presignedPutObjectRequest.url().toString();
     }
 
     @Override
@@ -127,14 +121,11 @@ public class ImageManagerImpl implements ImageManager {
         }
     }
 
-    private void uploadFile(String key, InputStream inputStream, long len, String type) {
-        PutObjectRequest putObjectRequest = PutObjectRequest.builder()
+    private PutObjectRequest uploadFile(String key, String type) {
+        return PutObjectRequest.builder()
                 .bucket(s3Manager.getBucketName())
                 .key(key)
-                .contentLength(len)
                 .contentType(type)
                 .build();
-
-        s3Client.putObject(putObjectRequest, RequestBody.fromInputStream(inputStream, len));
     }
 }

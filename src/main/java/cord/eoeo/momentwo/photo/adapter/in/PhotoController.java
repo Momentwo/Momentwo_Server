@@ -3,7 +3,6 @@ package cord.eoeo.momentwo.photo.adapter.in;
 import cord.eoeo.momentwo.image.adapter.dto.ImageViewListResponseDto;
 import cord.eoeo.momentwo.photo.adapter.dto.PhotoDeleteRequestDto;
 import cord.eoeo.momentwo.photo.adapter.dto.PhotoUploadRequestDto;
-import cord.eoeo.momentwo.photo.adapter.dto.PhotoViewRequestDto;
 import cord.eoeo.momentwo.photo.application.port.in.PhotoUseCase;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -24,7 +23,7 @@ public class PhotoController {
     // 업로드
     @PostMapping("/upload")
     @ResponseStatus(HttpStatus.OK)
-    public void photoUpload(@ModelAttribute @Valid PhotoUploadRequestDto photoUploadRequestDto) {
+    public void photoUpload(@RequestBody @Valid PhotoUploadRequestDto photoUploadRequestDto) {
         photoUseCase.photoUpload(photoUploadRequestDto);
     }
 
