@@ -14,10 +14,7 @@ plugins {
 
 group = 'cord.eoeo'
 version = '0.0.1-SNAPSHOT'
-
-java {
-    sourceCompatibility = '22'
-}
+sourceCompatibility = '11'
 
 configurations {
     compileOnly {
@@ -51,6 +48,20 @@ dependencies {
     // queryDsl
     implementation "com.querydsl:querydsl-jpa:${queryDslVersion}"
     implementation "com.querydsl:querydsl-apt:${queryDslVersion}"
+
+    // elastic search
+    implementation 'org.springframework.boot:spring-boot-starter-data-elasticsearch'
+    implementation 'org.springframework.data:spring-data-elasticsearch:4.4.2'
+    implementation 'jakarta.json:jakarta.json-api:2.0.1'
+    implementation platform('com.fasterxml.jackson:jackson-bom:2.13.4')
+    implementation 'com.fasterxml.jackson.core:jackson-databind'
+    implementation 'com.fasterxml.jackson.core:jackson-annotations'
+    implementation 'com.fasterxml.jackson.core:jackson-core'
+
+    // s3
+    implementation 'software.amazon.awssdk:s3:2.20.0'
+    implementation 'software.amazon.awssdk:auth:2.20.0' // 인증 관련 의존성
+    implementation 'software.amazon.awssdk:regions:2.20.0' // 지역 설정 관련 의존성
 }
 
 tasks.named('test') {

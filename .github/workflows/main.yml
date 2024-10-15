@@ -1,0 +1,63 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main  # main 브랜치로의 푸시 이벤트에 대해 트리거
+
+jobs:
+  build:
+    runs-on: ubuntu-latest  # 사용할 운영 체제
+
+    steps:
+      - name: Set up SSH key
+        run: |
+          mkdir -p ~/.ssh  # .ssh 폴더 생성
+          echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/ec2_key.pem  # SSH 키를 .ssh 디렉토리에 저장
+          chmod 600 ~/.ssh/ec2_key.pem  # 권한 설정
+      - name: Add EC2 host to known_hosts
+        run: |
+          ssh-keyscan -H ${{ secrets.EC2_IP_ADDRESS }} >> ~/.ssh/known_hosts
+      - name: Deploy to AWS EC2
+        run: |
+          ssh -i ~/.ssh/ec2_key.pem ubuntu@${{ secrets.EC2_IP_ADDRESS }} << 'EOF'
+    
+          echo "1. Changing directory to ~/momentwo/Momentwo_Server"
+          cd ~/momentwo/Momentwo_Server
+          
+          echo "2. Pulling latest code from develop branch"
+          git pull origin develop
+
+          echo "3. Stopping Momentwo-0.0.1-SNAPSHOT.jar"
+          pkill -f 'Momentwo-0.0.1-SNAPSHOT.jar' || true
+          
+          echo "4. build"
+          ./gradlew build -x test
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+
+    steps:
+      - name: Depoly Set up SSH key
+        run: |
+          mkdir -p ~/.ssh  # .ssh 폴더 생성
+          echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/ec2_key.pem  # SSH 키를 .ssh 디렉토리에 저장
+          chmod 600 ~/.ssh/ec2_key.pem  # 권한 설정
+          
+      - name: Depoly Add EC2 host to known_hosts
+        run: |
+          ssh-keyscan -H ${{ secrets.EC2_IP_ADDRESS }} >> ~/.ssh/known_hosts
+          
+      - name: Depoly run project
+        run: |
+          ssh -i ~/.ssh/ec2_key.pem ubuntu@${{ secrets.EC2_IP_ADDRESS }} << 'EOF'
+          echo "5. cd Momentwo_Server"
+          cd ~/momentwo/Momentwo_Server/build/libs
+          
+          echo "6. Starting the application with the new build"
+          nohup java -jar Momentwo-0.0.1-SNAPSHOT.jar > logfile.log 2>&1 &
+          
+          echo "Deployment complete!"
+      
+          EOF
