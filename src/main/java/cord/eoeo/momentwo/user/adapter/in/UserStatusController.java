@@ -1,7 +1,6 @@
 package cord.eoeo.momentwo.user.adapter.in;
 
 import cord.eoeo.momentwo.config.security.jwt.adapter.out.TokenResponseDto;
-import cord.eoeo.momentwo.user.adapter.dto.in.RefreshTokenRequestDto;
 import cord.eoeo.momentwo.user.adapter.dto.in.SignOutRequestDto;
 import cord.eoeo.momentwo.user.adapter.dto.in.UserLoginRequestDto;
 import cord.eoeo.momentwo.user.application.port.in.UserStatusUseCase;
@@ -9,20 +8,27 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import java.util.concurrent.CompletableFuture;
 
 @RestController
 @RequiredArgsConstructor
 public class UserStatusController {
+
+    private final String AUTHENTICATION_KEY = "Authorization";
+
+    private final String REFRESH_KEY = "Refresh";
 
     private final UserStatusUseCase userStatusUseCase;
 
     // 로그인
     @PostMapping("/signin")
     @ResponseStatus(HttpStatus.OK)
-    public CompletableFuture<TokenResponseDto> signIn(@RequestBody @Valid UserLoginRequestDto userLoginRequestDto) {
-        return userStatusUseCase.signIn(userLoginRequestDto);
+    public void signIn(@RequestBody @Valid UserLoginRequestDto userLoginRequestDto,
+                       HttpServletResponse httpServletResponse) {
+        TokenResponseDto tokenResponseDto = userStatusUseCase.signIn(userLoginRequestDto).join();
+        httpServletResponse.setHeader(AUTHENTICATION_KEY, tokenResponseDto.getAccessToken());
+        httpServletResponse.setHeader(REFRESH_KEY, tokenResponseDto.getRefreshToken());
     }
 
     // 로그아웃
@@ -38,12 +44,5 @@ public class UserStatusController {
     @ResponseStatus(HttpStatus.OK)
     public void signOut(@ModelAttribute @Valid SignOutRequestDto signOutRequestDto) {
         userStatusUseCase.signOut(signOutRequestDto);
-    }
-
-    // 토큰 재발급
-    @PostMapping("/reissue")
-    @ResponseStatus(HttpStatus.OK)
-    public TokenResponseDto reissue(@ModelAttribute @Valid RefreshTokenRequestDto refreshTokenRequestDto) {
-        return userStatusUseCase.reissue(refreshTokenRequestDto);
     }
 }

@@ -2,6 +2,7 @@ package cord.eoeo.momentwo.config.security.jwt;
 
 import cord.eoeo.momentwo.config.security.jwt.adapter.out.CustomUserDetailsDto;
 import cord.eoeo.momentwo.config.security.jwt.adapter.out.TokenResponseDto;
+import cord.eoeo.momentwo.user.advice.exception.RefreshTokenValidException;
 import cord.eoeo.momentwo.user.application.port.out.RefreshTokenRepository;
 import cord.eoeo.momentwo.user.domain.RefreshToken;
 import io.jsonwebtoken.*;
@@ -16,6 +17,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
 
 import java.security.Key;
@@ -40,6 +43,7 @@ public class TokenProvider implements InitializingBean {
     private Long tokenValidationTime;
     private Long refreshTokenValidationTime;
     private final RefreshTokenRepository refreshTokenRepository;
+    private final UserDetailsService userDetailsService;
 
     @Override
     public void afterPropertiesSet() throws Exception {
@@ -49,11 +53,13 @@ public class TokenProvider implements InitializingBean {
 
     // 생성자 초기화
     public TokenProvider(@Value("${jwt.tokenValidationTime}") long tokenValidationTime,
-                         @Value("${jwt.secret}") String secret, RefreshTokenRepository refreshTokenRepository) {
+                         @Value("${jwt.secret}") String secret, RefreshTokenRepository refreshTokenRepository,
+                         UserDetailsService userDetailsService) {
         this.secret = secret;
         this.tokenValidationTime = tokenValidationTime * TOKEN_PRODUCT_TIME;
         this.refreshTokenValidationTime = tokenValidationTime * REFRESH_TOKEN_PRODUCT_TIME;
         this.refreshTokenRepository = refreshTokenRepository;
+        this.userDetailsService = userDetailsService;
     }
 
     // 토큰 생성
@@ -152,5 +158,23 @@ public class TokenProvider implements InitializingBean {
                 .parseClaimsJws(refreshToken)
                 .getBody()
                 .getSubject();
+    }
+
+    public TokenResponseDto reissueRefreshToken(String refreshToken) {
+        // 리프레시 토큰 만료 여부 확인
+        if(!validRefreshToken(refreshToken)) {
+            throw new RefreshTokenValidException();
+        }
+        // 사용자 정보 추출
+        String username = getUsernameFromRefreshToken(refreshToken);
+        UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+        Authentication authentication = new UsernamePasswordAuthenticationToken(
+                userDetails,
+                null,
+                userDetails.getAuthorities()
+        );
+
+        // 추출한 정보를 토대로 토큰 재발급
+        return createToken(authentication, refreshToken);
     }
 }
