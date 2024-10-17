@@ -2,6 +2,7 @@ package cord.eoeo.momentwo.config.security.jwt;
 
 import cord.eoeo.momentwo.config.security.jwt.adapter.out.CustomUserDetailsDto;
 import cord.eoeo.momentwo.config.security.jwt.adapter.out.TokenResponseDto;
+import cord.eoeo.momentwo.user.advice.exception.RefreshTokenValidException;
 import cord.eoeo.momentwo.user.application.port.out.RefreshTokenRepository;
 import cord.eoeo.momentwo.user.domain.RefreshToken;
 import io.jsonwebtoken.*;
@@ -162,7 +163,7 @@ public class TokenProvider implements InitializingBean {
     public TokenResponseDto reissueRefreshToken(String refreshToken) {
         // 리프레시 토큰 만료 여부 확인
         if(!validRefreshToken(refreshToken)) {
-            throw new IllegalArgumentException("토큰이 만료되어 재로그인 해야합니다.");
+            throw new RefreshTokenValidException();
         }
         // 사용자 정보 추출
         String username = getUsernameFromRefreshToken(refreshToken);
