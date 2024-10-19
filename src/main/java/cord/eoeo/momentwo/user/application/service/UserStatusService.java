@@ -9,7 +9,6 @@ import cord.eoeo.momentwo.elasticsearch.application.port.out.UserElasticSearchMa
 import cord.eoeo.momentwo.member.advice.exception.AdminAlbumOutException;
 import cord.eoeo.momentwo.member.application.port.out.GetAlbumInfo;
 import cord.eoeo.momentwo.member.domain.Member;
-import cord.eoeo.momentwo.user.adapter.dto.in.RefreshTokenRequestDto;
 import cord.eoeo.momentwo.user.adapter.dto.in.SignOutRequestDto;
 import cord.eoeo.momentwo.user.adapter.dto.in.UserLoginRequestDto;
 import cord.eoeo.momentwo.user.advice.exception.NotFoundUserException;
@@ -22,7 +21,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -41,7 +39,6 @@ public class UserStatusService implements UserStatusUseCase {
     private final GetAuthentication getAuthentication;
     private final GetAlbumInfo getAlbumInfo;
     private final AlbumManager albumManager;
-    private final UserDetailsService userDetailsService;
     private final UserElasticSearchManager userElasticSearchManager;
     private final FriendsElasticSearchManager friendsElasticSearchManager;
     private final LikesElasticSearchManager likesElasticSearchManager;
@@ -102,27 +99,5 @@ public class UserStatusService implements UserStatusUseCase {
         userElasticSearchManager.deleteById(user.getId());
         friendsElasticSearchManager.deleteById(user.getId());
         likesElasticSearchManager.deleteByWildNickname(user.getNickname());
-    }
-
-    // 서버에 저장했던 토큰을 갱신하는 방법을 찾아야 함,,,
-    // 현재 토큰을 재발급한 후 저장하는 코드에서 비교할 수가 없음,,
-    @Transactional
-    @Override
-    public TokenResponseDto reissue(RefreshTokenRequestDto refreshTokenRequestDto) {
-        // 리프레시 토큰 만료 여부 확인
-        if(!tokenProvider.validRefreshToken(refreshTokenRequestDto.getRefreshToken())) {
-            throw new IllegalArgumentException("토큰이 만료되어 재로그인 해야합니다.");
-        }
-        // 사용자 정보 추출
-        String username = tokenProvider.getUsernameFromRefreshToken(refreshTokenRequestDto.getRefreshToken());
-        UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-        Authentication authentication = new UsernamePasswordAuthenticationToken(
-                userDetails,
-                null,
-                userDetails.getAuthorities()
-        );
-
-        // 추출한 정보를 토대로 토큰 재발급
-        return tokenProvider.createToken(authentication, refreshTokenRequestDto.getRefreshToken());
     }
 }

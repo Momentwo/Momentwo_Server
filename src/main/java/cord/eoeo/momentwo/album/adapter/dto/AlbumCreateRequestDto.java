@@ -14,4 +14,5 @@ public class AlbumCreateRequestDto {
     @NotBlank(message = "앨범 제목을 입력해주세요.")
     private String createTitle;
     private List<String> doInviteNicknameList;
+    private String filename;
 }

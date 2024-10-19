@@ -10,7 +10,6 @@ import cord.eoeo.momentwo.photo.adapter.dto.PhotoUploadRequestDto;
 import cord.eoeo.momentwo.photo.advice.exception.NotDeleteImageException;
 import cord.eoeo.momentwo.photo.advice.exception.NotFoundPhotoException;
 import cord.eoeo.momentwo.photo.advice.exception.PhotoCapacityFullException;
-import cord.eoeo.momentwo.photo.advice.exception.PhotoUploadFailException;
 import cord.eoeo.momentwo.photo.application.port.in.PhotoUseCase;
 import cord.eoeo.momentwo.photo.application.port.out.PhotoPageRepository;
 import cord.eoeo.momentwo.photo.application.port.out.PhotoRepository;
@@ -60,22 +59,13 @@ public class PhotoService implements PhotoUseCase {
 
         SubAlbum subAlbum = subAlbumManager.getSubAlbumInfo(photoUploadRequestDto.getSubAlbumId());
 
-        try {
-            // 이미지 이름 변환 UUID
-            String newFilename = imageManager
-                    .imageUpload(photoUploadRequestDto.getImages(), s3Manager.getImagePath())
-                    .get();
+        // 타입 정보 찾기
+        String type = PhotoFormat.findPhotoType(
+                photoUploadRequestDto.getFilename().split("\\.")[1].toUpperCase()).getType();
 
-            // 타입 정보 찾기
-            String type = PhotoFormat.findPhotoType(newFilename.split("\\.")[1].toUpperCase()).getType();
+        Photo newPhoto = new Photo(photoUploadRequestDto.getFilename(), type, user, album, subAlbum);
 
-
-            Photo newPhoto = new Photo(newFilename, type, user, album, subAlbum);
-
-            photoRepository.save(newPhoto);
-        } catch (Exception e) {
-            throw new PhotoUploadFailException();
-        }
+        photoRepository.save(newPhoto);
     }
 
     @Override

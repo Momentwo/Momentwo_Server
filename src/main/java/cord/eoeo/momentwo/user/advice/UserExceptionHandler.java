@@ -37,4 +37,10 @@ public class UserExceptionHandler {
     public String notInviteUserException() {
         return "친구 초대 목록에 존재하지 않는 유저가 포함되어 있습니다.";
     }
+
+    @ExceptionHandler(RefreshTokenValidException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public String refreshTokenValidException() {
+        return "리프레시 토큰이 만료되었습니다.";
+    }
 }

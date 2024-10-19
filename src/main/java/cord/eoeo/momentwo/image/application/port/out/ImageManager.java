@@ -6,7 +6,7 @@ import java.net.URL;
 import java.util.concurrent.CompletableFuture;
 
 public interface ImageManager {
-    CompletableFuture<String> imageUpload(MultipartFile image, String path);
+    String getPresignedUrl(String imageExtension, String path);
     CompletableFuture<Void> imageDelete(String filename);
     CompletableFuture<URL> imageFileSearch(String filename);
     CompletableFuture<MultipartFile> makeMultipartFileByS3Image(String filename);

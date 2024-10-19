@@ -11,12 +11,6 @@ import org.springframework.context.annotation.Configuration;
 @AllArgsConstructor
 @NoArgsConstructor
 public class S3Manager {
-    @Value("${cloud.aws.s3.default-image}")
-    private String profileBaseImage;
-
-    @Value("${cloud.aws.s3.default-profile-image}")
-    private String profileBaseImagePath;
-
     @Value("${cloud.aws.s3.images-path}")
     private String imagePath;
 
