@@ -28,10 +28,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
-
 @Service
 @RequiredArgsConstructor
 public class PhotoService implements PhotoUseCase {
@@ -102,12 +98,6 @@ public class PhotoService implements PhotoUseCase {
             throw new NotFoundPhotoException();
         }
 
-        List<URL> imagesUrl = new ArrayList<>();
-
-        photoList.forEach(photo -> {
-            imagesUrl.add(imageManager.imageFileSearch(s3Manager.getImagePath() + photo.getImageName()).join());
-        });
-
-        return new ImageViewListResponseDto().toDo(photoList, imagesUrl);
+        return new ImageViewListResponseDto().toDo(photoList);
     }
 }
