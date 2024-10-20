@@ -1,7 +1,9 @@
 package cord.eoeo.momentwo.friendship.adapter.out;
 
 import cord.eoeo.momentwo.elasticsearch.application.port.out.FriendsElasticSearchManager;
-import cord.eoeo.momentwo.friendship.adapter.in.dto.*;
+import cord.eoeo.momentwo.friendship.adapter.dto.FriendshipAllListResponseDto;
+import cord.eoeo.momentwo.friendship.adapter.dto.FriendshipReceiveListResponseDto;
+import cord.eoeo.momentwo.friendship.adapter.dto.FriendshipSendListResponseDto;
 import cord.eoeo.momentwo.friendship.advice.exception.AlreadyFriendshipException;
 import cord.eoeo.momentwo.friendship.advice.exception.NotFoundFriendshipRequestException;
 import cord.eoeo.momentwo.friendship.application.port.out.FriendshipProcess;

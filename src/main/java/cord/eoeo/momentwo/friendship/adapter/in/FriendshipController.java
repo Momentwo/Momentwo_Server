@@ -1,6 +1,6 @@
 package cord.eoeo.momentwo.friendship.adapter.in;
 
-import cord.eoeo.momentwo.friendship.adapter.in.dto.*;
+import cord.eoeo.momentwo.friendship.adapter.dto.*;
 import cord.eoeo.momentwo.friendship.application.port.in.FriendshipUseCase;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

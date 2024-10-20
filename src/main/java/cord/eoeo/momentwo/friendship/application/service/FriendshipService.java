@@ -1,6 +1,6 @@
 package cord.eoeo.momentwo.friendship.application.service;
 
-import cord.eoeo.momentwo.friendship.adapter.in.dto.*;
+import cord.eoeo.momentwo.friendship.adapter.dto.*;
 import cord.eoeo.momentwo.friendship.advice.exception.AlreadyFriendshipRequestException;
 import cord.eoeo.momentwo.friendship.advice.exception.SelfRequestException;
 import cord.eoeo.momentwo.friendship.application.port.in.FriendshipUseCase;

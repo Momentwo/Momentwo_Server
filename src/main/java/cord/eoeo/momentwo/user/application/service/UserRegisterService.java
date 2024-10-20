@@ -18,6 +18,7 @@ import java.util.concurrent.CompletableFuture;
 @Service
 @RequiredArgsConstructor
 public class UserRegisterService implements UserRegisterUseCase {
+    private final String USER_BASE_IMAGE = "";
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final UserRegisterAsync userRegisterAsync;
@@ -32,7 +33,8 @@ public class UserRegisterService implements UserRegisterUseCase {
                 passwordEncoder.encoder(userRegisterRequestDto.getPassword()),
                 userRegisterRequestDto.getNickname(),
                 userRegisterRequestDto.getBirthday(),
-                userRegisterRequestDto.getPhone()
+                userRegisterRequestDto.getPhone(),
+                USER_BASE_IMAGE
         );
         userRepository.save(newUser);
         userElasticSearchManager.save(newUser);
