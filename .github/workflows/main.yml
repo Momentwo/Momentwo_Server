@@ -18,7 +18,7 @@ jobs:
       - name: Add EC2 host to known_hosts
         run: |
           ssh-keyscan -H ${{ secrets.EC2_IP_ADDRESS }} >> ~/.ssh/known_hosts
-      - name: Deploy to AWS EC2
+      - name: Build to AWS EC2
         run: |
           ssh -i ~/.ssh/ec2_key.pem ubuntu@${{ secrets.EC2_IP_ADDRESS }} << 'EOF'
     
@@ -48,25 +48,29 @@ jobs:
       - name: Depoly Add EC2 host to known_hosts
         run: |
           ssh-keyscan -H ${{ secrets.EC2_IP_ADDRESS }} >> ~/.ssh/known_hosts
-          
-      - name: Depoly run project
-        run: |
-          ssh -i ~/.ssh/ec2_key.pem ubuntu@${{ secrets.EC2_IP_ADDRESS }} << 'EOF'
 
+      - name: Build run project
+        run: |
           echo "build"
+          ssh -i ~/.ssh/ec2_key.pem ubuntu@${{ secrets.EC2_IP_ADDRESS }} << 'EOF'
+          
           echo "1. Changing directory to ~/momentwo/Momentwo_Server"
           cd ~/momentwo/Momentwo_Server
           
-          echo "2. Pulling latest code from develop branch"
-          git pull origin develop
+          echo "2. Pulling latest code from main branch"
+          git pull origin main
 
           echo "3. Stopping Momentwo-0.0.1-SNAPSHOT.jar"
           pkill -f 'Momentwo-0.0.1-SNAPSHOT.jar' || true
           
           echo "4. build"
           ./gradlew build -x test
-
           echo "build Complete"
+          
+      - name: Depoly run project
+        run: |
+          ssh -i ~/.ssh/ec2_key.pem ubuntu@${{ secrets.EC2_IP_ADDRESS }} << 'EOF'
+
           echo "5. cd Momentwo_Server"
           cd ~/momentwo/Momentwo_Server/build/libs
           
