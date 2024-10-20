@@ -10,11 +10,13 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class MemberResponseDto {
     private String nickname;
+    private String userProfileImage;
     private String rules;
 
     public MemberResponseDto toDo(Member member) {
         return new MemberResponseDto(
                 member.getUser().getNickname(),
+                member.getUser().getUserProfileImage(),
                 member.getRules().toString()
         );
     }
