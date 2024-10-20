@@ -25,8 +25,8 @@ jobs:
           echo "1. Changing directory to ~/momentwo/Momentwo_Server"
           cd ~/momentwo/Momentwo_Server
           
-          echo "2. Pulling latest code from develop branch"
-          git pull origin develop
+          echo "2. Pulling latest code from main branch"
+          git pull origin main
 
           echo "3. Stopping Momentwo-0.0.1-SNAPSHOT.jar"
           pkill -f 'Momentwo-0.0.1-SNAPSHOT.jar' || true
@@ -52,6 +52,21 @@ jobs:
       - name: Depoly run project
         run: |
           ssh -i ~/.ssh/ec2_key.pem ubuntu@${{ secrets.EC2_IP_ADDRESS }} << 'EOF'
+
+          echo "build"
+          echo "1. Changing directory to ~/momentwo/Momentwo_Server"
+          cd ~/momentwo/Momentwo_Server
+          
+          echo "2. Pulling latest code from develop branch"
+          git pull origin develop
+
+          echo "3. Stopping Momentwo-0.0.1-SNAPSHOT.jar"
+          pkill -f 'Momentwo-0.0.1-SNAPSHOT.jar' || true
+          
+          echo "4. build"
+          ./gradlew build -x test
+
+          echo "build Complete"
           echo "5. cd Momentwo_Server"
           cd ~/momentwo/Momentwo_Server/build/libs
           
