@@ -3,7 +3,6 @@ package cord.eoeo.momentwo.user.application.service;
 import cord.eoeo.momentwo.album.application.port.out.AlbumManager;
 import cord.eoeo.momentwo.config.security.jwt.TokenProvider;
 import cord.eoeo.momentwo.config.security.jwt.adapter.out.TokenResponseDto;
-import cord.eoeo.momentwo.elasticsearch.application.port.out.FriendsElasticSearchManager;
 import cord.eoeo.momentwo.elasticsearch.application.port.out.LikesElasticSearchManager;
 import cord.eoeo.momentwo.elasticsearch.application.port.out.UserElasticSearchManager;
 import cord.eoeo.momentwo.member.advice.exception.AdminAlbumOutException;
@@ -21,7 +20,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -40,7 +38,6 @@ public class UserStatusService implements UserStatusUseCase {
     private final GetAlbumInfo getAlbumInfo;
     private final AlbumManager albumManager;
     private final UserElasticSearchManager userElasticSearchManager;
-    private final FriendsElasticSearchManager friendsElasticSearchManager;
     private final LikesElasticSearchManager likesElasticSearchManager;
 
     @Transactional(readOnly = true)
@@ -97,7 +94,6 @@ public class UserStatusService implements UserStatusUseCase {
 
         userRepository.delete(user);
         userElasticSearchManager.deleteById(user.getId());
-        friendsElasticSearchManager.deleteById(user.getId());
         likesElasticSearchManager.deleteByWildNickname(user.getNickname());
     }
 }
