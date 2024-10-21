@@ -21,8 +21,12 @@ public class UserDocument {
     @Field(type = FieldType.Keyword)
     private String nickname;
 
+    @Field(type = FieldType.Text)
+    private String userProfileImage;
+
     public UserDocument(User user) {
         this.id = user.getId();
         this.nickname = user.getNickname();
+        this.userProfileImage = user.getUserProfileImage();
     }
 }
