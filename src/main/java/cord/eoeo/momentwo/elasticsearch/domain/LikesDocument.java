@@ -31,11 +31,15 @@ public class LikesDocument {
     @Field(type = FieldType.Keyword)
     private long subAlbumId;
 
+    @Field(type = FieldType.Text)
+    private String userProfileImage;
+
     public LikesDocument(User user, Photo photo) {
         this.id = photo.getId() + "_" + user.getNickname();
         this.photoId = photo.getId();
         this.nickname = user.getNickname();
         this.albumId = photo.getAlbum().getId();
         this.subAlbumId = photo.getSubAlbum().getId();
+        this.userProfileImage = user.getUserProfileImage();
     }
 }

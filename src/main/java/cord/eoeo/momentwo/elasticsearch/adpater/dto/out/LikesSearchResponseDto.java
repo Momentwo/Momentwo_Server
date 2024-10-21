@@ -10,8 +10,12 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class LikesSearchResponseDto {
     private String nickname;
+    private String userProfileImage;
 
     public LikesSearchResponseDto toDo(LikesDocument likesDocument) {
-        return new LikesSearchResponseDto(likesDocument.getNickname());
+        return new LikesSearchResponseDto(
+                likesDocument.getNickname(),
+                likesDocument.getUserProfileImage()
+        );
     }
 }
