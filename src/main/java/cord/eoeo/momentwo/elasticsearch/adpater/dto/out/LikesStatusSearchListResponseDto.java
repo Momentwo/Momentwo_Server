@@ -15,23 +15,11 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 public class LikesStatusSearchListResponseDto {
     private List<LikesStatusSearchResponseDto> likesList;
-    private long page;
-    private long size;
-    private long totalPages;
-    private long totalElements;
-    private boolean hasNext;
-    private boolean hasPrevious;
 
     public LikesStatusSearchListResponseDto toDo(Page<LikesDocument> likesDocuments) {
         return new LikesStatusSearchListResponseDto(
                 likesDocuments.stream().map(likesDocument -> new LikesStatusSearchResponseDto().toDo(likesDocument))
-                        .collect(Collectors.toList()),
-                likesDocuments.getNumber(),
-                likesDocuments.getSize(),
-                likesDocuments.getTotalPages(),
-                likesDocuments.getTotalElements(),
-                likesDocuments.hasNext(),
-                likesDocuments.hasPrevious()
+                        .collect(Collectors.toList())
         );
     }
 }
