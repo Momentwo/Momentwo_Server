@@ -2,6 +2,7 @@ package cord.eoeo.momentwo.member.application.service;
 
 import cord.eoeo.momentwo.album.application.port.out.AlbumManager;
 import cord.eoeo.momentwo.album.domain.Album;
+import cord.eoeo.momentwo.elasticsearch.application.port.out.LikesElasticSearchManager;
 import cord.eoeo.momentwo.member.adapter.in.dto.*;
 import cord.eoeo.momentwo.member.adapter.out.dto.AlbumMemberResponseDto;
 import cord.eoeo.momentwo.member.advice.exception.*;
@@ -30,6 +31,7 @@ public class AlbumMemberService implements AlbumMemberUseCase {
     private final GetMemberInfo getMemberInfo;
     private final GetAuthentication getAuthentication;
     private final AlbumManager albumManager;
+    private final LikesElasticSearchManager likesElasticSearchManager;
 
     @Override
     @Transactional
@@ -83,6 +85,7 @@ public class AlbumMemberService implements AlbumMemberUseCase {
 
             // 본인보다 낮은 권한만 추방 가능
             getAlbumInfo.doKickMember(kickMembersRequestDto.getAlbumId(), owner, kickedUser);
+            likesElasticSearchManager.deleteByWildNickname(kickedUser.getNickname());
         });
 
     }
@@ -149,6 +152,7 @@ public class AlbumMemberService implements AlbumMemberUseCase {
                 && getAlbumInfo.isCheckAlbumOneMember(memberOutRequestDto.getAlbumId())) {
             albumManager.albumDelete(member);
         }
+        likesElasticSearchManager.deleteByWildNickname(selfUser.getNickname());
     }
 
     // 멤버 초대
