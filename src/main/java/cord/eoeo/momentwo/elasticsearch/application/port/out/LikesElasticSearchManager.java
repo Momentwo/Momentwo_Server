@@ -13,6 +13,6 @@ public interface LikesElasticSearchManager {
     Page<LikesDocument> getPhotoLikesPaging(long photoId, Pageable pageable);
     void deleteByLikes(long id, String nickname);
     boolean isLikes(User user, long photoId);
-    Page<LikesDocument> getPhotoLikesStatus(long subAlbumId, String nickname, Pageable pageable);
+    Page<LikesDocument> getPhotoLikesStatus(long subAlbumId, String nickname, long minPid, long maxPid);
     void deleteByWildNickname(String nickname);
 }
