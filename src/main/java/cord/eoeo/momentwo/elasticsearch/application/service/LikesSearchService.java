@@ -31,15 +31,14 @@ public class LikesSearchService implements LikesSearchUseCase {
     @Override
     @CheckAlbumAccessRules
     public LikesStatusSearchListResponseDto getPhotoLikesStatus(LikesStatusSearchRequestDto likesStatusSearchRequestDto) {
-        Pageable pageable = PageRequest
-                .of(likesStatusSearchRequestDto.getPage(), likesStatusSearchRequestDto.getSize());
-
         return new LikesStatusSearchListResponseDto()
                 .toDo(likesElasticSearchManager
                         .getPhotoLikesStatus(
                                 likesStatusSearchRequestDto.getSubAlbumId(),
                                 getAuthentication.getAuthentication().getName(),
-                                pageable)
+                                likesStatusSearchRequestDto.getMinPid(),
+                                likesStatusSearchRequestDto.getMaxPid()
+                        )
                 );
     }
 }
