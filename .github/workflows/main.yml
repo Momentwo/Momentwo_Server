@@ -26,13 +26,15 @@ jobs:
           cd ~/momentwo/Momentwo_Server
           
           echo "2. Pulling latest code from main branch"
-          git pull origin main
+          git fetch origin main
+          git reset --hard orign/main
 
           echo "3. Stopping Momentwo-0.0.1-SNAPSHOT.jar"
           pkill -f 'Momentwo-0.0.1-SNAPSHOT.jar' || true
           
-          echo "4. build"
-          ./gradlew build -x test
+          echo "4. chmod and clean build"
+          chmod 775 gradlew
+          ./gradlew clean build -x test
 
   deploy:
     runs-on: ubuntu-latest
@@ -58,13 +60,16 @@ jobs:
           cd ~/momentwo/Momentwo_Server
           
           echo "2. Pulling latest code from main branch"
-          git pull origin main
+          git fetch origin main
+          git reset --hard orign/main
 
           echo "3. Stopping Momentwo-0.0.1-SNAPSHOT.jar"
           pkill -f 'Momentwo-0.0.1-SNAPSHOT.jar' || true
           
-          echo "4. build"
-          ./gradlew build -x test
+          echo "4. chmod and clean build"
+          chmod 775 gradlew
+          ./gradlew clean build -x test
+          
           echo "build Complete"
           
       - name: Depoly run project
