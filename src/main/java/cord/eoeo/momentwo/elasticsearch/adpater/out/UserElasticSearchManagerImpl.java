@@ -38,6 +38,14 @@ public class UserElasticSearchManagerImpl implements UserElasticSearchManager {
     @Override
     @Transactional(readOnly = true)
     public Page<UserDocument> getUsersPaging(String keyword, User user, Pageable pageable) {
+        NativeSearchQuery countQuery = new NativeSearchQueryBuilder()
+                .withQuery(QueryBuilders.boolQuery()
+                        .must(QueryBuilders.wildcardQuery("nickname", keyword + "*"))
+                        .mustNot(QueryBuilders.matchQuery("id", user.getId()))
+                )
+                .withPageable(pageable)
+                .build();
+
         // Wildcard 쿼리 + 페이징 적용
         NativeSearchQuery searchQuery = new NativeSearchQueryBuilder()
                 .withQuery(QueryBuilders.wildcardQuery("nickname", keyword + "*"))
@@ -53,7 +61,9 @@ public class UserElasticSearchManagerImpl implements UserElasticSearchManager {
                 .filter(userDocument -> !Objects.equals(userDocument.getId(), user.getId()))
                 .collect(Collectors.toList());
 
-        return new PageImpl<>(userDocuments);
+        long count = elasticsearchRestTemplate.count(countQuery, UserDocument.class);
+
+        return new PageImpl<>(userDocuments, pageable, count);
     }
 
     @Override
