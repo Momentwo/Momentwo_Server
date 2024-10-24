@@ -35,7 +35,7 @@ public class ImageManagerImpl implements ImageManager {
     @Override
     public String getPresignedUrl(String imageExtension, String path) {
         // UUID 를 통한 고유한 이름 생성
-        String newFilename = UUID.randomUUID() + imageExtension;
+        String newFilename = UUID.randomUUID() + "." + imageExtension;
         // s3 이미지 저장 경로
         String key = path + newFilename;
         // s3 요청 정보
@@ -122,10 +122,12 @@ public class ImageManagerImpl implements ImageManager {
     }
 
     private PutObjectRequest uploadFile(String key, String type) {
+        String imageType = "image/" + type; // 확장자 MIME 타입으로 만들기
+
         return PutObjectRequest.builder()
                 .bucket(s3Manager.getBucketName())
                 .key(key)
-                .contentType(type)
+                .contentType(imageType) // MIME 타입으로 들어가야함
                 .build();
     }
 }
