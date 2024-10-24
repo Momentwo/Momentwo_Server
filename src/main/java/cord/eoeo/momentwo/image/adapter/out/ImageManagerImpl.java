@@ -38,7 +38,6 @@ public class ImageManagerImpl implements ImageManager {
         String newFilename = UUID.randomUUID() + "." + imageExtension;
         // s3 이미지 저장 경로
         String key = path + newFilename;
-        System.out.println(newFilename + " " + key);
         // s3 요청 정보
         PutObjectRequest objectRequest = uploadFile(key, imageExtension);
 
@@ -123,12 +122,12 @@ public class ImageManagerImpl implements ImageManager {
     }
 
     private PutObjectRequest uploadFile(String key, String type) {
-        String imageType = "image/" + type;
+        String imageType = "image/" + type; // 확장자 MIME 타입으로 만들기
 
         return PutObjectRequest.builder()
                 .bucket(s3Manager.getBucketName())
                 .key(key)
-                .contentType(imageType)
+                .contentType(imageType) // MIME 타입으로 들어가야함
                 .build();
     }
 }
