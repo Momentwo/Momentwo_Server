@@ -86,12 +86,14 @@ public class LikesElasticSearchManagerImpl implements LikesElasticSearchManager 
 
     @Override
     @Transactional(readOnly = true)
-    public Page<LikesDocument> getPhotoLikesStatus(long subAlbumId, String nickname, Pageable pageable) {
+    public Page<LikesDocument> getPhotoLikesStatus(long subAlbumId, String nickname, long minPid, long maxPid) {
         NativeSearchQuery searchQuery = new NativeSearchQueryBuilder()
                 .withQuery(QueryBuilders.boolQuery()
                         .must(QueryBuilders.matchQuery("subAlbumId", subAlbumId))
-                        .must(QueryBuilders.matchQuery("nickname", nickname)))
-                .withPageable(pageable)
+                        .must(QueryBuilders.matchQuery("nickname", nickname))
+                        .must(QueryBuilders.rangeQuery("photoId").gte(minPid)
+                                .lte(maxPid))
+                )
                 .build();
 
         // 검색 결과 가져오기

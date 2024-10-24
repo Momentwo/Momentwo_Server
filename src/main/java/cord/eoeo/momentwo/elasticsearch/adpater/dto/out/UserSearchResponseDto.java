@@ -11,11 +11,13 @@ import lombok.NoArgsConstructor;
 public class UserSearchResponseDto {
     private long id;
     private String nickname;
+    private String userProfileImage;
 
     public UserSearchResponseDto toDo(UserDocument userDocument) {
         return new UserSearchResponseDto(
                 this.id = userDocument.getId(),
-                this.nickname = userDocument.getNickname()
+                this.nickname = userDocument.getNickname(),
+                this.userProfileImage = userDocument.getUserProfileImage()
         );
     }
 }

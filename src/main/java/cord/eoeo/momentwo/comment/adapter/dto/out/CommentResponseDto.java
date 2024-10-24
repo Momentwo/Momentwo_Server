@@ -13,6 +13,7 @@ import java.time.LocalDate;
 public class CommentResponseDto {
     private long id;
     private String nickname;
+    private String userProfileImage;
     private String comment;
     private LocalDate date;
 
@@ -20,6 +21,7 @@ public class CommentResponseDto {
         return new CommentResponseDto(
                 comment.getId(),
                 comment.getUser().getNickname(),
+                comment.getUser().getUserProfileImage(),
                 comment.getComments(),
                 comment.getDate()
         );

@@ -9,6 +9,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class LikesStatusSearchRequestDto {
     private long subAlbumId;
-    private int page;
-    private int size;
+    private long minPid;
+    private long maxPid;
 }

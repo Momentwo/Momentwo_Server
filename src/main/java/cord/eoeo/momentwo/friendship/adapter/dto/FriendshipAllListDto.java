@@ -1,4 +1,4 @@
-package cord.eoeo.momentwo.friendship.adapter.in.dto;
+package cord.eoeo.momentwo.friendship.adapter.dto;
 
 import cord.eoeo.momentwo.friendship.domain.Friendship;
 import lombok.AllArgsConstructor;
@@ -10,8 +10,12 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class FriendshipAllListDto {
     private String nickname;
+    private String userProfileImage;
 
     public FriendshipAllListDto toDo(Friendship friendship) {
-        return new FriendshipAllListDto(friendship.getFromUser().getNickname());
+        return new FriendshipAllListDto(
+                friendship.getFromUser().getNickname(),
+                friendship.getFromUser().getUserProfileImage()
+        );
     }
 }
