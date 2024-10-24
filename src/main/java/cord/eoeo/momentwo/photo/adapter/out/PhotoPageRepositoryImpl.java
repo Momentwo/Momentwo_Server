@@ -22,6 +22,13 @@ public class PhotoPageRepositoryImpl implements PhotoPageRepository {
     public Page<Photo> findQPhotoBySubAlbumIdCustomPaging(long subAlbumId, Pageable pageable, long cursorId) {
         QPhoto photo = QPhoto.photo;
 
+        // 전체 갯수 카운트 (안하면 DTO 에서 표시가 안됌 -> fetchCount 대신 사용)
+        Long photoCount = jpaQueryFactory
+                .select(photo.count())
+                .from(photo)
+                .where(photo.subAlbum.id.eq(subAlbumId))
+                .fetchOne();
+
         List<Photo> photos = jpaQueryFactory
                 .select(photo)
                 .from(photo)
@@ -29,7 +36,7 @@ public class PhotoPageRepositoryImpl implements PhotoPageRepository {
                 .limit(pageable.getPageSize())
                 .fetch();
 
-        return new PageImpl<>(photos);
+        return new PageImpl<>(photos, pageable, photoCount);
     }
 
     public BooleanExpression cursor(Long cursorId, QPhoto photo) {

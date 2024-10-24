@@ -17,7 +17,6 @@ import javax.validation.Valid;
 @RequiredArgsConstructor
 @RequestMapping("/photos")
 public class PhotoController {
-    private static final int PAGE_SIZE = 50;
     private final PhotoUseCase photoUseCase;
 
     // 업로드
@@ -40,8 +39,9 @@ public class PhotoController {
     public ImageViewListResponseDto photoView(
             @PathVariable long albumId,
             @PathVariable long subAlbumId,
-            @RequestParam(required = false, defaultValue = "0") long cursor,
-            @PageableDefault(size = PAGE_SIZE, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
-        return photoUseCase.photoView(albumId, subAlbumId, cursor, pageable);
+            @RequestParam int size,
+            @RequestParam(required = false, defaultValue = "0") long cursor
+    ) {
+        return photoUseCase.photoView(albumId, subAlbumId, size, cursor);
     }
 }

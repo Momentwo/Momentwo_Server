@@ -55,7 +55,7 @@ public class LikesElasticSearchManagerImpl implements LikesElasticSearchManager 
                 .map(SearchHit::getContent)
                 .collect(Collectors.toList());
 
-        return new PageImpl<>(likesDocuments);
+        return new PageImpl<>(likesDocuments, pageable, likesSearchRepository.countByPhotoId(photoId));
     }
 
     @Override

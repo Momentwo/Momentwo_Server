@@ -39,6 +39,7 @@ public class SubAlbumManagerImpl implements SubAlbumManager {
     }
 
     @Override
+    @Transactional
     public void deleteSubAlbum(List<Long> subAlbumIds) {
         subAlbumRepository.deleteBySubAlbumIds(subAlbumIds);
     }
