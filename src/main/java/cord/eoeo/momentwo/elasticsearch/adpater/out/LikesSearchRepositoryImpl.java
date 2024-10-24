@@ -15,4 +15,9 @@ public class LikesSearchRepositoryImpl implements LikesSearchRepository {
     public void save(LikesDocument likesDocument) {
         likesElasticSearchRepository.save(likesDocument);
     }
+
+    @Override
+    public long countByPhotoId(long photoId) {
+        return likesElasticSearchRepository.countByPhotoId(photoId);
+    }
 }
