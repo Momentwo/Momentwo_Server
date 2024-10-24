@@ -28,6 +28,7 @@ jobs:
           echo "2. Pulling latest code from main branch"
           git fetch origin main
           git reset --hard orign/main
+          git pull origin main
 
           echo "3. Stopping Momentwo-0.0.1-SNAPSHOT.jar"
           pkill -f 'Momentwo-0.0.1-SNAPSHOT.jar' || true
@@ -62,6 +63,7 @@ jobs:
           echo "2. Pulling latest code from main branch"
           git fetch origin main
           git reset --hard orign/main
+          git pull origin main
 
           echo "3. Stopping Momentwo-0.0.1-SNAPSHOT.jar"
           pkill -f 'Momentwo-0.0.1-SNAPSHOT.jar' || true
