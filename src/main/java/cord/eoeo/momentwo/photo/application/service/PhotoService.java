@@ -24,6 +24,7 @@ import cord.eoeo.momentwo.user.application.port.out.UserRepository;
 import cord.eoeo.momentwo.user.domain.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -56,8 +57,9 @@ public class PhotoService implements PhotoUseCase {
         SubAlbum subAlbum = subAlbumManager.getSubAlbumInfo(photoUploadRequestDto.getSubAlbumId());
 
         // 타입 정보 찾기
+        int fileSplitSize = photoUploadRequestDto.getFilename().split("\\.").length - 1;
         String type = PhotoFormat.findPhotoType(
-                photoUploadRequestDto.getFilename().split("\\.")[1].toUpperCase()).getType();
+                photoUploadRequestDto.getFilename().split("\\.")[fileSplitSize].toUpperCase()).getType();
 
         Photo newPhoto = new Photo(photoUploadRequestDto.getFilename(), type, user, album, subAlbum);
 
@@ -87,11 +89,11 @@ public class PhotoService implements PhotoUseCase {
     @Override
     @Transactional(readOnly = true)
     @CheckAlbumAccessRules
-    public ImageViewListResponseDto photoView(long albumId, long subAlbumId, long cursor, Pageable pageable) {
+    public ImageViewListResponseDto photoView(long albumId, long subAlbumId, int size, long cursor) {
         Page<Photo> photoList = photoPageRepository
                 .findQPhotoBySubAlbumIdCustomPaging(
                         subAlbumId,
-                        pageable,
+                        PageRequest.of((int) (cursor / size), size),
                         cursor
                 );
         if(photoList.isEmpty()) {
