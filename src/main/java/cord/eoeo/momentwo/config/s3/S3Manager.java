@@ -17,6 +17,12 @@ public class S3Manager {
     @Value("${cloud.aws.s3.profiles-albums-path}")
     private String profileAlbumPath;
 
+    @Value("${cloud.aws.s3.profiles-users-path}")
+    private String profileUsersPath;
+
+    @Value("${cloud.aws.s3.domain}")
+    private String baseDomain;
+
     @Value("${cloud.aws.s3.bucket}")
     private String bucketName;
 }
