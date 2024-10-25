@@ -2,6 +2,7 @@ package cord.eoeo.momentwo.image.adapter.in;
 
 import cord.eoeo.momentwo.image.adapter.dto.PresignedRequestDto;
 import cord.eoeo.momentwo.image.adapter.dto.PresignedResponseDto;
+import cord.eoeo.momentwo.image.adapter.dto.UserPresignedRequestDto;
 import cord.eoeo.momentwo.image.application.port.in.ImageUseCase;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -25,5 +26,12 @@ public class ImageController {
     @ResponseStatus(HttpStatus.OK)
     public PresignedResponseDto albumProfilePresignedUrl(@RequestBody @Valid PresignedRequestDto presignedRequestDto) {
         return imageUseCase.albumProfilePresignedUrl(presignedRequestDto);
+    }
+
+    @PostMapping("/users/profiles/presigned")
+    @ResponseStatus(HttpStatus.OK)
+    public PresignedResponseDto userProfilePresignedUrl(
+            @ModelAttribute @Valid UserPresignedRequestDto userPresignedRequestDto) {
+        return imageUseCase.userProfilePresignedUrl(userPresignedRequestDto);
     }
 }

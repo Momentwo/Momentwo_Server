@@ -25,7 +25,6 @@ import cord.eoeo.momentwo.user.domain.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -50,10 +49,6 @@ public class PhotoService implements PhotoUseCase {
                 .orElseThrow(NotFoundUserException::new);
 
         Album album = albumManager.getAlbumInfo(photoUploadRequestDto.getAlbumId());
-        if(photoRepository.getAlbumCount(album) >= 1000) {
-            throw new PhotoCapacityFullException();
-        }
-
         SubAlbum subAlbum = subAlbumManager.getSubAlbumInfo(photoUploadRequestDto.getSubAlbumId());
 
         // 타입 정보 찾기
@@ -61,7 +56,13 @@ public class PhotoService implements PhotoUseCase {
         String type = PhotoFormat.findPhotoType(
                 photoUploadRequestDto.getFilename().split("\\.")[fileSplitSize].toUpperCase()).getType();
 
-        Photo newPhoto = new Photo(photoUploadRequestDto.getFilename(), type, user, album, subAlbum);
+        Photo newPhoto = new Photo(
+                s3Manager.getBaseDomain() + photoUploadRequestDto.getFilename(),
+                type,
+                user,
+                album,
+                subAlbum
+        );
 
         photoRepository.save(newPhoto);
     }
