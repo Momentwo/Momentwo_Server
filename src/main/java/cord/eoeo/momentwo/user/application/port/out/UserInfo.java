@@ -9,4 +9,6 @@ public interface UserInfo {
     TempPasswordResponseDto tempPassword(String username, String phone);
 
     void changePassword(String newPassword, String newPasswordMatch);
+
+    void usersProfilesUpload(String filename);
 }
