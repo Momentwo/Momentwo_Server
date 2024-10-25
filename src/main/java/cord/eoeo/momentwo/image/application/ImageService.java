@@ -52,7 +52,6 @@ public class ImageService implements ImageUseCase {
     }
 
     @Override
-    @CheckAlbumAccessRules
     public PresignedResponseDto userProfilePresignedUrl(UserPresignedRequestDto userPresignedRequestDto) {
         User user = userRepository.findByNickname(getAuthentication.getAuthentication().getName())
                 .orElseThrow(NotFoundUserException::new);
