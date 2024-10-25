@@ -3,15 +3,13 @@ package cord.eoeo.momentwo.user.adapter.in;
 import cord.eoeo.momentwo.user.adapter.dto.in.ChangePasswordRequestDto;
 import cord.eoeo.momentwo.user.adapter.dto.in.SearchUsernameRequestDto;
 import cord.eoeo.momentwo.user.adapter.dto.in.TempPasswordRequestDto;
+import cord.eoeo.momentwo.user.adapter.dto.in.UserProfileUploadRequestDto;
 import cord.eoeo.momentwo.user.adapter.dto.out.SearchUsernameResponseDto;
 import cord.eoeo.momentwo.user.adapter.dto.out.TempPasswordResponseDto;
 import cord.eoeo.momentwo.user.application.port.in.UserInfoChangeUseCase;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
@@ -39,5 +37,12 @@ public class UserInfoChangeController {
     @ResponseStatus(HttpStatus.OK)
     public void changePassword(@RequestBody @Valid ChangePasswordRequestDto changePasswordRequestDto) {
         userInfoChangeUseCase.changePassword(changePasswordRequestDto);
+    }
+
+    // 유저 프로필 업로드
+    @PostMapping("/users/profiles/images/upload")
+    @ResponseStatus(HttpStatus.OK)
+    public void usersProfilesUpload(@ModelAttribute @Valid UserProfileUploadRequestDto userProfileUploadRequestDto) {
+        userInfoChangeUseCase.usersProfilesUpload(userProfileUploadRequestDto);
     }
 }
