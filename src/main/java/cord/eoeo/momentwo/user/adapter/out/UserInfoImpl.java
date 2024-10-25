@@ -1,5 +1,7 @@
 package cord.eoeo.momentwo.user.adapter.out;
 
+import cord.eoeo.momentwo.config.s3.S3Manager;
+import cord.eoeo.momentwo.elasticsearch.application.port.out.UserElasticSearchManager;
 import cord.eoeo.momentwo.user.adapter.dto.out.SearchUsernameResponseDto;
 import cord.eoeo.momentwo.user.adapter.dto.out.TempPasswordResponseDto;
 import cord.eoeo.momentwo.user.advice.exception.NotFoundUserException;
@@ -23,6 +25,8 @@ public class UserInfoImpl implements UserInfo {
     private final UserRepository userRepository;
     private final GetAuthentication getAuthentication;
     private final PasswordEncoder passwordEncoder;
+    private final S3Manager s3Manager;
+    private final UserElasticSearchManager userElasticSearchManager;
 
     @Override
     @Transactional(readOnly = true)
@@ -60,5 +64,15 @@ public class UserInfoImpl implements UserInfo {
 
         user.setPassword(passwordEncoder.encoder(newPasswordMatch));
         userRepository.save(user);
+    }
+
+    @Override
+    public void usersProfilesUpload(String filename) {
+        User user = userRepository.findByNickname(getAuthentication.getAuthentication().getName())
+                .orElseThrow(NotFoundUserException::new);
+
+        user.setUserProfileImage(s3Manager.getBaseDomain() + filename);
+        userRepository.save(user);
+        userElasticSearchManager.userInfoChange(user);
     }
 }

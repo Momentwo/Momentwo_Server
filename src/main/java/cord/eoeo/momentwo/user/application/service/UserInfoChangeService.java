@@ -3,6 +3,7 @@ package cord.eoeo.momentwo.user.application.service;
 import cord.eoeo.momentwo.user.adapter.dto.in.ChangePasswordRequestDto;
 import cord.eoeo.momentwo.user.adapter.dto.in.SearchUsernameRequestDto;
 import cord.eoeo.momentwo.user.adapter.dto.in.TempPasswordRequestDto;
+import cord.eoeo.momentwo.user.adapter.dto.in.UserProfileUploadRequestDto;
 import cord.eoeo.momentwo.user.adapter.dto.out.SearchUsernameResponseDto;
 import cord.eoeo.momentwo.user.adapter.dto.out.TempPasswordResponseDto;
 import cord.eoeo.momentwo.user.application.port.in.UserInfoChangeUseCase;
@@ -41,5 +42,11 @@ public class UserInfoChangeService implements UserInfoChangeUseCase {
                 changePasswordRequestDto.getNewPassword(),
                 changePasswordRequestDto.getNewPasswordMatch()
         );
+    }
+
+    @Override
+    @Transactional
+    public void usersProfilesUpload(UserProfileUploadRequestDto userProfileUploadRequestDto) {
+        userInfo.usersProfilesUpload(userProfileUploadRequestDto.getFilename());
     }
 }

@@ -3,6 +3,7 @@ package cord.eoeo.momentwo.elasticsearch.adpater.out;
 import cord.eoeo.momentwo.elasticsearch.application.port.out.UserElasticSearchManager;
 import cord.eoeo.momentwo.elasticsearch.application.port.out.UserSearchRepository;
 import cord.eoeo.momentwo.elasticsearch.domain.UserDocument;
+import cord.eoeo.momentwo.user.advice.exception.NotFoundUserException;
 import cord.eoeo.momentwo.user.domain.User;
 import lombok.RequiredArgsConstructor;
 import org.elasticsearch.index.query.QueryBuilders;
@@ -71,5 +72,15 @@ public class UserElasticSearchManagerImpl implements UserElasticSearchManager {
     public void deleteById(long id) {
         // 클라이언트를 통해 업데이트 요청 실행
         elasticsearchRestTemplate.delete(String.valueOf(id), IndexCoordinates.of("users"));
+    }
+
+    @Override
+    @Transactional
+    public void userInfoChange(User user) {
+        UserDocument userDocument = userSearchRepository.findById(user.getId())
+                .orElseThrow(NotFoundUserException::new);
+
+        userDocument.setUserProfileImage(user.getUserProfileImage());
+        userSearchRepository.save(userDocument);
     }
 }

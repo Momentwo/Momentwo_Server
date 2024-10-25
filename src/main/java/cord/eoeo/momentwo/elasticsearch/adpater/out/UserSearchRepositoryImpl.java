@@ -6,6 +6,8 @@ import cord.eoeo.momentwo.elasticsearch.domain.UserDocument;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
 @RequiredArgsConstructor
 public class UserSearchRepositoryImpl implements UserSearchRepository {
@@ -14,5 +16,10 @@ public class UserSearchRepositoryImpl implements UserSearchRepository {
     @Override
     public void save(UserDocument userDocument) {
         userSearchElasticRepository.save(userDocument);
+    }
+
+    @Override
+    public Optional<UserDocument> findById(long id) {
+        return userSearchElasticRepository.findById(id);
     }
 }
