@@ -5,6 +5,7 @@ import cord.eoeo.momentwo.album.adapter.dto.AlbumProfileUploadRequestDto;
 import cord.eoeo.momentwo.album.adapter.dto.AlbumSubTitleEditRequestDto;
 import cord.eoeo.momentwo.album.application.port.in.AlbumProfileUseCase;
 import cord.eoeo.momentwo.album.application.port.out.AlbumProfile;
+import cord.eoeo.momentwo.config.s3.S3Manager;
 import cord.eoeo.momentwo.member.application.port.out.GetAlbumInfo;
 import cord.eoeo.momentwo.member.domain.Member;
 import cord.eoeo.momentwo.user.advice.exception.NotFoundUserException;
@@ -22,13 +23,14 @@ public class AlbumProfileService implements AlbumProfileUseCase {
     private final GetAuthentication getAuthentication;
     private final GetAlbumInfo getAlbumInfo;
     private final UserRepository userRepository;
+    private final S3Manager s3Manager;
 
     @Override
     @Transactional
     public void profileUpload(AlbumProfileUploadRequestDto uploadRequestDto) {
         albumProfile.profileUpload(
                 getMember(uploadRequestDto.getAlbumId()),
-                uploadRequestDto.getFilename()
+                s3Manager.getBaseDomain() + uploadRequestDto.getFilename()
         );
     }
 
