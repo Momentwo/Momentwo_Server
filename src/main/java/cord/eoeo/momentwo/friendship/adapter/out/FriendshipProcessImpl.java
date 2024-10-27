@@ -4,6 +4,7 @@ import cord.eoeo.momentwo.friendship.adapter.dto.FriendshipAllListResponseDto;
 import cord.eoeo.momentwo.friendship.adapter.dto.FriendshipReceiveListResponseDto;
 import cord.eoeo.momentwo.friendship.adapter.dto.FriendshipSendListResponseDto;
 import cord.eoeo.momentwo.friendship.advice.exception.AlreadyFriendshipException;
+import cord.eoeo.momentwo.friendship.advice.exception.NotDeleteFriendsException;
 import cord.eoeo.momentwo.friendship.advice.exception.NotFoundFriendshipRequestException;
 import cord.eoeo.momentwo.friendship.application.port.out.FriendshipProcess;
 import cord.eoeo.momentwo.friendship.application.port.out.FriendshipRepository;
@@ -94,6 +95,14 @@ public class FriendshipProcessImpl implements FriendshipProcess {
         List<Friendship> friendships = friendshipRepository.findReceiveFriendsByUser(owner);
 
         return new FriendshipReceiveListResponseDto().toDO(friendships);
+    }
+
+    @Override
+    @Transactional
+    public void deleteFriends(User toUser, User fromUser) {
+        if(!friendshipRepository.deleteByToUserAndFromUser(toUser, fromUser)) {
+            throw new NotDeleteFriendsException();
+        }
     }
 
     @Transactional

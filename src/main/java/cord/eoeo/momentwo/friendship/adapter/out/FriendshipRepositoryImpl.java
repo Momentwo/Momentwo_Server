@@ -54,4 +54,11 @@ public class FriendshipRepositoryImpl implements FriendshipRepository {
     public List<Friendship> findReceiveFriendsByUser(User owner) {
         return friendshipJpaRepository.findReceiveFriendsByUser(owner);
     }
+
+    @Override
+    public boolean deleteByToUserAndFromUser(User toUser, User fromUser) {
+        int isDelete = friendshipJpaRepository.deleteByToUserAndFromUser(toUser, fromUser);
+        System.out.println(isDelete);
+        return isDelete > 0;
+    }
 }

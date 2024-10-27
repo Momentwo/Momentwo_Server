@@ -106,4 +106,15 @@ public class FriendshipService implements FriendshipUseCase {
                 .orElseThrow(NotFoundUserException::new);
         return friendshipProcess.getFriendshipReceive(owner);
     }
+
+    @Override
+    @Transactional
+    public void deleteFriends(RequestFriendshipDto requestFriendshipDto) {
+        User toUser = userRepository.findByNickname(getAuthentication.getAuthentication().getName())
+                .orElseThrow(NotFoundUserException::new);
+        User fromUser = userRepository.findByNickname(requestFriendshipDto.getNickname())
+                .orElseThrow(NotFoundUserException::new);
+
+        friendshipProcess.deleteFriends(toUser, fromUser);
+    }
 }

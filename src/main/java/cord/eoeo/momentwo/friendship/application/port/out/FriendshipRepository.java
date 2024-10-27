@@ -24,4 +24,6 @@ public interface FriendshipRepository {
     List<Friendship> findSendFriendsByUser(User owner);
 
     List<Friendship> findReceiveFriendsByUser(User owner);
+
+    boolean deleteByToUserAndFromUser(User toUser, User fromUser);
 }

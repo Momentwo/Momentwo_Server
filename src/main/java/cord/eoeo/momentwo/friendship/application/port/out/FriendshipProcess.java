@@ -19,4 +19,6 @@ public interface FriendshipProcess {
     FriendshipSendListResponseDto getFriendshipSend(User owner);
 
     FriendshipReceiveListResponseDto getFriendshipReceive(User owner);
+
+    void deleteFriends(User toUser, User fromUser);
 }

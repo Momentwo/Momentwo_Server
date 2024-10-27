@@ -14,4 +14,6 @@ public interface FriendshipUseCase {
     FriendshipSendListResponseDto getFriendshipSend();
 
     FriendshipReceiveListResponseDto getFriendshipReceive();
+
+    void deleteFriends(RequestFriendshipDto requestFriendshipDto);
 }
