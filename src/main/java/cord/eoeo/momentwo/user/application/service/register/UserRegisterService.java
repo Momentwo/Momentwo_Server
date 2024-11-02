@@ -2,7 +2,7 @@ package cord.eoeo.momentwo.user.application.service.register;
 
 import cord.eoeo.momentwo.elasticsearch.application.port.out.UserElasticSearchManager;
 import cord.eoeo.momentwo.user.adapter.dto.in.UserRegisterRequestDto;
-import cord.eoeo.momentwo.user.application.port.in.UserRegisterUseCase;
+import cord.eoeo.momentwo.user.application.port.in.register.UserRegisterUseCase;
 import cord.eoeo.momentwo.user.application.port.out.PasswordEncoder;
 import cord.eoeo.momentwo.user.application.port.out.UserRepository;
 import cord.eoeo.momentwo.user.domain.User;

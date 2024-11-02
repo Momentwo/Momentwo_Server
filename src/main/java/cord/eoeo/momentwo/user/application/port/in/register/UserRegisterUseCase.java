@@ -1,4 +1,4 @@
-package cord.eoeo.momentwo.user.application.port.in;
+package cord.eoeo.momentwo.user.application.port.in.register;
 
 import cord.eoeo.momentwo.user.adapter.dto.in.UserRegisterRequestDto;
 

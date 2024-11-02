@@ -1,7 +1,7 @@
 package cord.eoeo.momentwo.user.adapter.in.register;
 
 import cord.eoeo.momentwo.user.adapter.dto.in.UserRegisterRequestDto;
-import cord.eoeo.momentwo.user.application.port.in.UserRegisterUseCase;
+import cord.eoeo.momentwo.user.application.port.in.register.UserRegisterUseCase;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
