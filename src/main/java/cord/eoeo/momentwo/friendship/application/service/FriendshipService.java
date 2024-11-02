@@ -7,7 +7,7 @@ import cord.eoeo.momentwo.friendship.application.port.in.FriendshipUseCase;
 import cord.eoeo.momentwo.friendship.application.port.out.FriendshipProcess;
 import cord.eoeo.momentwo.user.advice.exception.NotFoundUserException;
 import cord.eoeo.momentwo.user.application.port.out.GetAuthentication;
-import cord.eoeo.momentwo.user.application.port.out.UserRepository;
+import cord.eoeo.momentwo.user.application.port.out.find.UserFindNicknameRepo;
 import cord.eoeo.momentwo.user.domain.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -16,7 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 public class FriendshipService implements FriendshipUseCase {
-    private final UserRepository userRepository;
+    private final UserFindNicknameRepo userFindNicknameRepo;
     private final GetAuthentication getAuthentication;
     private final FriendshipProcess friendshipProcess;
 
@@ -24,14 +24,14 @@ public class FriendshipService implements FriendshipUseCase {
     @Override
     @Transactional
     public void requestFriendship(RequestFriendshipDto requestFriendshipDto) {
-        User fromUser = userRepository.findByNickname(getAuthentication.getAuthentication().getName()).orElseThrow(
+        User fromUser = userFindNicknameRepo.findByNickname(getAuthentication.getAuthentication().getName()).orElseThrow(
                 NotFoundUserException::new
         );
         if(fromUser.getNickname().equals(requestFriendshipDto.getNickname())) {
             throw new SelfRequestException();
         }
         // 사용자 조회
-        User toUser = userRepository.findByNickname(requestFriendshipDto.getNickname()).orElseThrow(
+        User toUser = userFindNicknameRepo.findByNickname(requestFriendshipDto.getNickname()).orElseThrow(
                 NotFoundUserException::new
         );
 
@@ -50,10 +50,10 @@ public class FriendshipService implements FriendshipUseCase {
     @Override
     @Transactional
     public void responseFriendship(ResponseFriendshipDto responseFriendshipDto) {
-        User responseUser = userRepository.findByNickname(getAuthentication.getAuthentication().getName()).orElseThrow(
+        User responseUser = userFindNicknameRepo.findByNickname(getAuthentication.getAuthentication().getName()).orElseThrow(
                 NotFoundUserException::new
         );
-        User requestUser = userRepository.findByNickname(responseFriendshipDto.getNickname()).orElseThrow(
+        User requestUser = userFindNicknameRepo.findByNickname(responseFriendshipDto.getNickname()).orElseThrow(
                 NotFoundUserException::new
         );
 
@@ -69,11 +69,11 @@ public class FriendshipService implements FriendshipUseCase {
     // 친구 요청 취소
     @Override
     public void requestFriendshipCancel(RequestFriendshipDto requestFriendshipDto) {
-        User fromUser = userRepository.findByNickname(getAuthentication.getAuthentication().getName()).orElseThrow(
+        User fromUser = userFindNicknameRepo.findByNickname(getAuthentication.getAuthentication().getName()).orElseThrow(
                 NotFoundUserException::new
         );
         // 사용자 조회
-        User toUser = userRepository.findByNickname(requestFriendshipDto.getNickname()).orElseThrow(
+        User toUser = userFindNicknameRepo.findByNickname(requestFriendshipDto.getNickname()).orElseThrow(
                 NotFoundUserException::new
         );
 
@@ -84,7 +84,7 @@ public class FriendshipService implements FriendshipUseCase {
     @Override
     @Transactional
     public FriendshipAllListResponseDto getFriendship() {
-        User owner = userRepository.findByNickname(getAuthentication.getAuthentication().getName())
+        User owner = userFindNicknameRepo.findByNickname(getAuthentication.getAuthentication().getName())
                 .orElseThrow(NotFoundUserException::new);
         return friendshipProcess.getFriendship(owner);
     }
@@ -93,7 +93,7 @@ public class FriendshipService implements FriendshipUseCase {
     @Override
     @Transactional
     public FriendshipSendListResponseDto getFriendshipSend() {
-        User owner = userRepository.findByNickname(getAuthentication.getAuthentication().getName())
+        User owner = userFindNicknameRepo.findByNickname(getAuthentication.getAuthentication().getName())
                 .orElseThrow(NotFoundUserException::new);
         return friendshipProcess.getFriendshipSend(owner);
     }
@@ -102,7 +102,7 @@ public class FriendshipService implements FriendshipUseCase {
     @Override
     @Transactional
     public FriendshipReceiveListResponseDto getFriendshipReceive() {
-        User owner = userRepository.findByNickname(getAuthentication.getAuthentication().getName())
+        User owner = userFindNicknameRepo.findByNickname(getAuthentication.getAuthentication().getName())
                 .orElseThrow(NotFoundUserException::new);
         return friendshipProcess.getFriendshipReceive(owner);
     }
@@ -110,9 +110,9 @@ public class FriendshipService implements FriendshipUseCase {
     @Override
     @Transactional
     public void deleteFriends(RequestFriendshipDto requestFriendshipDto) {
-        User toUser = userRepository.findByNickname(getAuthentication.getAuthentication().getName())
+        User toUser = userFindNicknameRepo.findByNickname(getAuthentication.getAuthentication().getName())
                 .orElseThrow(NotFoundUserException::new);
-        User fromUser = userRepository.findByNickname(requestFriendshipDto.getNickname())
+        User fromUser = userFindNicknameRepo.findByNickname(requestFriendshipDto.getNickname())
                 .orElseThrow(NotFoundUserException::new);
 
         friendshipProcess.deleteFriends(toUser, fromUser);

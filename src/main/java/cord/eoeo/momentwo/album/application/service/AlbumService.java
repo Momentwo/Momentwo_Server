@@ -13,7 +13,7 @@ import cord.eoeo.momentwo.member.domain.Member;
 import cord.eoeo.momentwo.user.advice.exception.NotFoundUserException;
 import cord.eoeo.momentwo.user.advice.exception.NotInviteUserException;
 import cord.eoeo.momentwo.user.application.port.out.GetAuthentication;
-import cord.eoeo.momentwo.user.application.port.out.UserRepository;
+import cord.eoeo.momentwo.user.application.port.out.find.UserFindNicknameRepo;
 import cord.eoeo.momentwo.user.domain.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -24,7 +24,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class AlbumService implements AlbumUseCase {
-    private final UserRepository userRepository;
+    private final UserFindNicknameRepo userFindNicknameRepo;
     private final GetAuthentication getAuthentication;
     private final GetAlbumInfo getAlbumInfo;
     private final AlbumManager albumManager;
@@ -33,7 +33,7 @@ public class AlbumService implements AlbumUseCase {
     @Transactional
     @Override
     public void createAlbums(AlbumCreateRequestDto albumCreateRequestDto) {
-        User admin = userRepository.findByNickname(getAuthentication.getAuthentication().getName())
+        User admin = userFindNicknameRepo.findByNickname(getAuthentication.getAuthentication().getName())
                 .orElseThrow(NotFoundUserException::new);
 
         // 계정당 속할 수 있는 앨범 20개
@@ -54,7 +54,7 @@ public class AlbumService implements AlbumUseCase {
 
         // 앨범에 초대된 멤버 권한 부여
         albumCreateRequestDto.getDoInviteNicknameList().forEach(nickname -> {
-            User inviteUser = userRepository.findByNickname(nickname)
+            User inviteUser = userFindNicknameRepo.findByNickname(nickname)
                     .orElseThrow(NotInviteUserException::new);
             albumManager.albumAddMember(newAlbum, inviteUser);
         });
@@ -81,7 +81,7 @@ public class AlbumService implements AlbumUseCase {
     @Override
     @Transactional(readOnly = true)
     public AlbumInfoListResponseDto getAlbums() {
-        User user = userRepository.findByNickname(getAuthentication.getAuthentication().getName())
+        User user = userFindNicknameRepo.findByNickname(getAuthentication.getAuthentication().getName())
                 .orElseThrow(NotFoundUserException::new);
         List<Album> albums = albumMemberRepository.findAlbumByUser(user);
         if(albums.isEmpty()) {
@@ -101,7 +101,7 @@ public class AlbumService implements AlbumUseCase {
         // 앨범이 존재하는지 확인
         albumManager.getAlbumInfo(id);
 
-        User user = userRepository.findByNickname(getAuthentication.getAuthentication().getName())
+        User user = userFindNicknameRepo.findByNickname(getAuthentication.getAuthentication().getName())
                 .orElseThrow(NotFoundUserException::new);
         return getAlbumInfo.getAlbumMemberInfo(id, user.getId());
     }

@@ -3,7 +3,8 @@ package cord.eoeo.momentwo.config.security.jwt;
 import cord.eoeo.momentwo.config.security.jwt.adapter.out.CustomUserDetailsDto;
 import cord.eoeo.momentwo.config.security.jwt.adapter.out.TokenResponseDto;
 import cord.eoeo.momentwo.user.advice.exception.RefreshTokenValidException;
-import cord.eoeo.momentwo.user.application.port.out.RefreshTokenRepository;
+import cord.eoeo.momentwo.user.application.port.out.RefreshTokenGenericJpaRepo;
+import cord.eoeo.momentwo.user.application.port.out.jpa.RefreshTokenFindJpaRepo;
 import cord.eoeo.momentwo.user.domain.RefreshToken;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
@@ -42,7 +43,8 @@ public class TokenProvider implements InitializingBean {
     private String secret;
     private Long tokenValidationTime;
     private Long refreshTokenValidationTime;
-    private final RefreshTokenRepository refreshTokenRepository;
+    private final RefreshTokenFindJpaRepo refreshTokenFindJpaRepo;
+    private final RefreshTokenGenericJpaRepo refreshTokenGenericJpaRepo;
     private final UserDetailsService userDetailsService;
 
     @Override
@@ -53,12 +55,14 @@ public class TokenProvider implements InitializingBean {
 
     // 생성자 초기화
     public TokenProvider(@Value("${jwt.tokenValidationTime}") long tokenValidationTime,
-                         @Value("${jwt.secret}") String secret, RefreshTokenRepository refreshTokenRepository,
+                         @Value("${jwt.secret}") String secret, RefreshTokenFindJpaRepo refreshTokenFindJpaRepo,
+                         RefreshTokenGenericJpaRepo refreshTokenGenericJpaRepo,
                          UserDetailsService userDetailsService) {
         this.secret = secret;
         this.tokenValidationTime = tokenValidationTime * TOKEN_PRODUCT_TIME;
         this.refreshTokenValidationTime = tokenValidationTime * REFRESH_TOKEN_PRODUCT_TIME;
-        this.refreshTokenRepository = refreshTokenRepository;
+        this.refreshTokenFindJpaRepo = refreshTokenFindJpaRepo;
+        this.refreshTokenGenericJpaRepo = refreshTokenGenericJpaRepo;
         this.userDetailsService = userDetailsService;
     }
 
@@ -136,17 +140,17 @@ public class TokenProvider implements InitializingBean {
     public void saveOrEditRefreshToken(String refresh, String newRefresh, String nickname, LocalDate expiration) {
         if(refresh.isEmpty()) {
             RefreshToken saveRefreshToken = new RefreshToken(newRefresh, nickname, expiration);
-            refreshTokenRepository.save(saveRefreshToken);
+            refreshTokenGenericJpaRepo.save(saveRefreshToken);
             return;
         }
-        RefreshToken editRefreshToken = refreshTokenRepository.findByRefreshToken(refresh).orElseThrow();
+        RefreshToken editRefreshToken = refreshTokenFindJpaRepo.findByRefreshToken(refresh).orElseThrow();
         editRefreshToken.setToken(newRefresh);
         editRefreshToken.setExpirationDate(expiration);
-        refreshTokenRepository.save(editRefreshToken);
+        refreshTokenGenericJpaRepo.save(editRefreshToken);
     }
 
     public boolean validRefreshToken(String token) {
-        return refreshTokenRepository.findByRefreshToken(token)
+        return refreshTokenFindJpaRepo.findByRefreshToken(token)
                 .filter(refreshToken -> refreshToken.getExpirationDate().isAfter(LocalDate.now()))
                 .isPresent();
     }
