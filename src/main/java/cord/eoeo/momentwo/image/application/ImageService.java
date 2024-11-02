@@ -13,7 +13,7 @@ import cord.eoeo.momentwo.photo.application.port.out.PhotoRepository;
 import cord.eoeo.momentwo.subAlbum.application.aop.annotation.CheckAlbumAccessRules;
 import cord.eoeo.momentwo.user.advice.exception.NotFoundUserException;
 import cord.eoeo.momentwo.user.application.port.out.GetAuthentication;
-import cord.eoeo.momentwo.user.application.port.out.UserRepository;
+import cord.eoeo.momentwo.user.application.port.out.find.UserFindNicknameRepo;
 import cord.eoeo.momentwo.user.domain.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -25,7 +25,7 @@ public class ImageService implements ImageUseCase {
     private final S3Manager s3Manager;
     private final PhotoRepository photoRepository;
     private final AlbumManager albumManager;
-    private final UserRepository userRepository;
+    private final UserFindNicknameRepo userFindNicknameRepo;
     private final GetAuthentication getAuthentication;
 
     @Override
@@ -53,7 +53,7 @@ public class ImageService implements ImageUseCase {
 
     @Override
     public PresignedResponseDto userProfilePresignedUrl(UserPresignedRequestDto userPresignedRequestDto) {
-        User user = userRepository.findByNickname(getAuthentication.getAuthentication().getName())
+        User user = userFindNicknameRepo.findByNickname(getAuthentication.getAuthentication().getName())
                 .orElseThrow(NotFoundUserException::new);
 
         // 이미지 삭제(현재) -> 기존 이미지가 없다면 업로드한 이미지만 저장, 기존 이미지가 있다면 삭제 진행

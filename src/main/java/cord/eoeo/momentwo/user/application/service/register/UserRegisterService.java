@@ -4,7 +4,7 @@ import cord.eoeo.momentwo.elasticsearch.application.port.out.UserElasticSearchMa
 import cord.eoeo.momentwo.user.adapter.dto.in.UserRegisterRequestDto;
 import cord.eoeo.momentwo.user.application.port.in.register.UserRegisterUseCase;
 import cord.eoeo.momentwo.user.application.port.out.PasswordEncoder;
-import cord.eoeo.momentwo.user.application.port.out.UserRepository;
+import cord.eoeo.momentwo.user.application.port.out.UserGenericRepo;
 import cord.eoeo.momentwo.user.domain.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -14,7 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class UserRegisterService implements UserRegisterUseCase {
     private final String USER_BASE_IMAGE = "";
-    private final UserRepository userRepository;
+    private final UserGenericRepo userGenericRepo;
     private final PasswordEncoder passwordEncoder;
     private final UserElasticSearchManager userElasticSearchManager;
 
@@ -30,7 +30,7 @@ public class UserRegisterService implements UserRegisterUseCase {
                 userRegisterRequestDto.getPhone(),
                 USER_BASE_IMAGE
         );
-        userRepository.save(newUser);
+        userGenericRepo.save(newUser);
         userElasticSearchManager.save(newUser);
     }
 }

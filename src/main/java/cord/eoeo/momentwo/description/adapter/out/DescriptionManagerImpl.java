@@ -15,7 +15,7 @@ import cord.eoeo.momentwo.photo.application.port.out.PhotoRepository;
 import cord.eoeo.momentwo.photo.domain.Photo;
 import cord.eoeo.momentwo.user.advice.exception.NotFoundUserException;
 import cord.eoeo.momentwo.user.application.port.out.GetAuthentication;
-import cord.eoeo.momentwo.user.application.port.out.UserRepository;
+import cord.eoeo.momentwo.user.application.port.out.find.UserFindNicknameRepo;
 import cord.eoeo.momentwo.user.domain.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
@@ -26,7 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class DescriptionManagerImpl implements DescriptionManager {
     private final DescriptionRepository descriptionRepository;
     private final PhotoRepository photoRepository;
-    private final UserRepository userRepository;
+    private final UserFindNicknameRepo userFindNicknameRepo;
     private final GetAuthentication getAuthentication;
 
     @Override
@@ -81,7 +81,7 @@ public class DescriptionManagerImpl implements DescriptionManager {
     }
 
     private Photo getPhoto(long photoId) {
-        User user = userRepository.findByNickname(getAuthentication.getAuthentication().getName())
+        User user = userFindNicknameRepo.findByNickname(getAuthentication.getAuthentication().getName())
                 .orElseThrow(NotFoundUserException::new);
         return photoRepository.findByIdAndUser(photoId, user)
                 .orElseThrow(NotPhotoAccessException::new);

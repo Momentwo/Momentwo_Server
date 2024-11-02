@@ -10,7 +10,7 @@ import cord.eoeo.momentwo.member.application.port.out.GetAlbumInfo;
 import cord.eoeo.momentwo.member.domain.Member;
 import cord.eoeo.momentwo.user.advice.exception.NotFoundUserException;
 import cord.eoeo.momentwo.user.application.port.out.GetAuthentication;
-import cord.eoeo.momentwo.user.application.port.out.UserRepository;
+import cord.eoeo.momentwo.user.application.port.out.find.UserFindNicknameRepo;
 import cord.eoeo.momentwo.user.domain.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -22,7 +22,7 @@ public class AlbumProfileService implements AlbumProfileUseCase {
     private final AlbumProfile albumProfile;
     private final GetAuthentication getAuthentication;
     private final GetAlbumInfo getAlbumInfo;
-    private final UserRepository userRepository;
+    private final UserFindNicknameRepo userFindNicknameRepo;
     private final S3Manager s3Manager;
 
     @Override
@@ -57,7 +57,7 @@ public class AlbumProfileService implements AlbumProfileUseCase {
 
     @Transactional(readOnly = true)
     private Member getMember(long albumId) {
-        User user = userRepository.findByNickname(getAuthentication.getAuthentication().getName())
+        User user = userFindNicknameRepo.findByNickname(getAuthentication.getAuthentication().getName())
                 .orElseThrow(NotFoundUserException::new);
         return getAlbumInfo.getAlbumMemberInfo(albumId, user.getId());
     }

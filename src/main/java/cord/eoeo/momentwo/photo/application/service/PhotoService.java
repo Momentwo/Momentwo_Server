@@ -9,7 +9,6 @@ import cord.eoeo.momentwo.photo.adapter.dto.PhotoDeleteRequestDto;
 import cord.eoeo.momentwo.photo.adapter.dto.PhotoUploadRequestDto;
 import cord.eoeo.momentwo.photo.advice.exception.NotDeleteImageException;
 import cord.eoeo.momentwo.photo.advice.exception.NotFoundPhotoException;
-import cord.eoeo.momentwo.photo.advice.exception.PhotoCapacityFullException;
 import cord.eoeo.momentwo.photo.application.port.in.PhotoUseCase;
 import cord.eoeo.momentwo.photo.application.port.out.PhotoPageRepository;
 import cord.eoeo.momentwo.photo.application.port.out.PhotoRepository;
@@ -20,7 +19,7 @@ import cord.eoeo.momentwo.subAlbum.application.port.out.SubAlbumManager;
 import cord.eoeo.momentwo.subAlbum.domain.SubAlbum;
 import cord.eoeo.momentwo.user.advice.exception.NotFoundUserException;
 import cord.eoeo.momentwo.user.application.port.out.GetAuthentication;
-import cord.eoeo.momentwo.user.application.port.out.UserRepository;
+import cord.eoeo.momentwo.user.application.port.out.find.UserFindNicknameRepo;
 import cord.eoeo.momentwo.user.domain.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -34,7 +33,7 @@ public class PhotoService implements PhotoUseCase {
     private final ImageManager imageManager;
     private final PhotoRepository photoRepository;
     private final PhotoPageRepository photoPageRepository;
-    private final UserRepository userRepository;
+    private final UserFindNicknameRepo userFindNicknameRepo;
     private final GetAuthentication getAuthentication;
     private final SubAlbumManager subAlbumManager;
     private final AlbumManager albumManager;
@@ -45,7 +44,7 @@ public class PhotoService implements PhotoUseCase {
     @CheckAlbumAccessRules
     public void photoUpload(PhotoUploadRequestDto photoUploadRequestDto) {
         // 유저 정보 및 앨범 정보 가져오기
-        User user = userRepository.findByNickname(getAuthentication.getAuthentication().getName())
+        User user = userFindNicknameRepo.findByNickname(getAuthentication.getAuthentication().getName())
                 .orElseThrow(NotFoundUserException::new);
 
         Album album = albumManager.getAlbumInfo(photoUploadRequestDto.getAlbumId());

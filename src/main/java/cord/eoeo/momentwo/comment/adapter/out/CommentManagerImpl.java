@@ -11,7 +11,7 @@ import cord.eoeo.momentwo.photo.application.port.out.PhotoRepository;
 import cord.eoeo.momentwo.photo.domain.Photo;
 import cord.eoeo.momentwo.user.advice.exception.NotFoundUserException;
 import cord.eoeo.momentwo.user.application.port.out.GetAuthentication;
-import cord.eoeo.momentwo.user.application.port.out.UserRepository;
+import cord.eoeo.momentwo.user.application.port.out.find.UserFindNicknameRepo;
 import cord.eoeo.momentwo.user.domain.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
@@ -23,14 +23,14 @@ import org.springframework.transaction.annotation.Transactional;
 public class CommentManagerImpl implements CommentManager {
     private final CommentRepository commentRepository;
     private final GetAuthentication getAuthentication;
-    private final UserRepository userRepository;
+    private final UserFindNicknameRepo userFindNicknameRepo;
     private final PhotoRepository photoRepository;
     private final CommentPageRepository commentPageRepository;
 
     @Override
     @Transactional
     public void commentCreate(String comments, long photoId) {
-        User user = userRepository.findByNickname(getAuthentication.getAuthentication().getName())
+        User user = userFindNicknameRepo.findByNickname(getAuthentication.getAuthentication().getName())
                 .orElseThrow(NotFoundUserException::new);
         Photo photo = photoRepository.findById(photoId).orElseThrow(NotFoundPhotoException::new);
 
@@ -41,7 +41,7 @@ public class CommentManagerImpl implements CommentManager {
     @Override
     @Transactional
     public void commentEdit(String editComments, long commentId) {
-        User user = userRepository.findByNickname(getAuthentication.getAuthentication().getName())
+        User user = userFindNicknameRepo.findByNickname(getAuthentication.getAuthentication().getName())
                 .orElseThrow(NotFoundUserException::new);
         Comment comment = commentRepository.findByIdAndUser(commentId, user)
                 .orElseThrow(NotCommentAccessException::new);
@@ -52,7 +52,7 @@ public class CommentManagerImpl implements CommentManager {
     @Override
     @Transactional
     public void commentDelete(long commentId) {
-        User user = userRepository.findByNickname(getAuthentication.getAuthentication().getName())
+        User user = userFindNicknameRepo.findByNickname(getAuthentication.getAuthentication().getName())
                 .orElseThrow(NotFoundUserException::new);
         commentRepository.findByIdAndUser(commentId, user).orElseThrow(NotCommentAccessException::new);
         commentRepository.deleteById(commentId);

@@ -10,7 +10,7 @@ import cord.eoeo.momentwo.photo.application.port.out.PhotoRepository;
 import cord.eoeo.momentwo.photo.domain.Photo;
 import cord.eoeo.momentwo.user.advice.exception.NotFoundUserException;
 import cord.eoeo.momentwo.user.application.port.out.GetAuthentication;
-import cord.eoeo.momentwo.user.application.port.out.UserRepository;
+import cord.eoeo.momentwo.user.application.port.out.find.UserFindNicknameRepo;
 import cord.eoeo.momentwo.user.domain.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
@@ -23,12 +23,12 @@ public class PhotoLikesManagerImpl implements PhotoLikesManager {
     private final PhotoRepository photoRepository;
     private final LikesElasticSearchManager likesElasticSearchManager;
     private final GetAuthentication getAuthentication;
-    private final UserRepository userRepository;
+    private final UserFindNicknameRepo userFindNicknameRepo;
 
     @Override
     @Transactional
     public void doLikes(long photoId) {
-        User user = userRepository.findByNickname(getAuthentication.getAuthentication().getName())
+        User user = userFindNicknameRepo.findByNickname(getAuthentication.getAuthentication().getName())
                 .orElseThrow(NotFoundUserException::new);
         Photo photo = photoRepository.findById(photoId).orElseThrow(NotFoundPhotoException::new);
 
@@ -53,7 +53,7 @@ public class PhotoLikesManagerImpl implements PhotoLikesManager {
     @Override
     @Transactional
     public void undoLikes(long photoId) {
-        User user = userRepository.findByNickname(getAuthentication.getAuthentication().getName())
+        User user = userFindNicknameRepo.findByNickname(getAuthentication.getAuthentication().getName())
                 .orElseThrow(NotFoundUserException::new);
         
         // 검색엔진에 좋아요를 누른상태면 삭제 진행
