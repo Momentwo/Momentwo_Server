@@ -11,7 +11,8 @@ import cord.eoeo.momentwo.description.application.port.out.DescriptionRepository
 import cord.eoeo.momentwo.description.domain.Description;
 import cord.eoeo.momentwo.photo.advice.exception.NotFoundPhotoException;
 import cord.eoeo.momentwo.photo.advice.exception.NotPhotoAccessException;
-import cord.eoeo.momentwo.photo.application.port.out.PhotoRepository;
+import cord.eoeo.momentwo.photo.application.port.out.PhotoGenericRepo;
+import cord.eoeo.momentwo.photo.application.port.out.find.PhotoFindIdAndUserPort;
 import cord.eoeo.momentwo.photo.domain.Photo;
 import cord.eoeo.momentwo.user.advice.exception.NotFoundUserException;
 import cord.eoeo.momentwo.user.application.port.out.GetAuthentication;
@@ -25,7 +26,8 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class DescriptionManagerImpl implements DescriptionManager {
     private final DescriptionRepository descriptionRepository;
-    private final PhotoRepository photoRepository;
+    private final PhotoGenericRepo photoGenericRepo;
+    private final PhotoFindIdAndUserPort photoFindIdAndUserPort;
     private final UserFindNicknameRepo userFindNicknameRepo;
     private final GetAuthentication getAuthentication;
 
@@ -72,7 +74,7 @@ public class DescriptionManagerImpl implements DescriptionManager {
     @Override
     @Transactional(readOnly = true)
     public DescriptionResponseDto getDescription(long photoId) {
-        Photo photo = photoRepository.findById(photoId).orElseThrow(NotFoundPhotoException::new);
+        Photo photo = photoGenericRepo.findById(photoId).orElseThrow(NotFoundPhotoException::new);
 
         Description description = descriptionRepository.findByPhoto(photo)
                 .orElseThrow(NotFoundDescriptionException::new);
@@ -83,7 +85,7 @@ public class DescriptionManagerImpl implements DescriptionManager {
     private Photo getPhoto(long photoId) {
         User user = userFindNicknameRepo.findByNickname(getAuthentication.getAuthentication().getName())
                 .orElseThrow(NotFoundUserException::new);
-        return photoRepository.findByIdAndUser(photoId, user)
+        return photoFindIdAndUserPort.findByIdAndUser(photoId, user)
                 .orElseThrow(NotPhotoAccessException::new);
     }
 }

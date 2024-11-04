@@ -7,7 +7,7 @@ import cord.eoeo.momentwo.comment.application.port.out.CommentPageRepository;
 import cord.eoeo.momentwo.comment.application.port.out.CommentRepository;
 import cord.eoeo.momentwo.comment.domain.Comment;
 import cord.eoeo.momentwo.photo.advice.exception.NotFoundPhotoException;
-import cord.eoeo.momentwo.photo.application.port.out.PhotoRepository;
+import cord.eoeo.momentwo.photo.application.port.out.PhotoGenericRepo;
 import cord.eoeo.momentwo.photo.domain.Photo;
 import cord.eoeo.momentwo.user.advice.exception.NotFoundUserException;
 import cord.eoeo.momentwo.user.application.port.out.GetAuthentication;
@@ -24,7 +24,7 @@ public class CommentManagerImpl implements CommentManager {
     private final CommentRepository commentRepository;
     private final GetAuthentication getAuthentication;
     private final UserFindNicknameRepo userFindNicknameRepo;
-    private final PhotoRepository photoRepository;
+    private final PhotoGenericRepo photoGenericRepo;
     private final CommentPageRepository commentPageRepository;
 
     @Override
@@ -32,7 +32,7 @@ public class CommentManagerImpl implements CommentManager {
     public void commentCreate(String comments, long photoId) {
         User user = userFindNicknameRepo.findByNickname(getAuthentication.getAuthentication().getName())
                 .orElseThrow(NotFoundUserException::new);
-        Photo photo = photoRepository.findById(photoId).orElseThrow(NotFoundPhotoException::new);
+        Photo photo = photoGenericRepo.findById(photoId).orElseThrow(NotFoundPhotoException::new);
 
         Comment comment = new Comment(comments, user, photo);
         commentRepository.save(comment);
@@ -61,7 +61,7 @@ public class CommentManagerImpl implements CommentManager {
     @Override
     @Transactional(readOnly = true)
     public CommentListResponseDto commentGet(long photoId, Pageable pageable, long cursorId) {
-        Photo photo = photoRepository.findById(photoId).orElseThrow(NotFoundPhotoException::new);
+        Photo photo = photoGenericRepo.findById(photoId).orElseThrow(NotFoundPhotoException::new);
         return new CommentListResponseDto()
                 .toDo(commentPageRepository.getCommentByPhotoPaging(photo, pageable, cursorId));
     }

@@ -8,7 +8,7 @@ import cord.eoeo.momentwo.image.adapter.dto.PresignedResponseDto;
 import cord.eoeo.momentwo.image.application.port.in.PhotoPresignedUrlUseCase;
 import cord.eoeo.momentwo.image.application.port.out.MakeImagePresignedUrlPort;
 import cord.eoeo.momentwo.photo.advice.exception.PhotoCapacityFullException;
-import cord.eoeo.momentwo.photo.application.port.out.PhotoRepository;
+import cord.eoeo.momentwo.photo.application.port.out.get.PhotoGetAlbumCountPort;
 import cord.eoeo.momentwo.subAlbum.application.aop.annotation.CheckAlbumAccessRules;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -17,7 +17,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class PhotoPresignedUrlService implements PhotoPresignedUrlUseCase {
     private final AlbumManager albumManager;
-    private final PhotoRepository photoRepository;
+    private final PhotoGetAlbumCountPort photoGetAlbumCountPort;
     private final MakeImagePresignedUrlPort makeImagePresignedUrlPort;
     private final S3Manager s3Manager;
 
@@ -26,7 +26,7 @@ public class PhotoPresignedUrlService implements PhotoPresignedUrlUseCase {
     public PresignedResponseDto photoPresignedUrl(PresignedRequestDto presignedRequestDto) {
         // 앨범 제한 갯수를 넘지 않는 다면 반환
         Album album = albumManager.getAlbumInfo(presignedRequestDto.getAlbumId());
-        if(photoRepository.getAlbumCount(album) >= 1000) {
+        if(photoGetAlbumCountPort.getAlbumCount(album) >= 1000) {
             throw new PhotoCapacityFullException();
         }
         return new PresignedResponseDto()

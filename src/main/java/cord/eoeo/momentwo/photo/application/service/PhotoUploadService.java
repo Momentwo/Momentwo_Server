@@ -3,15 +3,9 @@ package cord.eoeo.momentwo.photo.application.service;
 import cord.eoeo.momentwo.album.application.port.out.AlbumManager;
 import cord.eoeo.momentwo.album.domain.Album;
 import cord.eoeo.momentwo.config.s3.S3Manager;
-import cord.eoeo.momentwo.image.adapter.dto.ImageViewListResponseDto;
-import cord.eoeo.momentwo.image.application.port.out.ImageDeletePort;
-import cord.eoeo.momentwo.photo.adapter.dto.PhotoDeleteRequestDto;
 import cord.eoeo.momentwo.photo.adapter.dto.PhotoUploadRequestDto;
-import cord.eoeo.momentwo.photo.advice.exception.NotDeleteImageException;
-import cord.eoeo.momentwo.photo.advice.exception.NotFoundPhotoException;
-import cord.eoeo.momentwo.photo.application.port.in.PhotoUseCase;
-import cord.eoeo.momentwo.photo.application.port.out.PhotoPageRepository;
-import cord.eoeo.momentwo.photo.application.port.out.PhotoRepository;
+import cord.eoeo.momentwo.photo.application.port.in.PhotoUploadUseCase;
+import cord.eoeo.momentwo.photo.application.port.out.PhotoGenericRepo;
 import cord.eoeo.momentwo.photo.domain.Photo;
 import cord.eoeo.momentwo.photo.domain.PhotoFormat;
 import cord.eoeo.momentwo.subAlbum.application.aop.annotation.CheckAlbumAccessRules;
@@ -22,22 +16,18 @@ import cord.eoeo.momentwo.user.application.port.out.GetAuthentication;
 import cord.eoeo.momentwo.user.application.port.out.find.UserFindNicknameRepo;
 import cord.eoeo.momentwo.user.domain.User;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
-public class PhotoService implements PhotoUseCase {
-    private final ImageDeletePort imageDeletePort;
-    private final PhotoRepository photoRepository;
-    private final PhotoPageRepository photoPageRepository;
+public class PhotoUploadService implements PhotoUploadUseCase {
     private final UserFindNicknameRepo userFindNicknameRepo;
     private final GetAuthentication getAuthentication;
-    private final SubAlbumManager subAlbumManager;
     private final AlbumManager albumManager;
+    private final SubAlbumManager subAlbumManager;
     private final S3Manager s3Manager;
+    private final PhotoGenericRepo photoGenericRepo;
 
     @Override
     @Transactional
@@ -63,43 +53,6 @@ public class PhotoService implements PhotoUseCase {
                 subAlbum
         );
 
-        photoRepository.save(newPhoto);
-    }
-
-    @Override
-    @Transactional
-    @CheckAlbumAccessRules
-    public void photoDelete(PhotoDeleteRequestDto photoDeleteRequestDto) {
-        if(photoDeleteRequestDto.getImagesId().isEmpty() || photoDeleteRequestDto.getImagesUrl().isEmpty()) {
-            throw new NotDeleteImageException();
-        }
-
-        // 서버에서 삭제
-        photoRepository.deleteAllBySubAlbumIdAndPhotoId(
-                photoDeleteRequestDto.getSubAlbumId(),
-                photoDeleteRequestDto.getImagesId()
-        );
-
-        // 이미지 저장소 삭제
-        photoDeleteRequestDto.getImagesUrl().forEach(image -> {
-            imageDeletePort.imageDelete(s3Manager.getImagePath() + image).join();
-        });
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    @CheckAlbumAccessRules
-    public ImageViewListResponseDto photoView(long albumId, long subAlbumId, int size, long cursor) {
-        Page<Photo> photoList = photoPageRepository
-                .findQPhotoBySubAlbumIdCustomPaging(
-                        subAlbumId,
-                        PageRequest.of((int) (cursor / size), size),
-                        cursor
-                );
-        if(photoList.isEmpty()) {
-            throw new NotFoundPhotoException();
-        }
-
-        return new ImageViewListResponseDto().toDo(photoList);
+        photoGenericRepo.save(newPhoto);
     }
 }
