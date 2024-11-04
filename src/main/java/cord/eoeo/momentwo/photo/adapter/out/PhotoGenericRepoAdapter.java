@@ -1,4 +1,4 @@
-package cord.eoeo.momentwo.photo.adapter;
+package cord.eoeo.momentwo.photo.adapter.out;
 
 import cord.eoeo.momentwo.photo.application.port.out.PhotoGenericJpaRepo;
 import cord.eoeo.momentwo.photo.application.port.out.PhotoGenericRepo;
