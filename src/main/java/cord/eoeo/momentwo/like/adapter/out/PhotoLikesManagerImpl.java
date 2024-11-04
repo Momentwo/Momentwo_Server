@@ -6,7 +6,7 @@ import cord.eoeo.momentwo.like.application.port.out.PhotoLikesManager;
 import cord.eoeo.momentwo.like.application.port.out.PhotoLikesRepository;
 import cord.eoeo.momentwo.like.domain.PhotoLike;
 import cord.eoeo.momentwo.photo.advice.exception.NotFoundPhotoException;
-import cord.eoeo.momentwo.photo.application.port.out.PhotoRepository;
+import cord.eoeo.momentwo.photo.application.port.out.PhotoGenericRepo;
 import cord.eoeo.momentwo.photo.domain.Photo;
 import cord.eoeo.momentwo.user.advice.exception.NotFoundUserException;
 import cord.eoeo.momentwo.user.application.port.out.GetAuthentication;
@@ -20,7 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class PhotoLikesManagerImpl implements PhotoLikesManager {
     private final PhotoLikesRepository photoLikesRepository;
-    private final PhotoRepository photoRepository;
+    private final PhotoGenericRepo photoGenericRepo;
     private final LikesElasticSearchManager likesElasticSearchManager;
     private final GetAuthentication getAuthentication;
     private final UserFindNicknameRepo userFindNicknameRepo;
@@ -30,7 +30,7 @@ public class PhotoLikesManagerImpl implements PhotoLikesManager {
     public void doLikes(long photoId) {
         User user = userFindNicknameRepo.findByNickname(getAuthentication.getAuthentication().getName())
                 .orElseThrow(NotFoundUserException::new);
-        Photo photo = photoRepository.findById(photoId).orElseThrow(NotFoundPhotoException::new);
+        Photo photo = photoGenericRepo.findById(photoId).orElseThrow(NotFoundPhotoException::new);
 
         // 검색엔진에 좋아요가 없다면 좋아요를 누를 수 있는 상태
         if(!likesElasticSearchManager.isLikes(user, photoId)) {
@@ -58,7 +58,7 @@ public class PhotoLikesManagerImpl implements PhotoLikesManager {
         
         // 검색엔진에 좋아요를 누른상태면 삭제 진행
         if(likesElasticSearchManager.isLikes(user, photoId)) {
-            Photo photo = photoRepository.findById(photoId).orElseThrow(NotFoundPhotoException::new);
+            Photo photo = photoGenericRepo.findById(photoId).orElseThrow(NotFoundPhotoException::new);
             PhotoLike photoLike = photoLikesRepository.findByPhoto(photo).orElseThrow(NotFoundPhotoLikesException::new);
 
             photoLike.setCount(photoLike.getCount() - 1);
@@ -71,7 +71,7 @@ public class PhotoLikesManagerImpl implements PhotoLikesManager {
     @Override
     @Transactional(readOnly = true)
     public PhotoLike getLikes(long photoId) {
-        Photo photo = photoRepository.findById(photoId).orElseThrow(NotFoundPhotoException::new);
+        Photo photo = photoGenericRepo.findById(photoId).orElseThrow(NotFoundPhotoException::new);
 
         return photoLikesRepository.findByPhoto(photo)
                 .orElseThrow(NotFoundPhotoLikesException::new);
