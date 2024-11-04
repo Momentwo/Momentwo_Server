@@ -4,7 +4,7 @@ import cord.eoeo.momentwo.album.application.port.out.AlbumManager;
 import cord.eoeo.momentwo.album.domain.Album;
 import cord.eoeo.momentwo.config.s3.S3Manager;
 import cord.eoeo.momentwo.image.adapter.dto.ImageViewListResponseDto;
-import cord.eoeo.momentwo.image.application.port.out.ImageManager;
+import cord.eoeo.momentwo.image.application.port.out.ImageDeletePort;
 import cord.eoeo.momentwo.photo.adapter.dto.PhotoDeleteRequestDto;
 import cord.eoeo.momentwo.photo.adapter.dto.PhotoUploadRequestDto;
 import cord.eoeo.momentwo.photo.advice.exception.NotDeleteImageException;
@@ -30,7 +30,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 public class PhotoService implements PhotoUseCase {
-    private final ImageManager imageManager;
+    private final ImageDeletePort imageDeletePort;
     private final PhotoRepository photoRepository;
     private final PhotoPageRepository photoPageRepository;
     private final UserFindNicknameRepo userFindNicknameRepo;
@@ -82,7 +82,7 @@ public class PhotoService implements PhotoUseCase {
 
         // 이미지 저장소 삭제
         photoDeleteRequestDto.getImagesUrl().forEach(image -> {
-            imageManager.imageDelete(s3Manager.getImagePath() + image).join();
+            imageDeletePort.imageDelete(s3Manager.getImagePath() + image).join();
         });
     }
 
