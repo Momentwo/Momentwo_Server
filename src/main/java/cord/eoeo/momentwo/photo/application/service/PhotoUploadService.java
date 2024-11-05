@@ -9,7 +9,7 @@ import cord.eoeo.momentwo.photo.application.port.out.PhotoGenericRepo;
 import cord.eoeo.momentwo.photo.domain.Photo;
 import cord.eoeo.momentwo.photo.domain.PhotoFormat;
 import cord.eoeo.momentwo.subAlbum.application.aop.annotation.CheckAlbumAccessRules;
-import cord.eoeo.momentwo.subAlbum.application.port.out.SubAlbumManager;
+import cord.eoeo.momentwo.subAlbum.application.port.out.manager.GetSubAlbumInfoPort;
 import cord.eoeo.momentwo.subAlbum.domain.SubAlbum;
 import cord.eoeo.momentwo.user.advice.exception.NotFoundUserException;
 import cord.eoeo.momentwo.user.application.port.out.GetAuthentication;
@@ -25,7 +25,7 @@ public class PhotoUploadService implements PhotoUploadUseCase {
     private final UserFindNicknameRepo userFindNicknameRepo;
     private final GetAuthentication getAuthentication;
     private final AlbumManager albumManager;
-    private final SubAlbumManager subAlbumManager;
+    private final GetSubAlbumInfoPort getSubAlbumInfoPort;
     private final S3Manager s3Manager;
     private final PhotoGenericRepo photoGenericRepo;
 
@@ -38,7 +38,7 @@ public class PhotoUploadService implements PhotoUploadUseCase {
                 .orElseThrow(NotFoundUserException::new);
 
         Album album = albumManager.getAlbumInfo(photoUploadRequestDto.getAlbumId());
-        SubAlbum subAlbum = subAlbumManager.getSubAlbumInfo(photoUploadRequestDto.getSubAlbumId());
+        SubAlbum subAlbum = getSubAlbumInfoPort.getSubAlbumInfo(photoUploadRequestDto.getSubAlbumId());
 
         // 타입 정보 찾기
         int fileSplitSize = photoUploadRequestDto.getFilename().split("\\.").length - 1;
