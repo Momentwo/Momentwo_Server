@@ -1,6 +1,6 @@
 package cord.eoeo.momentwo.photo.application.service;
 
-import cord.eoeo.momentwo.album.application.port.out.AlbumManager;
+import cord.eoeo.momentwo.album.application.port.out.manager.GetAlbumInfoPort;
 import cord.eoeo.momentwo.album.domain.Album;
 import cord.eoeo.momentwo.config.s3.S3Manager;
 import cord.eoeo.momentwo.photo.adapter.dto.PhotoUploadRequestDto;
@@ -24,7 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class PhotoUploadService implements PhotoUploadUseCase {
     private final UserFindNicknameRepo userFindNicknameRepo;
     private final GetAuthentication getAuthentication;
-    private final AlbumManager albumManager;
+    private final GetAlbumInfoPort getAlbumInfoPort;
     private final GetSubAlbumInfoPort getSubAlbumInfoPort;
     private final S3Manager s3Manager;
     private final PhotoGenericRepo photoGenericRepo;
@@ -37,7 +37,7 @@ public class PhotoUploadService implements PhotoUploadUseCase {
         User user = userFindNicknameRepo.findByNickname(getAuthentication.getAuthentication().getName())
                 .orElseThrow(NotFoundUserException::new);
 
-        Album album = albumManager.getAlbumInfo(photoUploadRequestDto.getAlbumId());
+        Album album = getAlbumInfoPort.getAlbumInfo(photoUploadRequestDto.getAlbumId());
         SubAlbum subAlbum = getSubAlbumInfoPort.getSubAlbumInfo(photoUploadRequestDto.getSubAlbumId());
 
         // 타입 정보 찾기

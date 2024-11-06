@@ -1,6 +1,6 @@
 package cord.eoeo.momentwo.user.application.service.status;
 
-import cord.eoeo.momentwo.album.application.port.out.AlbumManager;
+import cord.eoeo.momentwo.album.application.port.out.AlbumGenericRepo;
 import cord.eoeo.momentwo.elasticsearch.application.port.out.LikesElasticSearchManager;
 import cord.eoeo.momentwo.elasticsearch.application.port.out.UserElasticSearchManager;
 import cord.eoeo.momentwo.member.advice.exception.AdminAlbumOutException;
@@ -26,7 +26,7 @@ public class UserSignOutService implements UserSignOutUseCase {
     private final GetAuthentication getAuthentication;
     private final PasswordEncoder passwordEncoder;
     private final GetAlbumInfo getAlbumInfo;
-    private final AlbumManager albumManager;
+    private final AlbumGenericRepo albumGenericRepo;
     private final UserDeleteJpaRepo userDeleteJpaRepo;
     private final UserElasticSearchManager userElasticSearchManager;
     private final LikesElasticSearchManager likesElasticSearchManager;
@@ -52,7 +52,7 @@ public class UserSignOutService implements UserSignOutUseCase {
             }
             // 관리자 일 때, 회원탈퇴를 할 경우 앨범 테이블 정보 삭제
             if(getAlbumInfo.isCheckAlbumAdmin(member) && getAlbumInfo.isCheckAlbumOneMember(albumId)) {
-                albumManager.albumDelete(member);
+                albumGenericRepo.deleteById(member.getAlbum().getId());
             }
         });
 
