@@ -7,7 +7,7 @@ import cord.eoeo.momentwo.member.advice.exception.MemberNotInAlbumException;
 import cord.eoeo.momentwo.member.application.port.in.OutAlbumUseCase;
 import cord.eoeo.momentwo.member.application.port.out.AlbumMemberGenericRepo;
 import cord.eoeo.momentwo.member.application.port.out.async.GetUserInfoByNicknamePort;
-import cord.eoeo.momentwo.member.application.port.out.info.GetAlbumMemberInfoPort;
+import cord.eoeo.momentwo.member.application.port.out.info.GetMemberInfoPort;
 import cord.eoeo.momentwo.member.application.port.out.info.IsAlbumOutPort;
 import cord.eoeo.momentwo.member.application.port.out.info.IsCheckAlbumAdminPort;
 import cord.eoeo.momentwo.member.application.port.out.info.IsCheckAlbumOneMemberPort;
@@ -24,7 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class OutAlbumService implements OutAlbumUseCase {
     private final GetUserInfoByNicknamePort getUserInfoByNicknamePort;
     private final GetAuthentication getAuthentication;
-    private final GetAlbumMemberInfoPort getAlbumMemberInfoPort;
+    private final GetMemberInfoPort getMemberInfoPort;
     private final IsCheckAlbumAdminPort isCheckAlbumAdminPort;
     private final IsCheckAlbumOneMemberPort isCheckAlbumOneMemberPort;
     private final IsAlbumOutPort isAlbumOutPort;
@@ -37,7 +37,7 @@ public class OutAlbumService implements OutAlbumUseCase {
     public void outAlbum(MemberOutRequestDto memberOutRequestDto) {
         User selfUser = getUserInfoByNicknamePort.getUserInfoByNickname(getAuthentication.getAuthentication().getName())
                 .join();
-        Member member = getAlbumMemberInfoPort.getAlbumMemberInfo(memberOutRequestDto.getAlbumId(), selfUser.getId());
+        Member member = getMemberInfoPort.getAlbumMemberInfo(memberOutRequestDto.getAlbumId(), selfUser.getId());
 
         // 앨범 관리자가 나갈 경우 멤버가 존재한다면 나갈 수 없음
         // 하지만 멤버가 없을 경우 나갈 수 있음

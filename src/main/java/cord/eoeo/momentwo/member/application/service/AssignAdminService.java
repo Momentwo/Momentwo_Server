@@ -5,7 +5,7 @@ import cord.eoeo.momentwo.member.advice.exception.NotChangeAdminException;
 import cord.eoeo.momentwo.member.application.port.in.AssignAdminUseCase;
 import cord.eoeo.momentwo.member.application.port.out.async.GetUserInfoByNicknamePort;
 import cord.eoeo.momentwo.member.application.port.out.info.AssignAdminPort;
-import cord.eoeo.momentwo.member.application.port.out.info.GetAlbumMemberInfoPort;
+import cord.eoeo.momentwo.member.application.port.out.info.GetMemberInfoPort;
 import cord.eoeo.momentwo.member.domain.MemberAlbumGrade;
 import cord.eoeo.momentwo.subAlbum.application.aop.annotation.CheckAlbumAccessRules;
 import cord.eoeo.momentwo.user.application.port.out.GetAuthentication;
@@ -19,7 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class AssignAdminService implements AssignAdminUseCase {
     private final GetUserInfoByNicknamePort getUserInfoByNicknamePort;
     private final GetAuthentication getAuthentication;
-    private final GetAlbumMemberInfoPort getAlbumMemberInfoPort;
+    private final GetMemberInfoPort getMemberInfoPort;
     private final AssignAdminPort assignAdminPort;
 
     @Override
@@ -30,7 +30,7 @@ public class AssignAdminService implements AssignAdminUseCase {
                 .join();
 
         // 관리자가 아닐경우
-        if(!getAlbumMemberInfoPort.getAlbumMemberInfo(assignAdminRequestDto.getAlbumId(),
+        if(!getMemberInfoPort.getAlbumMemberInfo(assignAdminRequestDto.getAlbumId(),
                 owner.getId()).getRules().equals(MemberAlbumGrade.ROLE_ALBUM_ADMIN)) {
             throw new NotChangeAdminException();
         }
