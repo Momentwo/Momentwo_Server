@@ -9,7 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Component
 @RequiredArgsConstructor
-public class GetAlbumMemberInfoAdapter implements GetAlbumMemberInfoPort {
+public class GetMemberInfoAdapter implements GetAlbumMemberInfoPort {
     private final MemberFindGradeByAlbumIdAndUserIdRepo memberFindGradeByAlbumIdAndUserIdRepo;
 
     // 앨범 멤버 정보 가져오기
