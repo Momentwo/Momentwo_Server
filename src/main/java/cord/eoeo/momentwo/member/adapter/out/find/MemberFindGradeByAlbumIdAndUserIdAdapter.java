@@ -5,9 +5,9 @@ import cord.eoeo.momentwo.member.application.port.out.find.MemberFindGradeByAlbu
 import cord.eoeo.momentwo.member.application.port.out.jpa.AlbumMemberFindJpaRepo;
 import cord.eoeo.momentwo.member.domain.Member;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
-@Component
+@Repository
 @RequiredArgsConstructor
 public class MemberFindGradeByAlbumIdAndUserIdAdapter implements MemberFindGradeByAlbumIdAndUserIdRepo {
     private final AlbumMemberFindJpaRepo albumMemberFindJpaRepo;

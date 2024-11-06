@@ -4,9 +4,9 @@ import cord.eoeo.momentwo.member.application.port.out.get.MemberGetAlbumSizeRepo
 import cord.eoeo.momentwo.member.application.port.out.jpa.AlbumMemberGetJpaRepo;
 import cord.eoeo.momentwo.user.domain.User;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
-@Component
+@Repository
 @RequiredArgsConstructor
 public class MemberGetAlbumSizeAdapter implements MemberGetAlbumSizeRepo {
     private final AlbumMemberGetJpaRepo albumMemberGetJpaRepo;

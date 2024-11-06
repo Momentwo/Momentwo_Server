@@ -5,11 +5,11 @@ import cord.eoeo.momentwo.member.application.port.out.find.MemberFindAlbumByUser
 import cord.eoeo.momentwo.member.application.port.out.jpa.AlbumMemberFindJpaRepo;
 import cord.eoeo.momentwo.user.domain.User;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-@Component
+@Repository
 @RequiredArgsConstructor
 public class MemberFindAlbumByUserAdapter implements MemberFindAlbumByUserRepo {
     private final AlbumMemberFindJpaRepo albumMemberFindJpaRepo;
