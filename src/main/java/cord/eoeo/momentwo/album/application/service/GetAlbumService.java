@@ -4,7 +4,7 @@ import cord.eoeo.momentwo.album.adapter.dto.AlbumInfoListResponseDto;
 import cord.eoeo.momentwo.album.advice.exception.NotFoundAlbumException;
 import cord.eoeo.momentwo.album.application.port.in.GetAlbumUseCase;
 import cord.eoeo.momentwo.album.domain.Album;
-import cord.eoeo.momentwo.member.application.port.out.AlbumMemberRepository;
+import cord.eoeo.momentwo.member.application.port.out.find.MemberFindAlbumByUserRepo;
 import cord.eoeo.momentwo.subAlbum.application.aop.annotation.CheckAlbumAccessRules;
 import cord.eoeo.momentwo.user.advice.exception.NotFoundUserException;
 import cord.eoeo.momentwo.user.application.port.out.GetAuthentication;
@@ -21,7 +21,7 @@ import java.util.List;
 public class GetAlbumService implements GetAlbumUseCase {
     private final UserFindNicknameRepo userFindNicknameRepo;
     private final GetAuthentication getAuthentication;
-    private final AlbumMemberRepository albumMemberRepository;
+    private final MemberFindAlbumByUserRepo memberFindAlbumByUserRepo;
 
     @Override
     @CheckAlbumAccessRules
@@ -29,7 +29,7 @@ public class GetAlbumService implements GetAlbumUseCase {
     public AlbumInfoListResponseDto getAlbums() {
         User user = userFindNicknameRepo.findByNickname(getAuthentication.getAuthentication().getName())
                 .orElseThrow(NotFoundUserException::new);
-        List<Album> albums = albumMemberRepository.findAlbumByUser(user);
+        List<Album> albums = memberFindAlbumByUserRepo.findAlbumByUser(user);
         if(albums.isEmpty()) {
             throw new NotFoundAlbumException();
         }

@@ -8,7 +8,7 @@ import cord.eoeo.momentwo.album.application.port.out.manager.AlbumAddMemberPort;
 import cord.eoeo.momentwo.album.application.port.out.manager.AlbumSetAdminPort;
 import cord.eoeo.momentwo.album.application.port.out.manager.GetAlbumSubTitlePort;
 import cord.eoeo.momentwo.album.domain.Album;
-import cord.eoeo.momentwo.member.application.port.out.GetAlbumInfo;
+import cord.eoeo.momentwo.member.application.port.out.info.IsCheckAlbumSizePort;
 import cord.eoeo.momentwo.user.advice.exception.NotFoundUserException;
 import cord.eoeo.momentwo.user.advice.exception.NotInviteUserException;
 import cord.eoeo.momentwo.user.application.port.out.GetAuthentication;
@@ -23,7 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class CreateAlbumService implements CreateAlbumUseCase {
     private final UserFindNicknameRepo userFindNicknameRepo;
     private final GetAuthentication getAuthentication;
-    private final GetAlbumInfo getAlbumInfo;
+    private final IsCheckAlbumSizePort isCheckAlbumSizePort;
     private final GetAlbumSubTitlePort getAlbumSubTitlePort;
     private final AlbumSetAdminPort albumSetAdminPort;
     private final AlbumGenericRepo albumGenericRepo;
@@ -36,7 +36,7 @@ public class CreateAlbumService implements CreateAlbumUseCase {
                 .orElseThrow(NotFoundUserException::new);
 
         // 계정당 속할 수 있는 앨범 20개
-        if(getAlbumInfo.isCheckAlbumSize(admin)) {
+        if(isCheckAlbumSizePort.isCheckAlbumSize(admin)) {
             throw new NotCreateAlbumException();
         }
 

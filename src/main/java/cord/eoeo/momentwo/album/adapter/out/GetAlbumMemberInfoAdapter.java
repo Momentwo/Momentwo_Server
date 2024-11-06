@@ -2,7 +2,7 @@ package cord.eoeo.momentwo.album.adapter.out;
 
 import cord.eoeo.momentwo.album.application.port.out.GetAlbumMemberInfoPort;
 import cord.eoeo.momentwo.album.application.port.out.manager.GetAlbumInfoPort;
-import cord.eoeo.momentwo.member.application.port.out.GetAlbumInfo;
+import cord.eoeo.momentwo.member.application.port.out.info.GetMemberInfoPort;
 import cord.eoeo.momentwo.member.domain.Member;
 import cord.eoeo.momentwo.user.advice.exception.NotFoundUserException;
 import cord.eoeo.momentwo.user.application.port.out.GetAuthentication;
@@ -18,7 +18,7 @@ public class GetAlbumMemberInfoAdapter implements GetAlbumMemberInfoPort {
     private final GetAlbumInfoPort getAlbumInfoPort;
     private final UserFindNicknameRepo userFindNicknameRepo;
     private final GetAuthentication getAuthentication;
-    private final GetAlbumInfo getAlbumInfo;
+    private final GetMemberInfoPort getMemberInfoPort;
 
     @Override
     @Transactional(readOnly = true)
@@ -28,6 +28,6 @@ public class GetAlbumMemberInfoAdapter implements GetAlbumMemberInfoPort {
 
         User user = userFindNicknameRepo.findByNickname(getAuthentication.getAuthentication().getName())
                 .orElseThrow(NotFoundUserException::new);
-        return getAlbumInfo.getAlbumMemberInfo(id, user.getId());
+        return getMemberInfoPort.getAlbumMemberInfo(id, user.getId());
     }
 }
