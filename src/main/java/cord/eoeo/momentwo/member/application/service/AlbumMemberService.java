@@ -1,6 +1,6 @@
 package cord.eoeo.momentwo.member.application.service;
 
-import cord.eoeo.momentwo.album.application.port.out.AlbumManager;
+import cord.eoeo.momentwo.album.application.port.out.AlbumGenericRepo;
 import cord.eoeo.momentwo.album.domain.Album;
 import cord.eoeo.momentwo.elasticsearch.application.port.out.LikesElasticSearchManager;
 import cord.eoeo.momentwo.member.adapter.in.dto.*;
@@ -30,7 +30,7 @@ public class AlbumMemberService implements AlbumMemberUseCase {
     private final GetAlbumInfo getAlbumInfo;
     private final GetMemberInfo getMemberInfo;
     private final GetAuthentication getAuthentication;
-    private final AlbumManager albumManager;
+    private final AlbumGenericRepo albumGenericRepo;
     private final LikesElasticSearchManager likesElasticSearchManager;
 
     @Override
@@ -150,7 +150,7 @@ public class AlbumMemberService implements AlbumMemberUseCase {
         // 앨범도 같이 삭제 되어야 한다.
         if(getAlbumInfo.isCheckAlbumAdmin(member)
                 && getAlbumInfo.isCheckAlbumOneMember(memberOutRequestDto.getAlbumId())) {
-            albumManager.albumDelete(member);
+            albumGenericRepo.deleteById(member.getAlbum().getId());
         }
         likesElasticSearchManager.deleteByWildNickname(selfUser.getNickname());
     }

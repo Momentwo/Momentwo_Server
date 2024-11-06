@@ -1,8 +1,7 @@
 package cord.eoeo.momentwo.member.adapter.out;
 
 import cord.eoeo.momentwo.album.advice.exception.NotFoundAlbumException;
-import cord.eoeo.momentwo.album.application.aop.annotation.CheckAlbumAdmin;
-import cord.eoeo.momentwo.album.application.port.out.AlbumRepository;
+import cord.eoeo.momentwo.album.application.port.out.AlbumGenericRepo;
 import cord.eoeo.momentwo.album.domain.Album;
 import cord.eoeo.momentwo.member.advice.exception.NotChangeSameAndUpGradeRulesException;
 import cord.eoeo.momentwo.member.advice.exception.NotFoundAuthorityException;
@@ -22,7 +21,7 @@ import java.util.concurrent.CompletableFuture;
 @Configuration
 @RequiredArgsConstructor
 public class GetAlbumInfoImpl implements GetAlbumInfo {
-    private final AlbumRepository albumRepository;
+    private final AlbumGenericRepo albumGenericRepo;
     private final AlbumMemberRepository albumMemberRepository;
 
     @Override
@@ -30,7 +29,7 @@ public class GetAlbumInfoImpl implements GetAlbumInfo {
     @Async
     public CompletableFuture<Album> getAlbum(long id) {
         return CompletableFuture.supplyAsync(()
-                -> albumRepository.findById(id).orElseThrow(NotFoundAlbumException::new));
+                -> albumGenericRepo.findById(id).orElseThrow(NotFoundAlbumException::new));
     }
 
     @Override
