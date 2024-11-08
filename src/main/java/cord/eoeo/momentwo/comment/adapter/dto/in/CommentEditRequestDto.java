@@ -9,6 +9,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class CommentEditRequestDto {
     private long albumId;
-    private long CommentId;
+    private long commentId;
     private String editComments;
 }
