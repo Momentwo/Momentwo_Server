@@ -1,11 +1,10 @@
-package cord.eoeo.momentwo.like.application.port.out;
+package cord.eoeo.momentwo.like.application.port.out.find;
 
 import cord.eoeo.momentwo.like.domain.PhotoLike;
 import cord.eoeo.momentwo.photo.domain.Photo;
 
 import java.util.Optional;
 
-public interface PhotoLikesRepository {
-    void save(PhotoLike photoLike);
+public interface PhotoLikesFindByPhotoPort {
     Optional<PhotoLike> findByPhoto(Photo photo);
 }
