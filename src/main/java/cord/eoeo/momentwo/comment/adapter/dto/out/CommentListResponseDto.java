@@ -14,11 +14,23 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 public class CommentListResponseDto {
     private List<CommentResponseDto> commentsList;
+    private long page;
+    private long size;
+    private long totalPages;
+    private long totalElements;
+    private boolean hasNext;
+    private boolean hasPrevious;
 
     public CommentListResponseDto toDo(Page<Comment> comments) {
         return new CommentListResponseDto(
                 comments.stream().map(comment -> new CommentResponseDto().toDo(comment))
-                .collect(Collectors.toList())
+                .collect(Collectors.toList()),
+                comments.getNumber(),
+                comments.getSize(),
+                comments.getTotalPages(),
+                comments.getTotalElements(),
+                comments.hasNext(),
+                comments.hasPrevious()
         );
     }
 }
