@@ -2,7 +2,7 @@ package cord.eoeo.momentwo.config.security;
 
 import cord.eoeo.momentwo.config.security.jwt.adapter.out.CustomUserDetailsDto;
 import cord.eoeo.momentwo.user.advice.exception.NotFoundUserException;
-import cord.eoeo.momentwo.user.application.port.out.UserRepository;
+import cord.eoeo.momentwo.user.application.port.out.find.UserFindUsernameRepo;
 import cord.eoeo.momentwo.user.domain.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -16,11 +16,11 @@ import java.util.Collections;
 @Service
 @RequiredArgsConstructor
 public class CustomUserDetailsService implements UserDetailsService {
-    private final UserRepository userRepository;
+    private final UserFindUsernameRepo userFindUsernameRepo;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return userRepository.findByUsername(username)
+        return userFindUsernameRepo.findByUsername(username)
                 .map(this::createUserDetails)
                 .orElseThrow(NotFoundUserException::new);
     }

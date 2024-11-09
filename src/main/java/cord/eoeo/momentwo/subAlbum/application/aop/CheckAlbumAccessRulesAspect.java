@@ -4,7 +4,7 @@ import cord.eoeo.momentwo.member.advice.exception.NotFoundAccessException;
 import cord.eoeo.momentwo.photo.application.port.out.PhotoRulesCheck;
 import cord.eoeo.momentwo.user.advice.exception.NotFoundUserException;
 import cord.eoeo.momentwo.user.application.port.out.GetAuthentication;
-import cord.eoeo.momentwo.user.application.port.out.UserRepository;
+import cord.eoeo.momentwo.user.application.port.out.find.UserFindNicknameRepo;
 import cord.eoeo.momentwo.user.domain.User;
 import lombok.RequiredArgsConstructor;
 import org.aspectj.lang.JoinPoint;
@@ -19,7 +19,7 @@ import java.lang.reflect.Field;
 @RequiredArgsConstructor
 public class CheckAlbumAccessRulesAspect {
     private final PhotoRulesCheck photoRulesCheck;
-    private final UserRepository userRepository;
+    private final UserFindNicknameRepo userFindNicknameRepo;
     private final GetAuthentication getAuthentication;
 
     @Before("@annotation(cord.eoeo.momentwo.subAlbum.application.aop.annotation.CheckAlbumAccessRules)")
@@ -42,7 +42,7 @@ public class CheckAlbumAccessRulesAspect {
                 }
             }
         }
-        User user = userRepository.findByNickname(getAuthentication.getAuthentication().getName())
+        User user = userFindNicknameRepo.findByNickname(getAuthentication.getAuthentication().getName())
                 .orElseThrow(NotFoundUserException::new);
 
         if(albumId != 0 && !photoRulesCheck.isAlbumMember(albumId, user)) {
