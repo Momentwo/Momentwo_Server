@@ -1,12 +1,10 @@
-package cord.eoeo.momentwo.description.application.port.out;
+package cord.eoeo.momentwo.description.application.port.out.find;
 
 import cord.eoeo.momentwo.description.domain.Description;
 import cord.eoeo.momentwo.photo.domain.Photo;
 
 import java.util.Optional;
 
-public interface DescriptionRepository {
-    void save(Description description);
-    void deleteByPhoto(Photo photo);
+public interface DescriptionFindByPhotoRepo {
     Optional<Description> findByPhoto(Photo photo);
 }
