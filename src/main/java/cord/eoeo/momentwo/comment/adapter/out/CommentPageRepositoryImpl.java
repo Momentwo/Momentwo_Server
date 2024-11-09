@@ -22,6 +22,13 @@ public class CommentPageRepositoryImpl implements CommentPageRepository {
     public Page<Comment> getCommentByPhotoPaging(Photo photo, Pageable pageable, long cursorId) {
         QComment comment = QComment.comment;
 
+        // 전체 갯수 카운트 (안하면 DTO 에서 표시가 안됌 -> fetchCount 대신 사용)
+        Long commentsCount = jpaQueryFactory
+                .select(comment.count())
+                .from(comment)
+                .where(comment.photo.eq(photo))
+                .fetchOne();
+
         List<Comment> comments = jpaQueryFactory
                 .select(comment)
                 .from(comment)
@@ -29,7 +36,7 @@ public class CommentPageRepositoryImpl implements CommentPageRepository {
                 .limit(pageable.getPageSize())
                 .fetch();
 
-        return new PageImpl<>(comments);
+        return new PageImpl<>(comments, pageable, commentsCount);
     }
 
     private BooleanExpression cursor(Long cursorId, QComment comment) {
