@@ -37,4 +37,10 @@ public class PhotoExceptionHandler {
     public String notPhotoAccessException() {
         return "사진이 존재하지 않거나 사진에 접근할 권한이 없습니다.";
     }
+
+    @ExceptionHandler(NotPhotoMoveException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public String notPhotoMoveException() {
+        return "이동할 수 없습니다.";
+    }
 }
