@@ -1,5 +1,6 @@
 package cord.eoeo.momentwo.friendship.adapter.dto;
 
+import cord.eoeo.momentwo.config.page.CursorPage;
 import cord.eoeo.momentwo.friendship.domain.Friendship;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -13,10 +14,13 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 public class FriendshipAllListResponseDto {
     private List<FriendshipAllListDto> friendshipAllListDtoList;
-    public FriendshipAllListResponseDto toDo(List<Friendship> friendships) {
+    private Object nextCursor;
+
+    public FriendshipAllListResponseDto toDo(CursorPage<Friendship> friendships) {
         return new FriendshipAllListResponseDto(
                 friendships.stream().map(friends -> new FriendshipAllListDto().toDo(friends))
-                        .collect(Collectors.toList())
+                        .collect(Collectors.toList()),
+                friendships.getNextCursor()
         );
     }
 }

@@ -1,5 +1,6 @@
 package cord.eoeo.momentwo.photo.application.service;
 
+import cord.eoeo.momentwo.config.page.CursorPage;
 import cord.eoeo.momentwo.image.adapter.dto.ImageViewListResponseDto;
 import cord.eoeo.momentwo.photo.advice.exception.NotFoundPhotoException;
 import cord.eoeo.momentwo.photo.application.port.in.PhotoViewUseCase;
@@ -21,7 +22,7 @@ public class PhotoViewService implements PhotoViewUseCase {
     @Transactional(readOnly = true)
     @CheckAlbumAccessRules
     public ImageViewListResponseDto photoView(long albumId, long subAlbumId, int size, long cursor) {
-        Page<Photo> photoList = photoPageRepository
+        CursorPage<Photo> photoList = photoPageRepository
                 .findQPhotoBySubAlbumIdCustomPaging(
                         subAlbumId,
                         PageRequest.of((int) (cursor / size), size),
