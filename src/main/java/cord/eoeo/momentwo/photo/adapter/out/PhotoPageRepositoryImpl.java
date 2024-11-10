@@ -2,12 +2,11 @@ package cord.eoeo.momentwo.photo.adapter.out;
 
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import cord.eoeo.momentwo.config.page.CursorPage;
 import cord.eoeo.momentwo.photo.application.port.out.PhotoPageRepository;
 import cord.eoeo.momentwo.photo.domain.Photo;
 import cord.eoeo.momentwo.photo.domain.QPhoto;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
@@ -19,15 +18,8 @@ public class PhotoPageRepositoryImpl implements PhotoPageRepository {
     private final JPAQueryFactory jpaQueryFactory;
 
     @Override
-    public Page<Photo> findQPhotoBySubAlbumIdCustomPaging(long subAlbumId, Pageable pageable, long cursorId) {
+    public CursorPage<Photo> findQPhotoBySubAlbumIdCustomPaging(long subAlbumId, Pageable pageable, long cursorId) {
         QPhoto photo = QPhoto.photo;
-
-        // 전체 갯수 카운트 (안하면 DTO 에서 표시가 안됌 -> fetchCount 대신 사용)
-        Long photoCount = jpaQueryFactory
-                .select(photo.count())
-                .from(photo)
-                .where(photo.subAlbum.id.eq(subAlbumId))
-                .fetchOne();
 
         List<Photo> photos = jpaQueryFactory
                 .select(photo)
@@ -36,7 +28,10 @@ public class PhotoPageRepositoryImpl implements PhotoPageRepository {
                 .limit(pageable.getPageSize())
                 .fetch();
 
-        return new PageImpl<>(photos, pageable, photoCount);
+        return new CursorPage<>(
+                photos,
+                photos.isEmpty() ? null : photos.get(photos.size()-1).getId()
+        );
     }
 
     public BooleanExpression cursor(Long cursorId, QPhoto photo) {

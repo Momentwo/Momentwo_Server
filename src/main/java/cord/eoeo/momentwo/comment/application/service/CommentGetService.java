@@ -20,7 +20,7 @@ public class CommentGetService implements GetCommentUseCase {
     public CommentListResponseDto getComment(long albumId, long photoId, int size, long cursor) {
         return commentGetPort.commentGet(
                 photoId,
-                PageRequest.of((int) (cursor / size), size),
+                PageRequest.of(0, size),
                 cursor
         );
     }
