@@ -62,6 +62,9 @@ dependencies {
     implementation 'software.amazon.awssdk:s3:2.20.0'
     implementation 'software.amazon.awssdk:auth:2.20.0' // 인증 관련 의존성
     implementation 'software.amazon.awssdk:regions:2.20.0' // 지역 설정 관련 의존성
+
+    // redis
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 }
 
 tasks.named('test') {
