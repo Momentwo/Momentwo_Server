@@ -1,39 +1,28 @@
 package cord.eoeo.momentwo.config.security.jwt.adapter.out;
 
+import cord.eoeo.momentwo.config.security.jwt.port.out.BlackListRedisGenericRepo;
 import cord.eoeo.momentwo.config.security.jwt.port.out.JWTBlackList;
-import org.springframework.scheduling.annotation.Scheduled;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-
 @Component
+@RequiredArgsConstructor
 public class JWTBlackListImpl implements JWTBlackList {
-    private Map<String, Long> tokenBlackList = new HashMap<>();
+    private final BlackListRedisGenericRepo blackListRedisGenericRepo;
 
     @Override
     public void blackListToken(String token) {
-        tokenBlackList.put(token, System.currentTimeMillis());
+        blackListRedisGenericRepo.set(token, "expire");
+        blackListRedisGenericRepo.expire(token, 30L);
     }
 
     // jwt 필터에서 로그아웃한 토큰이 있는지 확인
     @Override
     public boolean isTokenBlackListed(String token) {
-        return tokenBlackList.containsKey(token);
-    }
-
-    // 레디스 쓰기전까진 스케줄러를 통해 로그아웃 토큰 정리
-    @Scheduled(fixedRate = 3600000)
-    public void removeExpiredTokens() {
-        long now = System.currentTimeMillis();
-        Iterator<Map.Entry<String, Long>> iterator = tokenBlackList.entrySet().iterator();
-
-        while(iterator.hasNext()) {
-            Map.Entry<String, Long> entry = iterator.next();
-            if(now - entry.getValue() > 3600000) {
-                iterator.remove();
-            }
+        System.out.println(blackListRedisGenericRepo.get(token));
+        if(blackListRedisGenericRepo.get(token) != null) {
+            return true;
         }
+        return false;
     }
 }
