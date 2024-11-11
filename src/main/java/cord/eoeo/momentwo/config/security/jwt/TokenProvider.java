@@ -4,6 +4,7 @@ import cord.eoeo.momentwo.config.security.jwt.adapter.out.CustomUserDetailsDto;
 import cord.eoeo.momentwo.config.security.jwt.adapter.out.TokenResponseDto;
 import cord.eoeo.momentwo.user.advice.exception.RefreshTokenValidException;
 import cord.eoeo.momentwo.user.application.port.out.RefreshTokenGenericJpaRepo;
+import cord.eoeo.momentwo.user.application.port.out.find.RefreshTokenFindByNicknameRepo;
 import cord.eoeo.momentwo.user.application.port.out.jpa.RefreshTokenFindJpaRepo;
 import cord.eoeo.momentwo.user.domain.RefreshToken;
 import io.jsonwebtoken.*;
@@ -46,6 +47,7 @@ public class TokenProvider implements InitializingBean {
     private final RefreshTokenFindJpaRepo refreshTokenFindJpaRepo;
     private final RefreshTokenGenericJpaRepo refreshTokenGenericJpaRepo;
     private final UserDetailsService userDetailsService;
+    private final RefreshTokenFindByNicknameRepo refreshTokenFindByNicknameRepo;
 
     @Override
     public void afterPropertiesSet() throws Exception {
@@ -57,13 +59,16 @@ public class TokenProvider implements InitializingBean {
     public TokenProvider(@Value("${jwt.tokenValidationTime}") long tokenValidationTime,
                          @Value("${jwt.secret}") String secret, RefreshTokenFindJpaRepo refreshTokenFindJpaRepo,
                          RefreshTokenGenericJpaRepo refreshTokenGenericJpaRepo,
-                         UserDetailsService userDetailsService) {
+                         UserDetailsService userDetailsService,
+                         RefreshTokenFindByNicknameRepo refreshTokenFindByNicknameRepo
+    ) {
         this.secret = secret;
         this.tokenValidationTime = tokenValidationTime * TOKEN_PRODUCT_TIME;
         this.refreshTokenValidationTime = tokenValidationTime * REFRESH_TOKEN_PRODUCT_TIME;
         this.refreshTokenFindJpaRepo = refreshTokenFindJpaRepo;
         this.refreshTokenGenericJpaRepo = refreshTokenGenericJpaRepo;
         this.userDetailsService = userDetailsService;
+        this.refreshTokenFindByNicknameRepo = refreshTokenFindByNicknameRepo;
     }
 
     // 토큰 생성
@@ -139,8 +144,17 @@ public class TokenProvider implements InitializingBean {
 
     public void saveOrEditRefreshToken(String refresh, String newRefresh, String nickname, LocalDate expiration) {
         if(refresh.isEmpty()) {
-            RefreshToken saveRefreshToken = new RefreshToken(newRefresh, nickname, expiration);
-            refreshTokenGenericJpaRepo.save(saveRefreshToken);
+            refreshTokenFindByNicknameRepo.findByNickname(nickname).ifPresentOrElse(
+                    n -> {
+                        n.setToken(newRefresh);
+                        n.setExpirationDate(expiration);
+                        refreshTokenGenericJpaRepo.save(n);
+                    },
+                    () -> {
+                        RefreshToken saveRefreshToken = new RefreshToken(newRefresh, nickname, expiration);
+                        refreshTokenGenericJpaRepo.save(saveRefreshToken);
+                    }
+            );
             return;
         }
         RefreshToken editRefreshToken = refreshTokenFindJpaRepo.findByRefreshToken(refresh).orElseThrow();
