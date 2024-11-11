@@ -14,7 +14,7 @@ public class UserLogOutController {
     private final UserBlackListTokenUseCase userBlackListTokenUseCase;
 
     // 로그아웃
-    @PostMapping("/logout")
+    @PostMapping("/users/logout")
     @ResponseStatus(HttpStatus.OK)
     public void logout(@RequestHeader("Authorization") String token) {
         String jwtToken = token.substring(7);
