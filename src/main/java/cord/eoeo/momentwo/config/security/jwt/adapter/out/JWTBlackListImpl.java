@@ -19,7 +19,6 @@ public class JWTBlackListImpl implements JWTBlackList {
     // jwt 필터에서 로그아웃한 토큰이 있는지 확인
     @Override
     public boolean isTokenBlackListed(String token) {
-        System.out.println(blackListRedisGenericRepo.get(token));
         if(blackListRedisGenericRepo.get(token) != null) {
             return true;
         }
