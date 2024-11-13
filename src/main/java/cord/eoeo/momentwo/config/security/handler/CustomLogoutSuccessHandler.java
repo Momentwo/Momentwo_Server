@@ -14,6 +14,6 @@ public class CustomLogoutSuccessHandler implements LogoutSuccessHandler {
     @Override
     public void onLogoutSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication)
             throws IOException, ServletException {
-        response.sendRedirect("/signout");
+        // 리다이렉션이 필요하거나, 로그아웃 성공 시 핸들함
     }
 }

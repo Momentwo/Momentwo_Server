@@ -28,9 +28,6 @@ public class PhotoViewService implements PhotoViewUseCase {
                         PageRequest.of((int) (cursor / size), size),
                         cursor
                 );
-        if(photoList.isEmpty()) {
-            throw new NotFoundPhotoException();
-        }
 
         return new ImageViewListResponseDto().toDo(photoList);
     }

@@ -3,6 +3,8 @@ package cord.eoeo.momentwo.like.adapter.out.manager;
 import cord.eoeo.momentwo.elasticsearch.application.port.out.LikesElasticSearchManager;
 import cord.eoeo.momentwo.like.advice.exception.NotFoundPhotoLikesException;
 import cord.eoeo.momentwo.like.application.port.out.PhotoLikesGenericRepo;
+import cord.eoeo.momentwo.like.application.port.out.PhotoLikesRedisGenericRepo;
+import cord.eoeo.momentwo.like.application.port.out.PhotoLikesRedisKeyPort;
 import cord.eoeo.momentwo.like.application.port.out.find.PhotoLikesFindByPhotoPort;
 import cord.eoeo.momentwo.like.application.port.out.manager.UnDoLikesPort;
 import cord.eoeo.momentwo.like.domain.PhotoLike;
@@ -25,6 +27,8 @@ public class UnDoLikesAdapter implements UnDoLikesPort {
     private final PhotoGenericRepo photoGenericRepo;
     private final PhotoLikesFindByPhotoPort photoLikesFindByPhotoPort;
     private final PhotoLikesGenericRepo photoLikesGenericRepo;
+    private final PhotoLikesRedisGenericRepo photoLikesRedisGenericRepo;
+    private final PhotoLikesRedisKeyPort photoLikesRedisKeyPort;
 
     @Override
     public void undoLikes(long photoId) {
@@ -41,6 +45,14 @@ public class UnDoLikesAdapter implements UnDoLikesPort {
 
             photoLikesGenericRepo.save(photoLike);
             likesElasticSearchManager.deleteByLikes(photoId, user.getNickname());
+
+            // 캐시에 값이 있으면 갱신
+            String key = photoLikesRedisKeyPort.getKey(photoId);
+            Object isPhotoLikes = photoLikesRedisGenericRepo.get(key);
+            if(isPhotoLikes != null) {
+                photoLikesRedisGenericRepo
+                        .set(key, String.valueOf(Long.parseLong(String.valueOf(isPhotoLikes)) - 1L));
+            }
         }
     }
 }
