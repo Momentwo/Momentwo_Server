@@ -58,6 +58,9 @@ dependencies {
     implementation 'com.fasterxml.jackson.core:jackson-annotations'
     implementation 'com.fasterxml.jackson.core:jackson-core'
 
+    // ObjectMapper 에 LocalDate, LocalDateTime 형식 직렬화 역직렬화 의존성 주입
+    implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
+
     // s3
     implementation 'software.amazon.awssdk:s3:2.20.0'
     implementation 'software.amazon.awssdk:auth:2.20.0' // 인증 관련 의존성
