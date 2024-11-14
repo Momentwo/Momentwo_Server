@@ -4,9 +4,7 @@ import cord.eoeo.momentwo.elasticsearch.adpater.dto.in.UserSearchRequestDto;
 import cord.eoeo.momentwo.elasticsearch.adpater.dto.out.UserSearchListResponseDto;
 import cord.eoeo.momentwo.elasticsearch.application.port.in.UserSearchUseCase;
 import cord.eoeo.momentwo.elasticsearch.application.port.out.UserElasticSearchManager;
-import cord.eoeo.momentwo.user.advice.exception.NotFoundUserException;
-import cord.eoeo.momentwo.user.application.port.out.GetAuthentication;
-import cord.eoeo.momentwo.user.application.port.out.find.UserFindNicknameRepo;
+import cord.eoeo.momentwo.user.application.port.out.valid.UserNicknameValidPort;
 import cord.eoeo.momentwo.user.domain.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
@@ -17,13 +15,11 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class UserSearchService implements UserSearchUseCase {
     private final UserElasticSearchManager userElasticSearchManager;
-    private final UserFindNicknameRepo userFindNicknameRepo;
-    private final GetAuthentication getAuthentication;
+    private final UserNicknameValidPort userNicknameValidPort;
 
     @Override
     public UserSearchListResponseDto getUserElasticSearch(UserSearchRequestDto userSearchRequestDto) {
-        User user = userFindNicknameRepo.findByNickname(getAuthentication.getAuthentication().getName())
-                        .orElseThrow(NotFoundUserException::new);
+        User user = userNicknameValidPort.authenticationValid();
 
         Pageable pageable = PageRequest.of(userSearchRequestDto.getPage(), userSearchRequestDto.getSize());
 

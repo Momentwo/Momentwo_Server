@@ -9,10 +9,7 @@ import cord.eoeo.momentwo.album.application.port.out.manager.AlbumSetAdminPort;
 import cord.eoeo.momentwo.album.application.port.out.manager.GetAlbumSubTitlePort;
 import cord.eoeo.momentwo.album.domain.Album;
 import cord.eoeo.momentwo.member.application.port.out.info.IsCheckAlbumSizePort;
-import cord.eoeo.momentwo.user.advice.exception.NotFoundUserException;
-import cord.eoeo.momentwo.user.advice.exception.NotInviteUserException;
-import cord.eoeo.momentwo.user.application.port.out.GetAuthentication;
-import cord.eoeo.momentwo.user.application.port.out.find.UserFindNicknameRepo;
+import cord.eoeo.momentwo.user.application.port.out.valid.UserNicknameValidPort;
 import cord.eoeo.momentwo.user.domain.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -21,8 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 public class CreateAlbumService implements CreateAlbumUseCase {
-    private final UserFindNicknameRepo userFindNicknameRepo;
-    private final GetAuthentication getAuthentication;
+    private final UserNicknameValidPort userNicknameValidPort;
     private final IsCheckAlbumSizePort isCheckAlbumSizePort;
     private final GetAlbumSubTitlePort getAlbumSubTitlePort;
     private final AlbumSetAdminPort albumSetAdminPort;
@@ -32,8 +28,7 @@ public class CreateAlbumService implements CreateAlbumUseCase {
     @Transactional
     @Override
     public void createAlbums(AlbumCreateRequestDto albumCreateRequestDto) {
-        User admin = userFindNicknameRepo.findByNickname(getAuthentication.getAuthentication().getName())
-                .orElseThrow(NotFoundUserException::new);
+        User admin = userNicknameValidPort.authenticationValid();
 
         // 계정당 속할 수 있는 앨범 20개
         if(isCheckAlbumSizePort.isCheckAlbumSize(admin)) {
@@ -53,8 +48,7 @@ public class CreateAlbumService implements CreateAlbumUseCase {
 
         // 앨범에 초대된 멤버 권한 부여
         albumCreateRequestDto.getDoInviteNicknameList().forEach(nickname -> {
-            User inviteUser = userFindNicknameRepo.findByNickname(nickname)
-                    .orElseThrow(NotInviteUserException::new);
+            User inviteUser = userNicknameValidPort.userNicknameValid(nickname);
             albumAddMemberPort.albumAddMember(newAlbum, inviteUser);
         });
     }
