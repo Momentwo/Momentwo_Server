@@ -2,11 +2,10 @@ package cord.eoeo.momentwo.user.application.service.profile;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import cord.eoeo.momentwo.user.adapter.dto.out.UserProfileResponseDto;
-import cord.eoeo.momentwo.user.advice.exception.NotFoundUserException;
 import cord.eoeo.momentwo.user.application.port.in.profile.UserProfileKeyPort;
 import cord.eoeo.momentwo.user.application.port.in.profile.UserProfileUseCase;
 import cord.eoeo.momentwo.user.application.port.out.UserRedisGenericRepo;
-import cord.eoeo.momentwo.user.application.port.out.find.UserFindNicknameRepo;
+import cord.eoeo.momentwo.user.application.port.out.valid.UserNicknameValidPort;
 import cord.eoeo.momentwo.user.domain.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -15,7 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 public class UserProfileService implements UserProfileUseCase {
-    private final UserFindNicknameRepo userFindNicknameRepo;
+    private final UserNicknameValidPort userNicknameValidPort;
     private final UserRedisGenericRepo userRedisGenericRepo;
     private final UserProfileKeyPort userProfileKeyPort;
     private final ObjectMapper objectMapper;
@@ -31,7 +30,7 @@ public class UserProfileService implements UserProfileUseCase {
         }
 
         // DB 확인
-        User user = userFindNicknameRepo.findByNickname(nickname).orElseThrow(NotFoundUserException::new);
+        User user = userNicknameValidPort.userNicknameValid(nickname);
         UserProfileResponseDto profileResponseDto = new UserProfileResponseDto().toDo(user);
 
         // 캐시에 데이터 저장

@@ -10,9 +10,7 @@ import cord.eoeo.momentwo.like.domain.PhotoLike;
 import cord.eoeo.momentwo.photo.advice.exception.NotFoundPhotoException;
 import cord.eoeo.momentwo.photo.application.port.out.PhotoGenericRepo;
 import cord.eoeo.momentwo.photo.domain.Photo;
-import cord.eoeo.momentwo.user.advice.exception.NotFoundUserException;
-import cord.eoeo.momentwo.user.application.port.out.GetAuthentication;
-import cord.eoeo.momentwo.user.application.port.out.find.UserFindNicknameRepo;
+import cord.eoeo.momentwo.user.application.port.out.valid.UserNicknameValidPort;
 import cord.eoeo.momentwo.user.domain.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -20,8 +18,7 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 public class DoLikesAdapter implements DoLikesPort {
-    private final UserFindNicknameRepo userFindNicknameRepo;
-    private final GetAuthentication getAuthentication;
+    private final UserNicknameValidPort userNicknameValidPort;
     private final PhotoGenericRepo photoGenericRepo;
     private final LikesElasticSearchManager likesElasticSearchManager;
     private final PhotoLikesFindByPhotoPort photoLikesFindByPhotoPort;
@@ -31,8 +28,7 @@ public class DoLikesAdapter implements DoLikesPort {
 
     @Override
     public void doLikes(long photoId) {
-        User user = userFindNicknameRepo.findByNickname(getAuthentication.getAuthentication().getName())
-                .orElseThrow(NotFoundUserException::new);
+        User user = userNicknameValidPort.authenticationValid();
         Photo photo = photoGenericRepo.findById(photoId).orElseThrow(NotFoundPhotoException::new);
 
 

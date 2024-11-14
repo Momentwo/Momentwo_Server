@@ -16,8 +16,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.concurrent.CompletionException;
-
 @Service
 @RequiredArgsConstructor
 public class UserSignInService implements UserSignInUseCase {
@@ -30,11 +28,11 @@ public class UserSignInService implements UserSignInUseCase {
     @Transactional
     public TokenResponseDto signIn(UserLoginRequestDto userLoginRequestDto) {
         // 아이디 확인
-        User user = userFindUsernameRepo.findByUsername(userLoginRequestDto.getUsername()).orElseThrow(
-                () -> new CompletionException(new NotFoundUserException()));
+        User user = userFindUsernameRepo.findByUsername(userLoginRequestDto.getUsername())
+                .orElseThrow(NotFoundUserException::new);
         // 비밀번호 확인
         if(!passwordEncoder.matches(userLoginRequestDto.getPassword(), user.getPassword())) {
-            throw new CompletionException(new PasswordMisMatchException());
+            throw new PasswordMisMatchException();
         }
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
                 userLoginRequestDto.getUsername(),

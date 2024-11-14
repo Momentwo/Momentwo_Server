@@ -10,13 +10,11 @@ import cord.eoeo.momentwo.member.application.port.out.info.IsCheckAlbumAdminPort
 import cord.eoeo.momentwo.member.application.port.out.info.IsCheckAlbumOneMemberPort;
 import cord.eoeo.momentwo.member.domain.Member;
 import cord.eoeo.momentwo.user.adapter.dto.in.SignOutRequestDto;
-import cord.eoeo.momentwo.user.advice.exception.NotFoundUserException;
 import cord.eoeo.momentwo.user.advice.exception.PasswordMisMatchException;
 import cord.eoeo.momentwo.user.application.port.in.status.UserSignOutUseCase;
-import cord.eoeo.momentwo.user.application.port.out.GetAuthentication;
 import cord.eoeo.momentwo.user.application.port.out.PasswordEncoder;
-import cord.eoeo.momentwo.user.application.port.out.find.UserFindNicknameRepo;
 import cord.eoeo.momentwo.user.application.port.out.jpa.UserDeleteJpaRepo;
+import cord.eoeo.momentwo.user.application.port.out.valid.UserNicknameValidPort;
 import cord.eoeo.momentwo.user.domain.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -25,8 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 public class UserSignOutService implements UserSignOutUseCase {
-    private final UserFindNicknameRepo userFindNicknameRepo;
-    private final GetAuthentication getAuthentication;
+    private final UserNicknameValidPort userNicknameValidPort;
     private final PasswordEncoder passwordEncoder;
     private final GetAlbumIdByAdminUserPort getAlbumIdByAdminUserPort;
     private final GetMemberInfoPort getMemberInfoPort;
@@ -41,8 +38,8 @@ public class UserSignOutService implements UserSignOutUseCase {
     @Override
     @Transactional
     public void signOut(SignOutRequestDto signOutRequestDto) {
-        User user = userFindNicknameRepo.findByNickname(getAuthentication.getAuthentication().getName())
-                .orElseThrow(NotFoundUserException::new);
+        User user = userNicknameValidPort.authenticationValid();
+
         // 비밀번호 확인
         if(!passwordEncoder.matches(signOutRequestDto.getPassword(), user.getPassword())) {
             throw new PasswordMisMatchException();
