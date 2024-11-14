@@ -19,16 +19,16 @@ public class LikesDocument {
     @Id
     private String id;
 
-    @Field(type = FieldType.Keyword)
+    @Field(type = FieldType.Long)
     private long photoId;
 
     @Field(type = FieldType.Keyword)
     private String nickname;
 
-    @Field(type = FieldType.Keyword)
+    @Field(type = FieldType.Long)
     private long albumId;
 
-    @Field(type = FieldType.Keyword)
+    @Field(type = FieldType.Long)
     private long subAlbumId;
 
     @Field(type = FieldType.Text)
