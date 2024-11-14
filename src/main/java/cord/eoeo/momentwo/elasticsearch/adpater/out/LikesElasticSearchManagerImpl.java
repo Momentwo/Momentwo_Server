@@ -12,6 +12,7 @@ import org.elasticsearch.index.query.QueryBuilders;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.elasticsearch.core.ElasticsearchRestTemplate;
 import org.springframework.data.elasticsearch.core.SearchHit;
@@ -91,9 +92,9 @@ public class LikesElasticSearchManagerImpl implements LikesElasticSearchManager 
                 .withQuery(QueryBuilders.boolQuery()
                         .must(QueryBuilders.matchQuery("subAlbumId", subAlbumId))
                         .must(QueryBuilders.matchQuery("nickname", nickname))
-                        .must(QueryBuilders.rangeQuery("photoId").gte(minPid)
-                                .lte(maxPid))
+                        .must(QueryBuilders.rangeQuery("photoId").gte(minPid).lte(maxPid))
                 )
+                .withPageable(PageRequest.of(0, 20))
                 .build();
 
         // 검색 결과 가져오기
