@@ -11,9 +11,7 @@ import cord.eoeo.momentwo.like.domain.PhotoLike;
 import cord.eoeo.momentwo.photo.advice.exception.NotFoundPhotoException;
 import cord.eoeo.momentwo.photo.application.port.out.PhotoGenericRepo;
 import cord.eoeo.momentwo.photo.domain.Photo;
-import cord.eoeo.momentwo.user.advice.exception.NotFoundUserException;
-import cord.eoeo.momentwo.user.application.port.out.GetAuthentication;
-import cord.eoeo.momentwo.user.application.port.out.find.UserFindNicknameRepo;
+import cord.eoeo.momentwo.user.application.port.out.valid.UserNicknameValidPort;
 import cord.eoeo.momentwo.user.domain.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -21,8 +19,7 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 public class UnDoLikesAdapter implements UnDoLikesPort {
-    private final UserFindNicknameRepo userFindNicknameRepo;
-    private final GetAuthentication getAuthentication;
+    private final UserNicknameValidPort userNicknameValidPort;
     private final LikesElasticSearchManager likesElasticSearchManager;
     private final PhotoGenericRepo photoGenericRepo;
     private final PhotoLikesFindByPhotoPort photoLikesFindByPhotoPort;
@@ -32,8 +29,7 @@ public class UnDoLikesAdapter implements UnDoLikesPort {
 
     @Override
     public void undoLikes(long photoId) {
-        User user = userFindNicknameRepo.findByNickname(getAuthentication.getAuthentication().getName())
-                .orElseThrow(NotFoundUserException::new);
+        User user = userNicknameValidPort.authenticationValid();
 
         // 검색엔진에 좋아요를 누른상태면 삭제 진행
         if(likesElasticSearchManager.isLikes(user, photoId)) {

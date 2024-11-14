@@ -13,9 +13,7 @@ import cord.eoeo.momentwo.subAlbum.advice.exception.NotFoundSubAlbumException;
 import cord.eoeo.momentwo.subAlbum.application.aop.annotation.CheckAlbumAccessRules;
 import cord.eoeo.momentwo.subAlbum.application.port.out.get.GetSubAlbumInfoRepo;
 import cord.eoeo.momentwo.subAlbum.domain.SubAlbum;
-import cord.eoeo.momentwo.user.advice.exception.NotFoundUserException;
-import cord.eoeo.momentwo.user.application.port.out.GetAuthentication;
-import cord.eoeo.momentwo.user.application.port.out.find.UserFindNicknameRepo;
+import cord.eoeo.momentwo.user.application.port.out.valid.UserNicknameValidPort;
 import cord.eoeo.momentwo.user.domain.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -24,8 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 public class PhotoMoveService implements PhotoMoveUseCase {
-    private final UserFindNicknameRepo userFindNicknameRepo;
-    private final GetAuthentication getAuthentication;
+    private final UserNicknameValidPort userNicknameValidPort;
     private final GetSubAlbumInfoRepo getSubAlbumInfoRepo;
     private final PhotoGenericRepo photoGenericRepo;
     private final MoveCheckAdminOrSelfPort moveCheckAdminOrSelfPort;
@@ -37,8 +34,7 @@ public class PhotoMoveService implements PhotoMoveUseCase {
     @Transactional
     public void photoMove(PhotoMoveRequestDto photoMoveRequestDto) {
         // 유저 정보 확인
-        User user = userFindNicknameRepo.findByNickname(getAuthentication.getAuthentication().getName())
-                .orElseThrow(NotFoundUserException::new);
+        User user = userNicknameValidPort.authenticationValid();
 
         // 이동할 서브앨범이 존재하는지 확인
         SubAlbum moveSubAlbum = getSubAlbumInfoRepo.getSubAlbumInfo(photoMoveRequestDto.getMoveSubAlbumId())
