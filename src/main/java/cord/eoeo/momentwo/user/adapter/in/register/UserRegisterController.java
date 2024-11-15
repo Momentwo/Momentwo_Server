@@ -14,7 +14,7 @@ public class UserRegisterController {
     private final UserRegisterUseCase userRegisterUseCase;
 
     @PostMapping("/signup")
-    @ResponseStatus(HttpStatus.OK)
+    @ResponseStatus(HttpStatus.CREATED)
     public void register(@RequestBody @Valid UserRegisterRequestDto userRegisterRequestDto) {
         userRegisterUseCase.register(userRegisterRequestDto);
     }

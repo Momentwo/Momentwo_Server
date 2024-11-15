@@ -18,7 +18,7 @@ public class CreateAlbumController {
 
     // 앨범 생성
     @PostMapping("/albums/create")
-    @ResponseStatus(HttpStatus.OK)
+    @ResponseStatus(HttpStatus.CREATED)
     public void createAlbums(@RequestBody @Valid AlbumCreateRequestDto albumCreateRequestDto) {
         createAlbumUseCase.createAlbums(albumCreateRequestDto);
     }
