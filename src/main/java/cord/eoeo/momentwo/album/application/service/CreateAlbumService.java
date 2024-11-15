@@ -48,8 +48,10 @@ public class CreateAlbumService implements CreateAlbumUseCase {
 
         // 앨범에 초대된 멤버 권한 부여
         albumCreateRequestDto.getDoInviteNicknameList().forEach(nickname -> {
-            User inviteUser = userNicknameValidPort.userNicknameValid(nickname);
-            albumAddMemberPort.albumAddMember(newAlbum, inviteUser);
+            if(!admin.getNickname().equals(nickname)) {
+                User inviteUser = userNicknameValidPort.userNicknameValid(nickname);
+                albumAddMemberPort.albumAddMember(newAlbum, inviteUser);
+            }
         });
     }
 }
