@@ -18,7 +18,7 @@ public class AlbumProfileDeleteController {
 
     // 프로필 삭제
     @DeleteMapping("/albums/profile/image")
-    @ResponseStatus(HttpStatus.OK)
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void profileDelete(@ModelAttribute @Valid AlbumProfileRequestDto albumProfileRequestDto) {
         profileDeleteUseCase.profileDelete(albumProfileRequestDto);
     }

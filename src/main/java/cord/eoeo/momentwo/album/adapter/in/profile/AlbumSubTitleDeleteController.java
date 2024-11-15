@@ -18,7 +18,7 @@ public class AlbumSubTitleDeleteController {
 
     // 서브 타이틀 삭제
     @DeleteMapping("/albums/subtitle")
-    @ResponseStatus(HttpStatus.OK)
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void albumSubTitleDelete(@ModelAttribute @Valid AlbumProfileRequestDto albumProfileRequestDto) {
         albumSubTitleDeleteUseCase.albumSubTitleDelete(albumProfileRequestDto);
     }

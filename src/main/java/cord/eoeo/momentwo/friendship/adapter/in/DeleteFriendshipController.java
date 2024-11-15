@@ -17,7 +17,7 @@ public class DeleteFriendshipController {
     private final DeleteFriendsUseCase deleteFriendsUseCase;
 
     @DeleteMapping("/friendship/delete")
-    @ResponseStatus(HttpStatus.OK)
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteFriends(@ModelAttribute @Valid RequestFriendshipDto requestFriendshipDto) {
         deleteFriendsUseCase.deleteFriends(requestFriendshipDto);
     }

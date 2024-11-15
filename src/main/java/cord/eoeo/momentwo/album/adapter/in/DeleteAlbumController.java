@@ -18,7 +18,7 @@ public class DeleteAlbumController {
 
     // 앨범 삭제
     @DeleteMapping("/albums/delete")
-    @ResponseStatus(HttpStatus.OK)
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteAlbums(@ModelAttribute @Valid AlbumDeleteRequestDto albumDeleteRequestDto) {
         deleteAlbumUseCase.deleteAlbums(albumDeleteRequestDto);
     }

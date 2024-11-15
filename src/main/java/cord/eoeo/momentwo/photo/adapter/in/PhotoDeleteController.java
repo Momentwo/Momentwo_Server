@@ -14,7 +14,7 @@ public class PhotoDeleteController {
     private final PhotoDeleteUseCase photoDeleteUseCase;
     // 삭제
     @DeleteMapping("/photos/delete")
-    @ResponseStatus(HttpStatus.OK)
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void photoDelete(@RequestBody @Valid PhotoDeleteRequestDto photoDeleteRequestDto) {
         photoDeleteUseCase.photoDelete(photoDeleteRequestDto);
     }

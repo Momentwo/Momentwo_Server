@@ -15,7 +15,7 @@ public class DeleteSubAlbumController {
 
     // 서브앨범 삭제
     @DeleteMapping("/album/sub/delete")
-    @ResponseStatus(HttpStatus.OK)
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteSubAlbums(@RequestBody @Valid SubAlbumDeleteRequestDto subAlbumDeleteRequestDto) {
         deleteSubAlbumUseCase.deleteSubAlbums(subAlbumDeleteRequestDto);
     }
