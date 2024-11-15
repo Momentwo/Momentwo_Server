@@ -22,7 +22,7 @@ public class PhotoDeleteService implements PhotoDeleteUseCase {
     @Transactional
     @CheckAlbumAccessRules
     public void photoDelete(PhotoDeleteRequestDto photoDeleteRequestDto) {
-        if(photoDeleteRequestDto.getImagesId().isEmpty() || photoDeleteRequestDto.getImagesUrl().isEmpty()) {
+        if(photoDeleteRequestDto.getImagesId().isEmpty() || photoDeleteRequestDto.getImagesFilename().isEmpty()) {
             throw new NotDeleteImageException();
         }
 
@@ -33,7 +33,7 @@ public class PhotoDeleteService implements PhotoDeleteUseCase {
         );
 
         // 이미지 저장소 삭제
-        photoDeleteRequestDto.getImagesUrl().forEach(image -> {
+        photoDeleteRequestDto.getImagesFilename().forEach(image -> {
             imageDeletePort.imageDelete(s3Manager.getImagePath() + image).join();
         });
     }
