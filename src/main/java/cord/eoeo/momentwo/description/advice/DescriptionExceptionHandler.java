@@ -10,13 +10,13 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class DescriptionExceptionHandler {
     @ExceptionHandler(NotFoundDescriptionException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
     public String notFoundDescriptionException() {
         return "작성 없음";
     }
 
     @ExceptionHandler(NotCreateDescriptionException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseStatus(HttpStatus.CONFLICT)
     public String notCreateDescriptionException() {
         return "작성된 설명이 있습니다.";
     }

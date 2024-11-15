@@ -18,7 +18,7 @@ public class KickMembersController {
 
     // 멤버 추방
     @DeleteMapping("/members/kick")
-    @ResponseStatus(HttpStatus.OK)
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void kickMembers(@RequestBody @Valid KickMembersRequestDto kickMembersRequestDto) {
         kickMembersUseCase.kickMembers(kickMembersRequestDto);
     }

@@ -18,7 +18,7 @@ public class InviteMembersController {
 
     // 멤버 초대
     @PostMapping("/members/invite")
-    @ResponseStatus(HttpStatus.OK)
+    @ResponseStatus(HttpStatus.CREATED)
     public void inviteMembers(@RequestBody @Valid InviteMembersRequestDto inviteMembersRequestDto) {
         inviteMembersUseCase.inviteMembers(inviteMembersRequestDto);
     }
