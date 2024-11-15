@@ -10,13 +10,13 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class ImageExceptionHandler {
     @ExceptionHandler(NotFoundImageException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
     public String notFoundImageException() {
         return "이미지를 찾을 수 없습니다.";
     }
 
     @ExceptionHandler(NotFoundFileImageException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
     public String notFoundFileImageException() {
         return "파일에 이미지가 존재하지 않습니다.";
     }

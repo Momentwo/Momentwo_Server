@@ -10,13 +10,13 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class CommentExceptionHandler {
     @ExceptionHandler(NotFoundCommentException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
     public String notFoundCommentException() {
         return "존재하지 않는 댓글입니다.";
     }
 
     @ExceptionHandler(NotCommentAccessException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseStatus(HttpStatus.FORBIDDEN)
     public String notCommentAccessException() {
         return "댓글에 접근할 권한이 없습니다.";
     }

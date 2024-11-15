@@ -18,19 +18,19 @@ public class AlbumExceptionHandler {
     }
 
     @ExceptionHandler(NotAlbumAdminException.class)
-    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ResponseStatus(HttpStatus.FORBIDDEN)
     public String notAlbumAdminException() {
         return "앨범 관리자만 해당 기능을 사용할 수 있습니다.";
     }
 
     @ExceptionHandler(NotDeleteAlbumException.class)
-    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ResponseStatus(HttpStatus.CONFLICT)
     public String notDeleteAlbumException() {
         return "멤버가 존재하는 앨범은 삭제할 수 없습니다.";
     }
 
     @ExceptionHandler(NotCreateAlbumException.class)
-    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ResponseStatus(HttpStatus.CONFLICT)
     public String notCreateAlbumException() {
         return "앨범이 20개 이기 때문에 앨범을 만들 수 없습니다.";
     }
