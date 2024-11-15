@@ -13,13 +13,15 @@ public class AlbumInfoResponseDto {
     private String title;
     private String subTitle;
     private String profileImage;
+    private long albumCount;
 
-    public AlbumInfoResponseDto toDo(Album album) {
+    public AlbumInfoResponseDto toDo(Album album, long albumCount) {
         return new AlbumInfoResponseDto(
                 album.getId(),
                 album.getTitle(),
                 album.getSubTitle(),
-                album.getProfileFilename()
+                album.getProfileFilename(),
+                albumCount
         );
     }
 }
