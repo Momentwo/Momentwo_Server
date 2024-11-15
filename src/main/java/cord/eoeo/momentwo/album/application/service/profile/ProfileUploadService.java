@@ -2,10 +2,10 @@ package cord.eoeo.momentwo.album.application.service.profile;
 
 import cord.eoeo.momentwo.album.adapter.dto.AlbumProfileUploadRequestDto;
 import cord.eoeo.momentwo.album.adapter.out.profile.ProfileUploadAdapter;
+import cord.eoeo.momentwo.album.application.aop.annotation.CheckAlbumAdmin;
 import cord.eoeo.momentwo.album.application.port.in.profile.ProfileUploadUseCase;
 import cord.eoeo.momentwo.album.application.port.out.GetAlbumMemberPort;
 import cord.eoeo.momentwo.config.s3.S3Manager;
-import cord.eoeo.momentwo.subAlbum.application.aop.annotation.CheckAlbumAccessRules;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,7 +19,7 @@ public class ProfileUploadService implements ProfileUploadUseCase {
 
     @Override
     @Transactional
-    @CheckAlbumAccessRules
+    @CheckAlbumAdmin
     public void profileUpload(AlbumProfileUploadRequestDto uploadRequestDto) {
         profileUploadAdapter.profileUpload(
                 getAlbumMemberPort.getMember(uploadRequestDto.getAlbumId()),
