@@ -1,5 +1,6 @@
 package cord.eoeo.momentwo.image.application.service;
 
+import cord.eoeo.momentwo.album.application.aop.annotation.CheckAlbumAdmin;
 import cord.eoeo.momentwo.album.application.port.out.manager.GetAlbumInfoPort;
 import cord.eoeo.momentwo.album.domain.Album;
 import cord.eoeo.momentwo.config.s3.S3Manager;
@@ -8,7 +9,6 @@ import cord.eoeo.momentwo.image.adapter.dto.PresignedResponseDto;
 import cord.eoeo.momentwo.image.application.port.in.AlbumProfilePresignedUrlUseCase;
 import cord.eoeo.momentwo.image.application.port.out.ImageDeletePort;
 import cord.eoeo.momentwo.image.application.port.out.MakeImagePresignedUrlPort;
-import cord.eoeo.momentwo.subAlbum.application.aop.annotation.CheckAlbumAccessRules;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -21,7 +21,7 @@ public class AlbumProfilePresignedUrlService implements AlbumProfilePresignedUrl
     private final S3Manager s3Manager;
 
     @Override
-    @CheckAlbumAccessRules
+    @CheckAlbumAdmin
     public PresignedResponseDto albumProfilePresignedUrl(PresignedRequestDto presignedRequestDto) {
         Album album = getAlbumInfoPort.getAlbumInfo(presignedRequestDto.getAlbumId());
 

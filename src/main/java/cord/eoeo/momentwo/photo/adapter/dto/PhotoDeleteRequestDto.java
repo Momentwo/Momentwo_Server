@@ -13,5 +13,5 @@ public class PhotoDeleteRequestDto {
     private long albumId;
     private long subAlbumId;
     private List<Long> imagesId;
-    private List<String> imagesUrl;
+    private List<String> imagesFilename;
 }

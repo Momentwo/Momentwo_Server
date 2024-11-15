@@ -5,6 +5,7 @@ import cord.eoeo.momentwo.album.advice.exception.NotFoundAlbumException;
 import cord.eoeo.momentwo.album.application.port.in.GetAlbumUseCase;
 import cord.eoeo.momentwo.album.domain.Album;
 import cord.eoeo.momentwo.member.application.port.out.find.MemberFindAlbumByUserRepo;
+import cord.eoeo.momentwo.photo.application.port.out.get.PhotoGetAlbumCountPort;
 import cord.eoeo.momentwo.subAlbum.application.aop.annotation.CheckAlbumAccessRules;
 import cord.eoeo.momentwo.user.application.port.out.valid.UserNicknameValidPort;
 import cord.eoeo.momentwo.user.domain.User;
@@ -19,6 +20,7 @@ import java.util.List;
 public class GetAlbumService implements GetAlbumUseCase {
     private final MemberFindAlbumByUserRepo memberFindAlbumByUserRepo;
     private final UserNicknameValidPort userNicknameValidPort;
+    private final PhotoGetAlbumCountPort photoGetAlbumCountPort;
 
     @Override
     @CheckAlbumAccessRules
@@ -30,6 +32,7 @@ public class GetAlbumService implements GetAlbumUseCase {
         if(albums.isEmpty()) {
             throw new NotFoundAlbumException();
         }
-        return new AlbumInfoListResponseDto().toDo(albums);
+
+        return new AlbumInfoListResponseDto().toDo(albums, photoGetAlbumCountPort);
     }
 }
