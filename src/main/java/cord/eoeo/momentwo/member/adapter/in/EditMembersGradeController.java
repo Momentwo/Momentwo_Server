@@ -14,7 +14,7 @@ import javax.validation.Valid;
 @RestController
 @RequiredArgsConstructor
 public class EditMembersGradeController {
-    private EditMembersGradeUseCase editMembersGradeUseCase;
+    private final EditMembersGradeUseCase editMembersGradeUseCase;
 
     // 멤버 권한 변경 (앨범 수정 권한)
     @PutMapping("/members/permission")
