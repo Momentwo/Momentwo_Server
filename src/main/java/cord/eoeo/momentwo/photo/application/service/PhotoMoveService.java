@@ -1,7 +1,7 @@
 package cord.eoeo.momentwo.photo.application.service;
 
-import cord.eoeo.momentwo.elasticsearch.application.port.out.LikesElasticSearchManager;
 import cord.eoeo.momentwo.elasticsearch.application.port.out.like.LikesElasticSearchMovePhotoPort;
+import cord.eoeo.momentwo.elasticsearch.application.port.out.like.manager.IsLikesPort;
 import cord.eoeo.momentwo.photo.adapter.dto.PhotoMoveRequestDto;
 import cord.eoeo.momentwo.photo.advice.exception.NotFoundPhotoException;
 import cord.eoeo.momentwo.photo.advice.exception.NotPhotoMoveException;
@@ -26,7 +26,7 @@ public class PhotoMoveService implements PhotoMoveUseCase {
     private final GetSubAlbumInfoRepo getSubAlbumInfoRepo;
     private final PhotoGenericRepo photoGenericRepo;
     private final MoveCheckAdminOrSelfPort moveCheckAdminOrSelfPort;
-    private final LikesElasticSearchManager likesElasticSearchManager;
+    private final IsLikesPort isLikesPort;
     private final LikesElasticSearchMovePhotoPort likesElasticSearchMovePhotoPort;
 
     @Override
@@ -59,7 +59,7 @@ public class PhotoMoveService implements PhotoMoveUseCase {
 
         // 검색엔진에 저장된 정보 수정
         // 좋아요가 있었다면 서브앨범 정보만 변경
-        if(likesElasticSearchManager.isLikes(savePhoto.getUser(), savePhoto.getId())) {
+        if(isLikesPort.isLikes(savePhoto.getUser(), savePhoto.getId())) {
             likesElasticSearchMovePhotoPort.editSubAlbumId(
                     savePhoto,
                     user,

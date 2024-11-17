@@ -1,6 +1,6 @@
 package cord.eoeo.momentwo.member.application.service;
 
-import cord.eoeo.momentwo.elasticsearch.application.port.out.LikesElasticSearchManager;
+import cord.eoeo.momentwo.elasticsearch.application.port.out.like.manager.DeleteByWildNicknamePort;
 import cord.eoeo.momentwo.member.adapter.in.dto.MemberOutRequestDto;
 import cord.eoeo.momentwo.member.advice.exception.AdminAlbumOutException;
 import cord.eoeo.momentwo.member.advice.exception.MemberNotInAlbumException;
@@ -29,7 +29,7 @@ public class OutAlbumService implements OutAlbumUseCase {
     private final IsCheckAlbumOneMemberPort isCheckAlbumOneMemberPort;
     private final IsAlbumOutPort isAlbumOutPort;
     private final AlbumMemberGenericRepo albumMemberGenericRepo;
-    private final LikesElasticSearchManager likesElasticSearchManager;
+    private final DeleteByWildNicknamePort deleteByWildNicknamePort;
 
     @Override
     @Transactional
@@ -58,6 +58,6 @@ public class OutAlbumService implements OutAlbumUseCase {
                 && isCheckAlbumOneMemberPort.isCheckAlbumOneMember(memberOutRequestDto.getAlbumId())) {
             albumMemberGenericRepo.deleteById(member.getAlbum().getId());
         }
-        likesElasticSearchManager.deleteByWildNickname(selfUser.getNickname());
+        deleteByWildNicknamePort.deleteByWildNickname(selfUser.getNickname());
     }
 }

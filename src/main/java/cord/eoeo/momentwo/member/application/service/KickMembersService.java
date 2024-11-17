@@ -1,6 +1,6 @@
 package cord.eoeo.momentwo.member.application.service;
 
-import cord.eoeo.momentwo.elasticsearch.application.port.out.LikesElasticSearchManager;
+import cord.eoeo.momentwo.elasticsearch.application.port.out.like.manager.DeleteByWildNicknamePort;
 import cord.eoeo.momentwo.member.adapter.in.dto.KickMembersRequestDto;
 import cord.eoeo.momentwo.member.advice.exception.NotSelfKickException;
 import cord.eoeo.momentwo.member.application.port.in.KickMembersUseCase;
@@ -21,7 +21,7 @@ public class KickMembersService implements KickMembersUseCase {
     private final GetAuthentication getAuthentication;
     private final CheckAuthorityAdminPort checkAuthorityAdmin;
     private final DoKickMemberPort doKickMember;
-    private final LikesElasticSearchManager likesElasticSearchManager;
+    private final DeleteByWildNicknamePort deleteByWildNicknamePort;
 
     @Override
     @Transactional
@@ -42,7 +42,7 @@ public class KickMembersService implements KickMembersUseCase {
 
             // 본인보다 낮은 권한만 추방 가능
             doKickMember.doKickMember(kickMembersRequestDto.getAlbumId(), owner, kickedUser);
-            likesElasticSearchManager.deleteByWildNickname(kickedUser.getNickname());
+            deleteByWildNicknamePort.deleteByWildNickname(kickedUser.getNickname());
         });
     }
 }
