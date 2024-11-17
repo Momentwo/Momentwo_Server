@@ -14,7 +14,6 @@ public class GetAlbumInfoAdapter implements GetAlbumInfoPort {
     private final AlbumGenericRepo albumGenericRepo;
 
     @Override
-    @Transactional(readOnly = true)
     public Album getAlbumInfo(long id) {
         return albumGenericRepo.findById(id).orElseThrow(NotFoundAlbumException::new);
     }
