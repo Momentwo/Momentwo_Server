@@ -1,6 +1,7 @@
 package cord.eoeo.momentwo.like.adapter.out.manager;
 
-import cord.eoeo.momentwo.elasticsearch.application.port.out.LikesElasticSearchManager;
+import cord.eoeo.momentwo.elasticsearch.application.port.out.like.manager.IsLikesPort;
+import cord.eoeo.momentwo.elasticsearch.application.port.out.like.manager.LikesSavePort;
 import cord.eoeo.momentwo.like.application.port.out.PhotoLikesGenericRepo;
 import cord.eoeo.momentwo.like.application.port.out.PhotoLikesRedisGenericRepo;
 import cord.eoeo.momentwo.like.application.port.out.PhotoLikesRedisKeyPort;
@@ -20,7 +21,8 @@ import org.springframework.stereotype.Component;
 public class DoLikesAdapter implements DoLikesPort {
     private final UserNicknameValidPort userNicknameValidPort;
     private final PhotoGenericRepo photoGenericRepo;
-    private final LikesElasticSearchManager likesElasticSearchManager;
+    private final IsLikesPort isLikesPort;
+    private final LikesSavePort likesSavePort;
     private final PhotoLikesFindByPhotoPort photoLikesFindByPhotoPort;
     private final PhotoLikesGenericRepo photoLikesGenericRepo;
     private final PhotoLikesRedisGenericRepo photoLikesRedisGenericRepo;
@@ -33,13 +35,13 @@ public class DoLikesAdapter implements DoLikesPort {
 
 
         // 검색엔진에 좋아요가 없다면 좋아요를 누를 수 있는 상태
-        if(!likesElasticSearchManager.isLikes(user, photoId)) {
+        if(!isLikesPort.isLikes(user, photoId)) {
             photoLikesFindByPhotoPort.findByPhoto(photo).ifPresentOrElse(
                     photoLike -> {
                         // 값이 존재하는 경우 수행할 작업
                         photoLike.setCount(photoLike.getCount() + 1);
                         photoLikesGenericRepo.save(photoLike);
-                        likesElasticSearchManager.save(user, photo);
+                        likesSavePort.save(user, photo);
 
                         // 캐시에 값이 있으면 갱신
                         String key = photoLikesRedisKeyPort.getKey(photoId);
@@ -53,7 +55,7 @@ public class DoLikesAdapter implements DoLikesPort {
                         // 값이 존재하지 않는 경우 수행할 작업
                         PhotoLike photoLike = new PhotoLike(photo);
                         photoLikesGenericRepo.save(photoLike);
-                        likesElasticSearchManager.save(user, photo);
+                        likesSavePort.save(user, photo);
                     }
             );
         }

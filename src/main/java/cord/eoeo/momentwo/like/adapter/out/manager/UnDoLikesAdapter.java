@@ -1,6 +1,7 @@
 package cord.eoeo.momentwo.like.adapter.out.manager;
 
-import cord.eoeo.momentwo.elasticsearch.application.port.out.LikesElasticSearchManager;
+import cord.eoeo.momentwo.elasticsearch.application.port.out.like.manager.DeleteByLikesPort;
+import cord.eoeo.momentwo.elasticsearch.application.port.out.like.manager.IsLikesPort;
 import cord.eoeo.momentwo.like.advice.exception.NotFoundPhotoLikesException;
 import cord.eoeo.momentwo.like.application.port.out.PhotoLikesGenericRepo;
 import cord.eoeo.momentwo.like.application.port.out.PhotoLikesRedisGenericRepo;
@@ -20,7 +21,8 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class UnDoLikesAdapter implements UnDoLikesPort {
     private final UserNicknameValidPort userNicknameValidPort;
-    private final LikesElasticSearchManager likesElasticSearchManager;
+    private final IsLikesPort isLikesPort;
+    private final DeleteByLikesPort deleteByLikesPort;
     private final PhotoGenericRepo photoGenericRepo;
     private final PhotoLikesFindByPhotoPort photoLikesFindByPhotoPort;
     private final PhotoLikesGenericRepo photoLikesGenericRepo;
@@ -32,7 +34,7 @@ public class UnDoLikesAdapter implements UnDoLikesPort {
         User user = userNicknameValidPort.authenticationValid();
 
         // 검색엔진에 좋아요를 누른상태면 삭제 진행
-        if(likesElasticSearchManager.isLikes(user, photoId)) {
+        if(isLikesPort.isLikes(user, photoId)) {
             Photo photo = photoGenericRepo.findById(photoId).orElseThrow(NotFoundPhotoException::new);
             PhotoLike photoLike = photoLikesFindByPhotoPort
                     .findByPhoto(photo).orElseThrow(NotFoundPhotoLikesException::new);
@@ -40,7 +42,7 @@ public class UnDoLikesAdapter implements UnDoLikesPort {
             photoLike.setCount(photoLike.getCount() - 1);
 
             photoLikesGenericRepo.save(photoLike);
-            likesElasticSearchManager.deleteByLikes(photoId, user.getNickname());
+            deleteByLikesPort.deleteByLikes(photoId, user.getNickname());
 
             // 캐시에 값이 있으면 갱신
             String key = photoLikesRedisKeyPort.getKey(photoId);
