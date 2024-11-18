@@ -3,6 +3,7 @@ package cord.eoeo.momentwo.image.adapter.out;
 import cord.eoeo.momentwo.config.s3.S3Manager;
 import cord.eoeo.momentwo.image.application.port.out.ImageListDeletePort;
 import lombok.RequiredArgsConstructor;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.Delete;
@@ -19,6 +20,7 @@ public class ImageListDeleteAdapter implements ImageListDeletePort {
     private final S3Client s3Client;
 
     @Override
+    @Async
     public void imageListDelete(List<String> keys) {
         // ObjectIdentifier 리스트 생성
         List<ObjectIdentifier> objectIdentifiers = keys.stream()
