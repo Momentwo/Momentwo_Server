@@ -21,12 +21,12 @@ public class LikesElasticsearchAdapter implements LikesElasticsearchRepo {
     }
 
     @Override
-    public Optional<LikesDocument> findById(Long id) {
+    public Optional<LikesDocument> findById(String id) {
         return likesElasticsearchErRepo.findById(id);
     }
 
     @Override
-    public void deleteById(Long id) {
+    public void deleteById(String id) {
         likesElasticsearchErRepo.deleteById(id);
     }
 
