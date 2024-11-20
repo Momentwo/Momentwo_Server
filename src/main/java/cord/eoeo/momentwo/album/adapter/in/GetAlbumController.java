@@ -1,6 +1,6 @@
 package cord.eoeo.momentwo.album.adapter.in;
 
-import cord.eoeo.momentwo.album.adapter.dto.AlbumInfoListResponseDto;
+import cord.eoeo.momentwo.album.adapter.dto.out.AlbumInfoListResponseDto;
 import cord.eoeo.momentwo.album.application.port.in.GetAlbumUseCase;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

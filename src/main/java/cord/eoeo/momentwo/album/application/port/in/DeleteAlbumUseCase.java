@@ -1,6 +1,6 @@
 package cord.eoeo.momentwo.album.application.port.in;
 
-import cord.eoeo.momentwo.album.adapter.dto.AlbumDeleteRequestDto;
+import cord.eoeo.momentwo.album.adapter.dto.in.AlbumDeleteRequestDto;
 
 public interface DeleteAlbumUseCase {
     /**

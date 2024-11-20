@@ -1,6 +1,6 @@
 package cord.eoeo.momentwo.album.application.service;
 
-import cord.eoeo.momentwo.album.adapter.dto.AlbumRulesResponseDto;
+import cord.eoeo.momentwo.album.adapter.dto.out.AlbumRulesResponseDto;
 import cord.eoeo.momentwo.album.application.port.in.GetAlbumRulesUseCase;
 import cord.eoeo.momentwo.album.application.port.out.GetAlbumMemberInfoPort;
 import cord.eoeo.momentwo.subAlbum.application.aop.annotation.CheckAlbumAccessRules;

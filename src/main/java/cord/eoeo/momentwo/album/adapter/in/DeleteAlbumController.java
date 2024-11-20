@@ -1,6 +1,6 @@
 package cord.eoeo.momentwo.album.adapter.in;
 
-import cord.eoeo.momentwo.album.adapter.dto.AlbumDeleteRequestDto;
+import cord.eoeo.momentwo.album.adapter.dto.in.AlbumDeleteRequestDto;
 import cord.eoeo.momentwo.album.application.port.in.DeleteAlbumUseCase;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
