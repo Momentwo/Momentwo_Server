@@ -4,8 +4,10 @@ import cord.eoeo.momentwo.album.advice.exception.NotFoundAlbumException;
 import cord.eoeo.momentwo.album.application.port.out.AlbumGenericRepo;
 import cord.eoeo.momentwo.album.domain.Album;
 import cord.eoeo.momentwo.tag.advice.exception.TagDuplicateException;
+import cord.eoeo.momentwo.tag.advice.exception.TagExceedException;
 import cord.eoeo.momentwo.tag.application.port.out.album.AlbumTagGenericRepo;
 import cord.eoeo.momentwo.tag.application.port.out.album.jpa.AlbumTagGetAlbumIdAndTagRepo;
+import cord.eoeo.momentwo.tag.application.port.out.album.manager.AlbumTagCountPort;
 import cord.eoeo.momentwo.tag.application.port.out.album.manager.AlbumTagSavePort;
 import cord.eoeo.momentwo.tag.domain.AlbumTag;
 import lombok.RequiredArgsConstructor;
@@ -17,9 +19,14 @@ public class AlbumTagSaveAdapter implements AlbumTagSavePort {
     private final AlbumGenericRepo albumGenericRepo;
     private final AlbumTagGenericRepo albumTagGenericRepo;
     private final AlbumTagGetAlbumIdAndTagRepo albumTagGetAlbumIdAndTagRepo;
+    private final AlbumTagCountPort albumTagCountPort;
 
     @Override
     public void albumTagSave(long albumId, String tag) {
+        if(albumTagCountPort.albumTagCount(albumId) >= 20) {
+            throw new TagExceedException();
+        }
+
         // 앨범이 있는지 확인
         Album album = albumGenericRepo.findById(albumId).orElseThrow(NotFoundAlbumException::new);
 
