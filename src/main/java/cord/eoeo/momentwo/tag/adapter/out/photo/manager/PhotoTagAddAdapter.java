@@ -3,9 +3,11 @@ package cord.eoeo.momentwo.tag.adapter.out.photo.manager;
 import cord.eoeo.momentwo.description.application.port.out.manager.DescriptionGetPhotoPort;
 import cord.eoeo.momentwo.photo.domain.Photo;
 import cord.eoeo.momentwo.tag.advice.exception.NotFoundTagException;
+import cord.eoeo.momentwo.tag.advice.exception.TagExceedException;
 import cord.eoeo.momentwo.tag.application.port.out.album.AlbumTagGenericRepo;
 import cord.eoeo.momentwo.tag.application.port.out.photo.PhotoTagGenericRepo;
 import cord.eoeo.momentwo.tag.application.port.out.photo.manager.PhotoTagAddPort;
+import cord.eoeo.momentwo.tag.application.port.out.photo.manager.PhotoTagCountPort;
 import cord.eoeo.momentwo.tag.domain.AlbumTag;
 import cord.eoeo.momentwo.tag.domain.PhotoTag;
 import lombok.RequiredArgsConstructor;
@@ -17,9 +19,15 @@ public class PhotoTagAddAdapter implements PhotoTagAddPort {
     private final DescriptionGetPhotoPort descriptionGetPhotoPort;
     private final PhotoTagGenericRepo photoTagGenericRepo;
     private final AlbumTagGenericRepo albumTagGenericRepo;
+    private final PhotoTagCountPort photoTagCountPort;
 
     @Override
     public void PhotoTagAdd(long albumId, long photoId, long albumTagId) {
+        // 20개 확인
+        if(photoTagCountPort.photoTagCount(photoId) >= 20) {
+            throw new TagExceedException();
+        }
+
         // 설명(작성자) 확인
         Photo photo = descriptionGetPhotoPort.getPhoto(photoId);
 
