@@ -8,6 +8,7 @@ import cord.eoeo.momentwo.description.domain.Description;
 import cord.eoeo.momentwo.photo.advice.exception.NotFoundPhotoException;
 import cord.eoeo.momentwo.photo.application.port.out.PhotoGenericRepo;
 import cord.eoeo.momentwo.photo.domain.Photo;
+import cord.eoeo.momentwo.tag.application.port.out.photo.manager.PhotoTagGetPort;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -18,6 +19,7 @@ import java.util.List;
 public class DescriptionGetAdapter implements DescriptionGetPort {
     private final PhotoGenericRepo photoGenericRepo;
     private final DescriptionFindByPhotoRepo descriptionFindByPhotoRepo;
+    private final PhotoTagGetPort photoTagGetPort;
 
     @Override
     public DescriptionResponseDto getDescription(long photoId) {
@@ -26,6 +28,6 @@ public class DescriptionGetAdapter implements DescriptionGetPort {
         Description description = descriptionFindByPhotoRepo.findByPhoto(photo)
                 .orElseThrow(NotFoundDescriptionException::new);
 
-        return new DescriptionResponseDto().toDo(description);
+        return new DescriptionResponseDto().toDo(description, photoTagGetPort.photoTagGet(photoId));
     }
 }
