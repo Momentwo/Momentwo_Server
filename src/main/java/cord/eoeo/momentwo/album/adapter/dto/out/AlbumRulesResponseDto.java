@@ -1,4 +1,4 @@
-package cord.eoeo.momentwo.album.adapter.dto;
+package cord.eoeo.momentwo.album.adapter.dto.out;
 
 import cord.eoeo.momentwo.member.domain.Member;
 import lombok.AllArgsConstructor;

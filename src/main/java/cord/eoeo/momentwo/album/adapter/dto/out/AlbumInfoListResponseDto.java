@@ -1,4 +1,4 @@
-package cord.eoeo.momentwo.album.adapter.dto;
+package cord.eoeo.momentwo.album.adapter.dto.out;
 
 import cord.eoeo.momentwo.album.domain.Album;
 import cord.eoeo.momentwo.photo.application.port.out.get.PhotoGetAlbumCountPort;
