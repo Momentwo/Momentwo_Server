@@ -1,5 +1,6 @@
 package cord.eoeo.momentwo.tag.advice;
 
+import cord.eoeo.momentwo.tag.advice.exception.TagExceedException;
 import cord.eoeo.momentwo.tag.advice.exception.TagDuplicateException;
 import cord.eoeo.momentwo.tag.advice.exception.NotFoundTagException;
 import org.springframework.http.HttpStatus;
@@ -19,5 +20,11 @@ public class TagExceptionHandler {
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public String notFoundTagException() {
         return "태그가 존재하지 않습니다.";
+    }
+
+    @ExceptionHandler(TagExceedException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public String tagExceedException() {
+        return "태그는 20개까지 저장 가능합니다.";
     }
 }
