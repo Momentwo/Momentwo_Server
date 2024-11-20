@@ -1,6 +1,6 @@
 package cord.eoeo.momentwo.album.adapter.in.profile;
 
-import cord.eoeo.momentwo.album.adapter.dto.AlbumProfileRequestDto;
+import cord.eoeo.momentwo.album.adapter.dto.in.AlbumProfileRequestDto;
 import cord.eoeo.momentwo.album.application.port.in.profile.AlbumSubTitleDeleteUseCase;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -18,7 +18,7 @@ public class AlbumSubTitleDeleteController {
 
     // 서브 타이틀 삭제
     @DeleteMapping("/albums/subtitle")
-    @ResponseStatus(HttpStatus.OK)
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void albumSubTitleDelete(@ModelAttribute @Valid AlbumProfileRequestDto albumProfileRequestDto) {
         albumSubTitleDeleteUseCase.albumSubTitleDelete(albumProfileRequestDto);
     }

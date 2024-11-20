@@ -17,6 +17,9 @@ public class CommentDeleteService implements DeleteCommentUseCase {
     @CheckAlbumAccessRules
     @Transactional
     public void deleteComment(CommentDeleteRequestDto commentDeleteRequestDto) {
-        commentDeletePort.commentDelete(commentDeleteRequestDto.getCommentId());
+        commentDeletePort.commentDelete(
+                commentDeleteRequestDto.getAlbumId(),
+                commentDeleteRequestDto.getCommentId()
+        );
     }
 }

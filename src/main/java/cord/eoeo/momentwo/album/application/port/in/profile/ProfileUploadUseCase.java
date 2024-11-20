@@ -1,6 +1,6 @@
 package cord.eoeo.momentwo.album.application.port.in.profile;
 
-import cord.eoeo.momentwo.album.adapter.dto.AlbumProfileUploadRequestDto;
+import cord.eoeo.momentwo.album.adapter.dto.in.AlbumProfileUploadRequestDto;
 
 public interface ProfileUploadUseCase {
     /**

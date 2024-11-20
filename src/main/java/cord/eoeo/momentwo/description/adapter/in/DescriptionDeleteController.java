@@ -17,7 +17,7 @@ public class DescriptionDeleteController {
     private final DescriptionDeleteUseCase descriptionDeleteUseCase;
 
     @DeleteMapping("/descriptions/delete")
-    @ResponseStatus(HttpStatus.OK)
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteDescription(@RequestBody @Valid DescriptionRequestDto descriptionRequestDto) {
         descriptionDeleteUseCase.deleteDescription(descriptionRequestDto);
     }

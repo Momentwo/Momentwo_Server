@@ -18,7 +18,7 @@ public class RequestFriendshipController {
 
     // 요청
     @PostMapping("/friendship/request")
-    @ResponseStatus(HttpStatus.OK)
+    @ResponseStatus(HttpStatus.CREATED)
     public void requestFriendship(@ModelAttribute @Valid RequestFriendshipDto requestFriendshipDto) {
         requestFriendshipUseCase.requestFriendship(requestFriendshipDto);
     }

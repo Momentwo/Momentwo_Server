@@ -1,6 +1,6 @@
 package cord.eoeo.momentwo.album.adapter.in;
 
-import cord.eoeo.momentwo.album.adapter.dto.AlbumCreateRequestDto;
+import cord.eoeo.momentwo.album.adapter.dto.in.AlbumCreateRequestDto;
 import cord.eoeo.momentwo.album.application.port.in.CreateAlbumUseCase;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -18,7 +18,7 @@ public class CreateAlbumController {
 
     // 앨범 생성
     @PostMapping("/albums/create")
-    @ResponseStatus(HttpStatus.OK)
+    @ResponseStatus(HttpStatus.CREATED)
     public void createAlbums(@RequestBody @Valid AlbumCreateRequestDto albumCreateRequestDto) {
         createAlbumUseCase.createAlbums(albumCreateRequestDto);
     }

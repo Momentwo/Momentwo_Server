@@ -15,7 +15,7 @@ public class PhotoUploadController {
 
     // 업로드
     @PostMapping("/photos/upload")
-    @ResponseStatus(HttpStatus.OK)
+    @ResponseStatus(HttpStatus.CREATED)
     public void photoUpload(@RequestBody @Valid PhotoUploadRequestDto photoUploadRequestDto) {
         photoUploadUseCase.photoUpload(photoUploadRequestDto);
     }

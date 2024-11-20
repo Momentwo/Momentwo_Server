@@ -1,6 +1,6 @@
 package cord.eoeo.momentwo.user.application.service.register;
 
-import cord.eoeo.momentwo.elasticsearch.application.port.out.UserElasticSearchManager;
+import cord.eoeo.momentwo.elasticsearch.application.port.out.user.manager.UserSavePort;
 import cord.eoeo.momentwo.user.adapter.dto.in.UserRegisterRequestDto;
 import cord.eoeo.momentwo.user.application.port.in.register.UserRegisterUseCase;
 import cord.eoeo.momentwo.user.application.port.out.PasswordEncoder;
@@ -16,7 +16,7 @@ public class UserRegisterService implements UserRegisterUseCase {
     private final String USER_BASE_IMAGE = "";
     private final UserGenericRepo userGenericRepo;
     private final PasswordEncoder passwordEncoder;
-    private final UserElasticSearchManager userElasticSearchManager;
+    private final UserSavePort userSavePort;
 
     @Transactional
     @Override
@@ -31,6 +31,6 @@ public class UserRegisterService implements UserRegisterUseCase {
                 USER_BASE_IMAGE
         );
         userGenericRepo.save(newUser);
-        userElasticSearchManager.save(newUser);
+        userSavePort.userSave(newUser);
     }
 }

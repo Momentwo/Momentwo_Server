@@ -1,6 +1,6 @@
 package cord.eoeo.momentwo.album.application.port.in;
 
-import cord.eoeo.momentwo.album.adapter.dto.AlbumRulesResponseDto;
+import cord.eoeo.momentwo.album.adapter.dto.out.AlbumRulesResponseDto;
 
 public interface GetAlbumRulesUseCase {
     /**

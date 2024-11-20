@@ -1,6 +1,6 @@
 package cord.eoeo.momentwo.album.application.service;
 
-import cord.eoeo.momentwo.album.adapter.dto.AlbumInfoListResponseDto;
+import cord.eoeo.momentwo.album.adapter.dto.out.AlbumInfoListResponseDto;
 import cord.eoeo.momentwo.album.advice.exception.NotFoundAlbumException;
 import cord.eoeo.momentwo.album.application.port.in.GetAlbumUseCase;
 import cord.eoeo.momentwo.album.domain.Album;

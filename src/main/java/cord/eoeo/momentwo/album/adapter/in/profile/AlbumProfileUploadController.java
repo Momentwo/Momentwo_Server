@@ -1,6 +1,6 @@
 package cord.eoeo.momentwo.album.adapter.in.profile;
 
-import cord.eoeo.momentwo.album.adapter.dto.AlbumProfileUploadRequestDto;
+import cord.eoeo.momentwo.album.adapter.dto.in.AlbumProfileUploadRequestDto;
 import cord.eoeo.momentwo.album.application.port.in.profile.ProfileUploadUseCase;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

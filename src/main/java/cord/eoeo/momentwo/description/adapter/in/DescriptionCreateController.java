@@ -17,7 +17,7 @@ public class DescriptionCreateController {
     private final DescriptionCreateUseCase descriptionCreateUseCase;
 
     @PostMapping("/descriptions/create")
-    @ResponseStatus(HttpStatus.OK)
+    @ResponseStatus(HttpStatus.CREATED)
     public void createDescription(@RequestBody @Valid DescriptionCreateRequestDto descriptionCreateRequestDto) {
         descriptionCreateUseCase.createDescription(descriptionCreateRequestDto);
     }

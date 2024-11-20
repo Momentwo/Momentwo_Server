@@ -9,31 +9,31 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class UserExceptionHandler {
     @ExceptionHandler(NotFoundUserException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
     public String notFoundUserException() {
         return "유저가 존재하지 않습니다.";
     }
 
     @ExceptionHandler(PasswordMisMatchException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseStatus(HttpStatus.CONFLICT)
     public String passwordMisMatchException() {
         return "비밀번호가 일치하지 않습니다.";
     }
 
     @ExceptionHandler(DuplicateUsernameException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseStatus(HttpStatus.CONFLICT)
     public String duplicateUsernameException() {
         return "이미 등록된 이메일입니다.";
     }
 
     @ExceptionHandler(DuplicateNicknameException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseStatus(HttpStatus.CONFLICT)
     public String duplicateNicknameException() {
         return "이미 등록된 별명입니다.";
     }
 
     @ExceptionHandler(NotInviteUserException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
     public String notInviteUserException() {
         return "친구 초대 목록에 존재하지 않는 유저가 포함되어 있습니다.";
     }

@@ -1,6 +1,6 @@
 package cord.eoeo.momentwo.album.application.service.profile;
 
-import cord.eoeo.momentwo.album.adapter.dto.AlbumProfileRequestDto;
+import cord.eoeo.momentwo.album.adapter.dto.in.AlbumProfileRequestDto;
 import cord.eoeo.momentwo.album.application.aop.annotation.CheckAlbumAdmin;
 import cord.eoeo.momentwo.album.application.port.in.profile.AlbumSubTitleDeleteUseCase;
 import cord.eoeo.momentwo.album.application.port.out.GetAlbumMemberPort;

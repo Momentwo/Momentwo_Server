@@ -1,8 +1,8 @@
 package cord.eoeo.momentwo.user.application.service.status;
 
 import cord.eoeo.momentwo.album.application.port.out.AlbumGenericRepo;
-import cord.eoeo.momentwo.elasticsearch.application.port.out.LikesElasticSearchManager;
-import cord.eoeo.momentwo.elasticsearch.application.port.out.UserElasticSearchManager;
+import cord.eoeo.momentwo.elasticsearch.application.port.out.like.manager.DeleteByWildNicknamePort;
+import cord.eoeo.momentwo.elasticsearch.application.port.out.user.manager.UserDeleteByIdPort;
 import cord.eoeo.momentwo.member.advice.exception.AdminAlbumOutException;
 import cord.eoeo.momentwo.member.application.port.out.info.GetAlbumIdByAdminUserPort;
 import cord.eoeo.momentwo.member.application.port.out.info.GetMemberInfoPort;
@@ -31,8 +31,8 @@ public class UserSignOutService implements UserSignOutUseCase {
     private final IsCheckAlbumOneMemberPort isCheckAlbumOneMemberPort;
     private final AlbumGenericRepo albumGenericRepo;
     private final UserDeleteJpaRepo userDeleteJpaRepo;
-    private final UserElasticSearchManager userElasticSearchManager;
-    private final LikesElasticSearchManager likesElasticSearchManager;
+    private final UserDeleteByIdPort userDeleteByIdPort;
+    private final DeleteByWildNicknamePort deleteByWildNicknamePort;
 
     // 회원탈퇴
     @Override
@@ -62,7 +62,7 @@ public class UserSignOutService implements UserSignOutUseCase {
         });
 
         userDeleteJpaRepo.delete(user);
-        userElasticSearchManager.deleteById(user.getId());
-        likesElasticSearchManager.deleteByWildNickname(user.getNickname());
+        userDeleteByIdPort.deleteById(user.getId());
+        deleteByWildNicknamePort.deleteByWildNickname(user.getNickname());
     }
 }

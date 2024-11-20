@@ -18,7 +18,7 @@ public class OutAlbumController {
 
     // 멤버 나가기 (개인)
     @DeleteMapping("/members/out")
-    @ResponseStatus(HttpStatus.OK)
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void outAlbum(@ModelAttribute @Valid MemberOutRequestDto memberOutRequestDto) {
         outAlbumUseCase.outAlbum(memberOutRequestDto);
     }

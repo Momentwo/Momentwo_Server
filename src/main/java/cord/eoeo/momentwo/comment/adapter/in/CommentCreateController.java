@@ -17,7 +17,7 @@ public class CommentCreateController {
     private final CreateCommentUseCase createCommentUseCase;
 
     @PostMapping("/photo/comments/create")
-    @ResponseStatus(HttpStatus.OK)
+    @ResponseStatus(HttpStatus.CREATED)
     public void createComment(@RequestBody @Valid CommentCreateRequestDto commentCreateRequestDto) {
         createCommentUseCase.createComment(commentCreateRequestDto);
     }

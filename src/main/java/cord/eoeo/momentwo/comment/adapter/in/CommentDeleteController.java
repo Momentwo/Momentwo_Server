@@ -17,7 +17,7 @@ public class CommentDeleteController {
     private final DeleteCommentUseCase deleteCommentUseCase;
 
     @DeleteMapping("/photo/comments")
-    @ResponseStatus(HttpStatus.OK)
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteComment(@RequestBody @Valid CommentDeleteRequestDto commentDeleteRequestDto) {
         deleteCommentUseCase.deleteComment(commentDeleteRequestDto);
     }

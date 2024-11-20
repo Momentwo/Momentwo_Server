@@ -1,6 +1,6 @@
 package cord.eoeo.momentwo.album.adapter.in.profile;
 
-import cord.eoeo.momentwo.album.adapter.dto.AlbumProfileRequestDto;
+import cord.eoeo.momentwo.album.adapter.dto.in.AlbumProfileRequestDto;
 import cord.eoeo.momentwo.album.application.port.in.profile.ProfileDeleteUseCase;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -18,7 +18,7 @@ public class AlbumProfileDeleteController {
 
     // 프로필 삭제
     @DeleteMapping("/albums/profile/image")
-    @ResponseStatus(HttpStatus.OK)
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void profileDelete(@ModelAttribute @Valid AlbumProfileRequestDto albumProfileRequestDto) {
         profileDeleteUseCase.profileDelete(albumProfileRequestDto);
     }

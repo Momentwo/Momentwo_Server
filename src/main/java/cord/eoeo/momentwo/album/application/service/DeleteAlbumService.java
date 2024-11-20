@@ -1,6 +1,6 @@
 package cord.eoeo.momentwo.album.application.service;
 
-import cord.eoeo.momentwo.album.adapter.dto.AlbumDeleteRequestDto;
+import cord.eoeo.momentwo.album.adapter.dto.in.AlbumDeleteRequestDto;
 import cord.eoeo.momentwo.album.advice.exception.NotDeleteAlbumException;
 import cord.eoeo.momentwo.album.application.aop.annotation.CheckAlbumAdmin;
 import cord.eoeo.momentwo.album.application.port.in.DeleteAlbumUseCase;

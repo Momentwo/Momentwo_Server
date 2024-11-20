@@ -16,7 +16,6 @@ public class GetSubAlbumListPortAdapter implements GetSubAlbumListPort {
     private final GetSubAlbumListByAlbumIdRepo getSubAlbumListByAlbumId;
 
     @Override
-    @Transactional(readOnly = true)
     public SubAlbumListResponseDto getSubAlbumList(long albumId) {
         List<SubAlbum> subAlbumList = getSubAlbumListByAlbumId.getSubAlbumListByAlbumId(albumId);
         return new SubAlbumListResponseDto().toDo(subAlbumList);

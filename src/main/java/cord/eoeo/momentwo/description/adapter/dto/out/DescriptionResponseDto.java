@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -15,13 +16,15 @@ public class DescriptionResponseDto {
     private String userProfileImage;
     private String description;
     private LocalDate date;
+    private List<String> photoTags;
 
-    public DescriptionResponseDto toDo(Description description) {
+    public DescriptionResponseDto toDo(Description description, List<String> photoTags) {
         return new DescriptionResponseDto(
                 description.getPhoto().getUser().getNickname(),
                 description.getPhoto().getUser().getUserProfileImage(),
                 description.getDescription(),
-                description.getDate()
+                description.getDate(),
+                photoTags
         );
     }
 }

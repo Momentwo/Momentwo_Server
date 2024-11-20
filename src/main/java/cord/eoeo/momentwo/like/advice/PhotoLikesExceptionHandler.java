@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class PhotoLikesExceptionHandler {
     @ExceptionHandler(NotFoundPhotoLikesException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
     public String notFoundImageLikesException() {
         return "눌린 좋아요 없음";
     }

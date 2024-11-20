@@ -18,7 +18,7 @@ public class RequestFriendshipCancelController {
 
     // 친구 요청 취소
     @DeleteMapping("/friendship/request/cancel")
-    @ResponseStatus(HttpStatus.OK)
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void requestFriendshipCancel(@ModelAttribute @Valid RequestFriendshipDto requestFriendshipDto) {
         requestFriendshipCancelUseCase.requestFriendshipCancel(requestFriendshipDto);
     }

@@ -10,13 +10,13 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class SubAlbumExceptionHandler {
     @ExceptionHandler(NotFoundSubAlbumException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
     public String notFoundSubAlbumException() {
         return "서브 앨범이 존재하지 않습니다.";
     }
 
     @ExceptionHandler(NotDeleteSubAlbumException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
     public String notDeleteSubAlbumException() {
         return "삭제할 서브앨범이 없습니다.";
     }

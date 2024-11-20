@@ -15,7 +15,7 @@ public class CreateSubAlbumController {
 
     // 서브앨범 생성
     @PostMapping("/album/sub/create")
-    @ResponseStatus(HttpStatus.OK)
+    @ResponseStatus(HttpStatus.CREATED)
     public void createSubAlbum(@RequestBody @Valid SubAlbumCreateRequestDto subAlbumCreateRequestDto) {
         createSubAlbumUseCase.createSubAlbum(subAlbumCreateRequestDto);
     }

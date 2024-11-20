@@ -18,7 +18,7 @@ public class UserSignOutController {
 
     // 회원 탈퇴
     @DeleteMapping("/signout")
-    @ResponseStatus(HttpStatus.OK)
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void signOut(@ModelAttribute @Valid SignOutRequestDto signOutRequestDto) {
         userSignOutUseCase.signOut(signOutRequestDto);
     }
