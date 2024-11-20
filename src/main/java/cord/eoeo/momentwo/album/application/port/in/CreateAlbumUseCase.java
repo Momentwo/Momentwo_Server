@@ -1,6 +1,6 @@
 package cord.eoeo.momentwo.album.application.port.in;
 
-import cord.eoeo.momentwo.album.adapter.dto.AlbumCreateRequestDto;
+import cord.eoeo.momentwo.album.adapter.dto.in.AlbumCreateRequestDto;
 
 public interface CreateAlbumUseCase {
     /**

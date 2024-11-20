@@ -1,6 +1,6 @@
 package cord.eoeo.momentwo.album.application.port.in.profile;
 
-import cord.eoeo.momentwo.album.adapter.dto.AlbumProfileRequestDto;
+import cord.eoeo.momentwo.album.adapter.dto.in.AlbumProfileRequestDto;
 
 public interface AlbumSubTitleDeleteUseCase {
     /**

@@ -1,6 +1,6 @@
 package cord.eoeo.momentwo.album.application.service;
 
-import cord.eoeo.momentwo.album.adapter.dto.AlbumCreateRequestDto;
+import cord.eoeo.momentwo.album.adapter.dto.in.AlbumCreateRequestDto;
 import cord.eoeo.momentwo.album.advice.exception.NotCreateAlbumException;
 import cord.eoeo.momentwo.album.application.port.in.CreateAlbumUseCase;
 import cord.eoeo.momentwo.album.application.port.out.AlbumGenericRepo;

@@ -1,6 +1,6 @@
 package cord.eoeo.momentwo.album.application.service.profile;
 
-import cord.eoeo.momentwo.album.adapter.dto.AlbumProfileUploadRequestDto;
+import cord.eoeo.momentwo.album.adapter.dto.in.AlbumProfileUploadRequestDto;
 import cord.eoeo.momentwo.album.adapter.out.profile.ProfileUploadAdapter;
 import cord.eoeo.momentwo.album.application.aop.annotation.CheckAlbumAdmin;
 import cord.eoeo.momentwo.album.application.port.in.profile.ProfileUploadUseCase;

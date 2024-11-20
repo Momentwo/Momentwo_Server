@@ -1,6 +1,6 @@
 package cord.eoeo.momentwo.album.application.port.in;
 
-import cord.eoeo.momentwo.album.adapter.dto.AlbumTitleEditRequestDto;
+import cord.eoeo.momentwo.album.adapter.dto.in.AlbumTitleEditRequestDto;
 
 public interface EditAlbumTitleUseCase {
     /**
