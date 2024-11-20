@@ -254,4 +254,5 @@
 | Search Engine | ElasticSearch |
 | AWS | EC2, RDS, S3, IAM, CloudFront |
 | Cache | Redis |
+| CI/CD | Github Action |
 | Others | Web, Valid, lombok, Docker |
