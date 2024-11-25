@@ -3,6 +3,7 @@ package cord.eoeo.momentwo.photo.application.service;
 import cord.eoeo.momentwo.album.application.port.out.manager.GetAlbumInfoPort;
 import cord.eoeo.momentwo.album.domain.Album;
 import cord.eoeo.momentwo.config.s3.S3Manager;
+import cord.eoeo.momentwo.elasticsearch.application.port.out.date.PhotoDateSaveRepo;
 import cord.eoeo.momentwo.photo.adapter.dto.PhotoUploadRequestDto;
 import cord.eoeo.momentwo.photo.application.port.in.PhotoUploadUseCase;
 import cord.eoeo.momentwo.photo.application.port.out.PhotoGenericRepo;
@@ -25,6 +26,7 @@ public class PhotoUploadService implements PhotoUploadUseCase {
     private final GetSubAlbumInfoPort getSubAlbumInfoPort;
     private final S3Manager s3Manager;
     private final PhotoGenericRepo photoGenericRepo;
+    private final PhotoDateSaveRepo photoDateSaveRepo;
 
     @Override
     @Transactional
@@ -50,5 +52,6 @@ public class PhotoUploadService implements PhotoUploadUseCase {
         );
 
         photoGenericRepo.save(newPhoto);
+        photoDateSaveRepo.photoSave(newPhoto);
     }
 }
