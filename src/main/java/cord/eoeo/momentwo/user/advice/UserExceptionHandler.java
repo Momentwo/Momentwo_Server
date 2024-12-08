@@ -43,4 +43,10 @@ public class UserExceptionHandler {
     public String refreshTokenValidException() {
         return "리프레시 토큰이 만료되었습니다.";
     }
+
+    @ExceptionHandler(NotFoundOAuthInfoTypeException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public String notFoundOAuthInfoTypeException() {
+        return "지원하지 않는 OAuth2 타입입니다.";
+    }
 }
