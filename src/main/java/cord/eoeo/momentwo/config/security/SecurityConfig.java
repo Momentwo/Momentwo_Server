@@ -1,5 +1,9 @@
 package cord.eoeo.momentwo.config.security;
 
+import cord.eoeo.momentwo.config.oauth.CustomAuthorizationCodeTokenResponseClient;
+import cord.eoeo.momentwo.config.oauth.CustomOAuth2UserService;
+import cord.eoeo.momentwo.config.oauth.handler.OAuth2FailureHandler;
+import cord.eoeo.momentwo.config.oauth.handler.OAuth2SuccessHandler;
 import cord.eoeo.momentwo.config.security.handler.AuthenticationEntryPointHandler;
 import cord.eoeo.momentwo.config.security.handler.CustomLogoutSuccessHandler;
 import cord.eoeo.momentwo.config.security.handler.JWTAccessDeniedHandler;
@@ -25,6 +29,15 @@ public class SecurityConfig {
     private final JWTAccessDeniedHandler jwtAccessDeniedHandler;
     private final AuthenticationEntryPointHandler authenticationEntryPointHandler;
     private final CustomLogoutSuccessHandler customLogoutSuccessHandler;
+
+    // OAuth2
+    private final OAuth2SuccessHandler oAuth2SuccessHandler;
+    private final OAuth2FailureHandler oAuth2FailureHandler;
+    private final CustomOAuth2UserService customOAuth2UserService;
+
+    // 카카오 필터
+    private final CustomAuthorizationCodeTokenResponseClient customAuthorizationCodeTokenResponseClient;
+
     private static final String[] WHITE_LIST = {
             "/signup",
             "/signin",
@@ -56,6 +69,15 @@ public class SecurityConfig {
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 
+                // OAuth 로그인
+                .and()
+                .oauth2Login()
+                .successHandler(oAuth2SuccessHandler)
+                .failureHandler(oAuth2FailureHandler)
+                .tokenEndpoint(tokenEndpoint -> tokenEndpoint // 카카오 인증 시 사용
+                        .accessTokenResponseClient(customAuthorizationCodeTokenResponseClient))
+                .userInfoEndpoint(endPoint -> endPoint.userService(customOAuth2UserService))
+
                 .and()
                 .authorizeRequests()
                 .antMatchers(HttpMethod.POST, WHITE_LIST).permitAll()
@@ -64,6 +86,7 @@ public class SecurityConfig {
 
                 .and()
                 .apply(new JWTSecurityConfig(tokenProvider, jwtBlackList));
+
         return httpSecurity.build();
     }
 }
