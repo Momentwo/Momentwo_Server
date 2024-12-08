@@ -45,6 +45,10 @@ public class User {
     @DateTimeFormat(pattern = "yyyy-mm-dd")
     private LocalDate createDate;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "oAuthType")
+    private OAuthInfo oAuthInfo;
+
     @PrePersist // DB에 Insert 되기 직전에 실행된다.
     public void initDateAndGrade(){
         this.createDate = LocalDate.now();
@@ -60,5 +64,17 @@ public class User {
         this.birthday = birthday;
         this.phone = phone;
         this.userProfileImage = userProfileImage;
+    }
+
+    public User(String name, String username, String password,
+                String birthday, String phone, String userProfileImage, OAuthInfo oAuthInfo) {
+        this.name = name;
+        this.username = username;
+        this.password = password;
+        this.nickname = username;
+        this.birthday = birthday;
+        this.phone = phone;
+        this.userProfileImage = userProfileImage;
+        this.oAuthInfo = oAuthInfo;
     }
 }
