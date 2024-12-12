@@ -15,7 +15,7 @@ import javax.validation.Valid;
 @RequiredArgsConstructor
 public class CommentEditController {
     private final EditCommentUseCase editCommentUseCase;
-    @PutMapping("/photo/comments/edit")
+    @PutMapping("/albums/sub/photos/comments")
     @ResponseStatus(HttpStatus.OK)
     public void editComment(@RequestBody @Valid CommentEditRequestDto commentEditRequestDto) {
         editCommentUseCase.editComment(commentEditRequestDto);
