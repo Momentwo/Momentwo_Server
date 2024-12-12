@@ -12,7 +12,7 @@ public class PhotoViewController {
     private final PhotoViewUseCase photoViewUseCase;
 
     // 조회 (이미지 보기)
-    @GetMapping("/photos/view/{albumId}/{subAlbumId}")
+    @GetMapping("/albums/{albumId}/sub/{subAlbumId}/photos")
     @ResponseStatus(HttpStatus.OK)
     public ImageViewListResponseDto photoView(
             @PathVariable long albumId,
