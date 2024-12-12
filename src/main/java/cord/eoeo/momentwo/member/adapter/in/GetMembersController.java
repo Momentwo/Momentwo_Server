@@ -15,9 +15,9 @@ public class GetMembersController {
     private final GetMembersUseCase getMembersUseCase;
 
     // 멤버 조회
-    @GetMapping("/members/{albumId}")
+    @GetMapping("/albums/{albumId}/members")
     @ResponseStatus(HttpStatus.OK)
-    public AlbumMemberResponseDto getMembers(@PathVariable long albumId) {
+    public AlbumMemberResponseDto getMembers(@PathVariable Long albumId) {
         return getMembersUseCase.getMembers(albumId);
     }
 }
