@@ -1,7 +1,6 @@
 package cord.eoeo.momentwo.member.application.service;
 
 import cord.eoeo.momentwo.elasticsearch.application.port.out.like.manager.DeleteByWildNicknamePort;
-import cord.eoeo.momentwo.member.adapter.in.dto.MemberOutRequestDto;
 import cord.eoeo.momentwo.member.advice.exception.AdminAlbumOutException;
 import cord.eoeo.momentwo.member.advice.exception.MemberNotInAlbumException;
 import cord.eoeo.momentwo.member.application.port.in.OutAlbumUseCase;
@@ -34,28 +33,28 @@ public class OutAlbumService implements OutAlbumUseCase {
     @Override
     @Transactional
     @CheckAlbumAccessRules
-    public void outAlbum(MemberOutRequestDto memberOutRequestDto) {
+    public void outAlbum(Long albumId) {
         User selfUser = getUserInfoByNicknamePort.getUserInfoByNickname(getAuthentication.getAuthentication().getName())
                 .join();
-        Member member = getMemberInfoPort.getAlbumMemberInfo(memberOutRequestDto.getAlbumId(), selfUser.getId());
+        Member member = getMemberInfoPort.getAlbumMemberInfo(albumId, selfUser.getId());
 
         // 앨범 관리자가 나갈 경우 멤버가 존재한다면 나갈 수 없음
         // 하지만 멤버가 없을 경우 나갈 수 있음
         if(isCheckAlbumAdminPort.isCheckAlbumAdmin(member)
-                && !isCheckAlbumOneMemberPort.isCheckAlbumOneMember(memberOutRequestDto.getAlbumId())) {
+                && !isCheckAlbumOneMemberPort.isCheckAlbumOneMember(albumId)) {
             throw new AdminAlbumOutException();
         }
 
         // 본인이 앨범에 속해있는지 확인한다.
         // 삭제 된 행이 있으면 true, 없으면 false 반환
-        if(!isAlbumOutPort.isAlbumOut(memberOutRequestDto.getAlbumId(), selfUser)) {
+        if(!isAlbumOutPort.isAlbumOut(albumId, selfUser)) {
             throw new MemberNotInAlbumException();
         }
 
         // 관리자만 있는 앨범에서 관리자가 나갈 경우
         // 앨범도 같이 삭제 되어야 한다.
         if(isCheckAlbumAdminPort.isCheckAlbumAdmin(member)
-                && isCheckAlbumOneMemberPort.isCheckAlbumOneMember(memberOutRequestDto.getAlbumId())) {
+                && isCheckAlbumOneMemberPort.isCheckAlbumOneMember(albumId)) {
             albumMemberGenericRepo.deleteById(member.getAlbum().getId());
         }
         deleteByWildNicknamePort.deleteByWildNickname(selfUser.getNickname());

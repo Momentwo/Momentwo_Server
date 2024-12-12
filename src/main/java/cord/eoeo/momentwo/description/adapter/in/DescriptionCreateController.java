@@ -16,7 +16,7 @@ import javax.validation.Valid;
 public class DescriptionCreateController {
     private final DescriptionCreateUseCase descriptionCreateUseCase;
 
-    @PostMapping("/descriptions/create")
+    @PostMapping("/albums/sub/photos/descriptions")
     @ResponseStatus(HttpStatus.CREATED)
     public void createDescription(@RequestBody @Valid DescriptionCreateRequestDto descriptionCreateRequestDto) {
         descriptionCreateUseCase.createDescription(descriptionCreateRequestDto);

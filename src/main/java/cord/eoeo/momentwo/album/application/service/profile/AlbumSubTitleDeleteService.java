@@ -1,6 +1,5 @@
 package cord.eoeo.momentwo.album.application.service.profile;
 
-import cord.eoeo.momentwo.album.adapter.dto.in.AlbumProfileRequestDto;
 import cord.eoeo.momentwo.album.application.aop.annotation.CheckAlbumAdmin;
 import cord.eoeo.momentwo.album.application.port.in.profile.AlbumSubTitleDeleteUseCase;
 import cord.eoeo.momentwo.album.application.port.out.GetAlbumMemberPort;
@@ -18,7 +17,7 @@ public class AlbumSubTitleDeleteService implements AlbumSubTitleDeleteUseCase {
     @Override
     @Transactional
     @CheckAlbumAdmin
-    public void albumSubTitleDelete(AlbumProfileRequestDto albumProfileRequestDto) {
-        albumSubTitleDeletePort.albumSubTitleDelete(getAlbumMemberPort.getMember(albumProfileRequestDto.getAlbumId()));
+    public void albumSubTitleDelete(Long albumId) {
+        albumSubTitleDeletePort.albumSubTitleDelete(getAlbumMemberPort.getMember(albumId));
     }
 }

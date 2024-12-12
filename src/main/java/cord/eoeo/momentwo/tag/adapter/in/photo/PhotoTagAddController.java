@@ -16,7 +16,7 @@ import javax.validation.Valid;
 public class PhotoTagAddController {
     private final PhotoTagAddUseCase photoTagAddUseCase;
 
-    @PostMapping("/photos/tags")
+    @PostMapping("/albums/sub/photos/tags")
     @ResponseStatus(HttpStatus.CREATED)
     public void photoTagAdd(@RequestBody @Valid PhotoTagAddRequestDto photoTagAddRequestDto) {
         photoTagAddUseCase.photoTagAdd(photoTagAddRequestDto);

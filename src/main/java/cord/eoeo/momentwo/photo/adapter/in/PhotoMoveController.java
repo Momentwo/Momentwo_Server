@@ -16,7 +16,7 @@ import javax.validation.Valid;
 public class PhotoMoveController {
     private final PhotoMoveUseCase photoMoveUseCase;
 
-    @PutMapping("/photos/move")
+    @PutMapping("/albums/sub/photos/move")
     @ResponseStatus(HttpStatus.OK)
     public void photoMove(@RequestBody @Valid PhotoMoveRequestDto photoMoveRequestDto) {
         photoMoveUseCase.photoMove(photoMoveRequestDto);

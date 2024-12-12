@@ -16,7 +16,7 @@ import javax.validation.Valid;
 public class CommentCreateController {
     private final CreateCommentUseCase createCommentUseCase;
 
-    @PostMapping("/photo/comments/create")
+    @PostMapping("/albums/sub/photos/comments")
     @ResponseStatus(HttpStatus.CREATED)
     public void createComment(@RequestBody @Valid CommentCreateRequestDto commentCreateRequestDto) {
         createCommentUseCase.createComment(commentCreateRequestDto);

@@ -1,7 +1,6 @@
 package cord.eoeo.momentwo.tag.application.service.photo;
 
 import cord.eoeo.momentwo.subAlbum.application.aop.annotation.CheckAlbumAccessRules;
-import cord.eoeo.momentwo.tag.adapter.dto.in.photo.PhotoTagRemoveRequestDto;
 import cord.eoeo.momentwo.tag.application.port.in.photo.PhotoTagRemoveUseCase;
 import cord.eoeo.momentwo.tag.application.port.out.photo.manager.PhotoTagRemovePort;
 import lombok.RequiredArgsConstructor;
@@ -16,10 +15,10 @@ public class PhotoTagRemoveService implements PhotoTagRemoveUseCase {
     @Override
     @Transactional
     @CheckAlbumAccessRules
-    public void photoTagRemove(PhotoTagRemoveRequestDto photoTagRemoveRequestDto) {
+    public void photoTagRemove(Long albumId, Long photoId, Long photoTagId) {
         photoTagRemovePort.photoTagRemove(
-                photoTagRemoveRequestDto.getPhotoId(),
-                photoTagRemoveRequestDto.getPhotoTagId()
+                photoId,
+                photoTagId
         );
     }
 }

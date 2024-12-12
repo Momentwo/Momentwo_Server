@@ -17,7 +17,7 @@ public class AssignAdminController {
     private final AssignAdminUseCase assignAdminUseCase;
 
     // 관리자 권한 넘겨주기
-    @PutMapping("/members/assign/admin")
+    @PutMapping("/albums/members/assign/admin")
     @ResponseStatus(HttpStatus.OK)
     public void assignAdmin(@RequestBody @Valid AssignAdminRequestDto assignAdminRequestDto) {
         assignAdminUseCase.assignAdmin(assignAdminRequestDto);

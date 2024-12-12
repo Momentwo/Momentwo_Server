@@ -1,7 +1,6 @@
 package cord.eoeo.momentwo.tag.application.service.album;
 
 import cord.eoeo.momentwo.subAlbum.application.aop.annotation.CheckAlbumAccessRules;
-import cord.eoeo.momentwo.tag.adapter.dto.in.album.AlbumTagDeleteRequestDto;
 import cord.eoeo.momentwo.tag.application.port.in.album.AlbumTagDeleteUseCase;
 import cord.eoeo.momentwo.tag.application.port.out.album.manager.AlbumTagDeletePort;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +15,7 @@ public class AlbumTagDeleteService implements AlbumTagDeleteUseCase {
     @Override
     @Transactional
     @CheckAlbumAccessRules
-    public void albumTagDelete(AlbumTagDeleteRequestDto albumTagDeleteRequestDto) {
-        albumTagDeletePort.albumTagDelete(albumTagDeleteRequestDto.getAlbumTagId());
+    public void albumTagDelete(Long albumId, Long albumTagId) {
+        albumTagDeletePort.albumTagDelete(albumTagId);
     }
 }

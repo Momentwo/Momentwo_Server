@@ -17,7 +17,7 @@ public class EditMembersGradeController {
     private final EditMembersGradeUseCase editMembersGradeUseCase;
 
     // 멤버 권한 변경 (앨범 수정 권한)
-    @PutMapping("/members/permission")
+    @PutMapping("/albums/members/permission")
     @ResponseStatus(HttpStatus.OK)
     public void editMembersGrade(@RequestBody @Valid EditGradeListRequestDto editGradeListRequestDto) {
         editMembersGradeUseCase.editMembersGrade(editGradeListRequestDto);
