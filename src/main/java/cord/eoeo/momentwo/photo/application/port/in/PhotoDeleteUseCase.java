@@ -1,15 +1,16 @@
 package cord.eoeo.momentwo.photo.application.port.in;
 
-import cord.eoeo.momentwo.photo.adapter.dto.PhotoDeleteRequestDto;
+import java.util.List;
 
 public interface PhotoDeleteUseCase {
     /**
      * 사진 삭제
-     * @param photoDeleteRequestDto
+     * @param albumId
+     * @param subAlbumId
+     * @param imagesId
      * albumId : 앨범 아이디
      * subAlbumId : 서브 앨범 아이디
      * (리스트)imagesId : 이미지 아이디
-     * (리스트)imagesUrl : 이미지 url
      */
-    void photoDelete(PhotoDeleteRequestDto photoDeleteRequestDto);
+    void photoDelete(Long albumId, Long subAlbumId, List<Long> imagesId);
 }
