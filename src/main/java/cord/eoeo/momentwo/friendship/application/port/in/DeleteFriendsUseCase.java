@@ -1,12 +1,10 @@
 package cord.eoeo.momentwo.friendship.application.port.in;
 
-import cord.eoeo.momentwo.friendship.adapter.dto.RequestFriendshipDto;
-
 public interface DeleteFriendsUseCase {
     /**
      * 친구 삭제
-     * @param requestFriendshipDto
-     * nickname : 닉네임
+     * @param userId
+     * userId : 유저 아이디
      */
-    void deleteFriends(RequestFriendshipDto requestFriendshipDto);
+    void deleteFriends(Long userId);
 }
