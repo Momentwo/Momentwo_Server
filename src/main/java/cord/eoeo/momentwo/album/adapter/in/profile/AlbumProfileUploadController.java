@@ -17,7 +17,7 @@ public class AlbumProfileUploadController {
     private final ProfileUploadUseCase profileUploadUseCase;
 
     // 프로필 업로드 (변경)
-    @PostMapping("/albums/profile/image/upload")
+    @PostMapping("/albums/profile/image")
     @ResponseStatus(HttpStatus.OK)
     public void profileUpload(@RequestBody @Valid AlbumProfileUploadRequestDto uploadRequestDto) {
         profileUploadUseCase.profileUpload(uploadRequestDto);
