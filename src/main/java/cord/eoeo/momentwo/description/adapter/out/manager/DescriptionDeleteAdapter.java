@@ -1,6 +1,5 @@
 package cord.eoeo.momentwo.description.adapter.out.manager;
 
-import cord.eoeo.momentwo.description.adapter.dto.in.DescriptionRequestDto;
 import cord.eoeo.momentwo.description.application.port.out.delete.DescriptionDeleteByPhotoRepo;
 import cord.eoeo.momentwo.description.application.port.out.manager.DescriptionDeletePort;
 import cord.eoeo.momentwo.description.application.port.out.manager.DescriptionGetPhotoPort;
@@ -15,8 +14,8 @@ public class DescriptionDeleteAdapter implements DescriptionDeletePort {
     private final DescriptionDeleteByPhotoRepo descriptionDeleteByPhotoRepo;
 
     @Override
-    public void deleteDescription(DescriptionRequestDto descriptionRequestDto) {
-        Photo photo = descriptionGetPhotoPort.getPhoto(descriptionRequestDto.getPhotoId());
+    public void deleteDescription(Long photoId) {
+        Photo photo = descriptionGetPhotoPort.getPhoto(photoId);
 
         descriptionDeleteByPhotoRepo.deleteByPhoto(photo);
     }

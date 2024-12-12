@@ -1,6 +1,5 @@
 package cord.eoeo.momentwo.description.application.service;
 
-import cord.eoeo.momentwo.description.adapter.dto.in.DescriptionRequestDto;
 import cord.eoeo.momentwo.description.application.port.in.DescriptionDeleteUseCase;
 import cord.eoeo.momentwo.description.application.port.out.DescriptionRedisGenericRepo;
 import cord.eoeo.momentwo.description.application.port.out.DescriptionRedisKeyPort;
@@ -20,11 +19,11 @@ public class DescriptionDeleteService implements DescriptionDeleteUseCase {
     @Override
     @CheckAlbumAccessRules
     @Transactional
-    public void deleteDescription(DescriptionRequestDto descriptionRequestDto) {
-        descriptionDeletePort.deleteDescription(descriptionRequestDto);
+    public void deleteDescription(Long albumId, Long photoId) {
+        descriptionDeletePort.deleteDescription(photoId);
 
         // 레디스 캐시 정보 삭제
-        String key = descriptionRedisKeyPort.getKey(descriptionRequestDto.getPhotoId());
+        String key = descriptionRedisKeyPort.getKey(photoId);
         descriptionRedisGenericRepo.delete(key);
     }
 }
