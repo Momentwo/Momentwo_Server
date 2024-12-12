@@ -17,7 +17,7 @@ public class EditAlbumTitleController {
     private final EditAlbumTitleUseCase editAlbumTitleUseCase;
 
     // 앨범 수정
-    @PutMapping("/albums/edit")
+    @PutMapping("/albums")
     @ResponseStatus(HttpStatus.OK)
     public void editAlbumsTitle(@RequestBody @Valid AlbumTitleEditRequestDto albumTitleEditRequestDto) {
         editAlbumTitleUseCase.editAlbumsTitle(albumTitleEditRequestDto);
