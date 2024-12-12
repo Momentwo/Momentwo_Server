@@ -1,13 +1,14 @@
 package cord.eoeo.momentwo.subAlbum.application.port.in;
 
-import cord.eoeo.momentwo.subAlbum.adapter.dto.SubAlbumDeleteRequestDto;
+import java.util.List;
 
 public interface DeleteSubAlbumUseCase {
     /**
      * 서브 앨범 삭제
-     * @param subAlbumDeleteRequestDto
+     * @param albumId
+     * @param subAlbumIds
      * albumId : 앨범 아이디
      * subAlbumIds : 서브 앨범의 아이디 정보
      */
-    void deleteSubAlbums(SubAlbumDeleteRequestDto subAlbumDeleteRequestDto);
+    void deleteSubAlbums(Long albumId, List<Long> subAlbumIds);
 }
