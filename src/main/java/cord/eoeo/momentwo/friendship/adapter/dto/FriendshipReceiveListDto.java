@@ -9,13 +9,15 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class FriendshipReceiveListDto {
+    private Long userId;
     private String nickname;
     private String userProfileImage;
 
     public FriendshipReceiveListDto toDo(Friendship friendship) {
         return new FriendshipReceiveListDto(
-                friendship.fromUser.getNickname(),
-                friendship.fromUser.getUserProfileImage()
+                friendship.getFromUser().getId(),
+                friendship.getFromUser().getNickname(),
+                friendship.getFromUser().getUserProfileImage()
         );
     }
 }
