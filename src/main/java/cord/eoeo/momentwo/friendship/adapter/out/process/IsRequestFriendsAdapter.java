@@ -22,7 +22,7 @@ public class IsRequestFriendsAdapter implements IsRequestFriendsPort {
             return true;
         }
 
-        if(friendship.accept) {
+        if(friendship.isAccept()) {
             throw new AlreadyFriendshipException();
         }
         return false;
