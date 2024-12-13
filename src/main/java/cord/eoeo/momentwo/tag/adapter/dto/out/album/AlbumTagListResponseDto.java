@@ -9,11 +9,11 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class AlbumTagGetResponseDto {
-    private List<String> albumTags;
+public class AlbumTagListResponseDto {
+    private List<AlbumTagQueryDto> albumTags;
 
-    public AlbumTagGetResponseDto toDo(List<String> albumTags) {
-        return new AlbumTagGetResponseDto(
+    public AlbumTagListResponseDto toDo(List<AlbumTagQueryDto> albumTags) {
+        return new AlbumTagListResponseDto(
                 albumTags
         );
     }
