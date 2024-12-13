@@ -1,7 +1,7 @@
 package cord.eoeo.momentwo.tag.application.service.album;
 
 import cord.eoeo.momentwo.subAlbum.application.aop.annotation.CheckAlbumAccessRules;
-import cord.eoeo.momentwo.tag.adapter.dto.out.album.AlbumTagGetResponseDto;
+import cord.eoeo.momentwo.tag.adapter.dto.out.album.AlbumTagListResponseDto;
 import cord.eoeo.momentwo.tag.application.port.in.album.AlbumTagGetUseCase;
 import cord.eoeo.momentwo.tag.application.port.out.album.manager.AlbumTagGetAllTagPort;
 import lombok.RequiredArgsConstructor;
@@ -16,8 +16,8 @@ public class AlbumTagGetService implements AlbumTagGetUseCase {
     @Override
     @Transactional(readOnly = true)
     @CheckAlbumAccessRules
-    public AlbumTagGetResponseDto albumTagGet(long albumId) {
-        return new AlbumTagGetResponseDto().toDo(
+    public AlbumTagListResponseDto albumTagGet(long albumId) {
+        return new AlbumTagListResponseDto().toDo(
                 albumTagGetAllTagPort.allTagByAlbumId(albumId)
         );
     }

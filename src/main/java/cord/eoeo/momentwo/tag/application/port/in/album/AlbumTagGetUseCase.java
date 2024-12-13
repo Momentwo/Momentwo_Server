@@ -1,7 +1,7 @@
 package cord.eoeo.momentwo.tag.application.port.in.album;
 
-import cord.eoeo.momentwo.tag.adapter.dto.out.album.AlbumTagGetResponseDto;
+import cord.eoeo.momentwo.tag.adapter.dto.out.album.AlbumTagListResponseDto;
 
 public interface AlbumTagGetUseCase {
-    AlbumTagGetResponseDto albumTagGet(long albumId);
+    AlbumTagListResponseDto albumTagGet(long albumId);
 }
