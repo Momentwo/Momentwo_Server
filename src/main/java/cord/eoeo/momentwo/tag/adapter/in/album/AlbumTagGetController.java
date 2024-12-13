@@ -1,6 +1,6 @@
 package cord.eoeo.momentwo.tag.adapter.in.album;
 
-import cord.eoeo.momentwo.tag.adapter.dto.out.album.AlbumTagGetResponseDto;
+import cord.eoeo.momentwo.tag.adapter.dto.out.album.AlbumTagListResponseDto;
 import cord.eoeo.momentwo.tag.application.port.in.album.AlbumTagGetUseCase;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -16,7 +16,7 @@ public class AlbumTagGetController {
 
     @GetMapping("/albums/tags/{albumId}")
     @ResponseStatus(HttpStatus.OK)
-    public AlbumTagGetResponseDto albumTagGet(@PathVariable long albumId) {
+    public AlbumTagListResponseDto albumTagGet(@PathVariable long albumId) {
         return albumTagGetUseCase.albumTagGet(albumId);
     }
 }

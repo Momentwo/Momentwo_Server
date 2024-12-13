@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class UserProfileResponseDto {
     private long id;
+    private String name;
     private String username;
     private String nickname;
     private String userProfileImage;
@@ -17,6 +18,7 @@ public class UserProfileResponseDto {
     public UserProfileResponseDto toDo(User user) {
         return new UserProfileResponseDto(
                 user.getId(),
+                user.getName(),
                 user.getUsername(),
                 user.getNickname(),
                 user.getUserProfileImage()
