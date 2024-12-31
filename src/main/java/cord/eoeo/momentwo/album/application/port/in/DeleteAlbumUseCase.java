@@ -1,12 +1,10 @@
 package cord.eoeo.momentwo.album.application.port.in;
 
-import cord.eoeo.momentwo.album.adapter.dto.in.AlbumDeleteRequestDto;
-
 public interface DeleteAlbumUseCase {
     /**
      * 앨범 삭제
-     * @param albumDeleteRequestDto
+     * @param albumId
      * albumId : 앨범 아이디
      */
-    void deleteAlbums(AlbumDeleteRequestDto albumDeleteRequestDto);
+    void deleteAlbums(Long albumId);
 }

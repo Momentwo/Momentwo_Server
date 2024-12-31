@@ -16,7 +16,7 @@ import javax.validation.Valid;
 public class DescriptionEditController {
     private final DescriptionEditUseCase descriptionEditUseCase;
 
-    @PutMapping("/descriptions/edit")
+    @PutMapping("/albums/sub/photos/descriptions")
     @ResponseStatus(HttpStatus.OK)
     public void editDescription(@RequestBody @Valid DescriptionEditRequestDto descriptionEditRequestDto) {
         descriptionEditUseCase.editDescription(descriptionEditRequestDto);

@@ -1,6 +1,5 @@
 package cord.eoeo.momentwo.album.application.service.profile;
 
-import cord.eoeo.momentwo.album.adapter.dto.in.AlbumProfileRequestDto;
 import cord.eoeo.momentwo.album.application.aop.annotation.CheckAlbumAdmin;
 import cord.eoeo.momentwo.album.application.port.in.profile.ProfileDeleteUseCase;
 import cord.eoeo.momentwo.album.application.port.out.GetAlbumMemberPort;
@@ -18,7 +17,7 @@ public class ProfileDeleteService implements ProfileDeleteUseCase {
     @Override
     @Transactional
     @CheckAlbumAdmin
-    public void profileDelete(AlbumProfileRequestDto albumProfileRequestDto) {
-        profileDeletePort.profileDelete(getAlbumMemberPort.getMember(albumProfileRequestDto.getAlbumId()));
+    public void profileDelete(Long albumId) {
+        profileDeletePort.profileDelete(getAlbumMemberPort.getMember(albumId));
     }
 }

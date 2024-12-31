@@ -1,12 +1,10 @@
 package cord.eoeo.momentwo.friendship.application.port.in;
 
-import cord.eoeo.momentwo.friendship.adapter.dto.RequestFriendshipDto;
-
 public interface RequestFriendshipCancelUseCase {
     /**
      * 친구요청 취소
-     * @param requestFriendshipDto
-     * nickname : 닉네임
+     * @param userId
+     * userId : 유저 아이디
      */
-    void requestFriendshipCancel(RequestFriendshipDto requestFriendshipDto);
+    void requestFriendshipCancel(Long userId);
 }

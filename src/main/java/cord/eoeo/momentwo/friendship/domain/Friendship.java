@@ -18,26 +18,26 @@ import java.time.LocalDate;
 public class Friendship {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    public long id;
+    private long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(nullable = false, name = "fromUser")
     @OnDelete(action = OnDeleteAction.CASCADE)
-    public User fromUser;
+    private User fromUser;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(nullable = false, name = "toUser")
     @OnDelete(action = OnDeleteAction.CASCADE)
-    public User toUser;
+    private User toUser;
 
     @Column(nullable = false)
-    public boolean accept;
+    private boolean accept;
 
     @DateTimeFormat(pattern = "yyyy-mm-dd")
     private LocalDate friendsDate;
 
     @PrePersist
-    public void initDate() {
+    private void initDate() {
         this.friendsDate = LocalDate.now();
     }
 

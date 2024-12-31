@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 public class CommentGetController {
     private final GetCommentUseCase getCommentUseCase;
 
-    @GetMapping("/photo/comments/{albumId}/{photoId}")
+    @GetMapping("/albums/{albumId}/sub/photos/{photoId}/comments")
     @ResponseStatus(HttpStatus.OK)
     public CommentListResponseDto getComment(
             @PathVariable long albumId,

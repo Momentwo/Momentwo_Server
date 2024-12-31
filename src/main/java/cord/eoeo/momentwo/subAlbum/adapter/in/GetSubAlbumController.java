@@ -12,9 +12,9 @@ public class GetSubAlbumController {
     private final GetSubAlbumUseCase getSubAlbumUseCase;
 
     // 서브앨범 조회
-    @GetMapping("/album/sub/{albumId}")
+    @GetMapping("/albums/{albumId}/sub")
     @ResponseStatus(HttpStatus.OK)
-    public SubAlbumListResponseDto getSubAlbums(@PathVariable long albumId) {
+    public SubAlbumListResponseDto getSubAlbums(@PathVariable Long albumId) {
         return getSubAlbumUseCase.getSubAlbums(albumId);
     }
 }

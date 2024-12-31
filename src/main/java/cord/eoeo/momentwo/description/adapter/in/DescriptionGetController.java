@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class DescriptionGetController {
     private final DescriptionGetUseCase descriptionGetUseCase;
 
-    @GetMapping("/descriptions/{albumId}/{photoId}")
+    @GetMapping("/albums/{albumId}/sub/photos/{photoId}/descriptions")
     @ResponseStatus(HttpStatus.OK)
     public DescriptionResponseDto getDescription(
             @PathVariable long albumId,

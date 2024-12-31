@@ -14,4 +14,7 @@ public interface PhotoFindJpaRepo extends PhotoGenericJpaRepo {
 
     @Query("SELECT p.imageName FROM Photo p WHERE p.album.id = :albumId")
     List<String> findAllNameByAlbumId(long albumId);
+
+    @Query("SELECT p.imageName FROM Photo p WHERE p.id IN :imagesId")
+    List<String> findAllImageRootById(List<Long> imagesId);
 }

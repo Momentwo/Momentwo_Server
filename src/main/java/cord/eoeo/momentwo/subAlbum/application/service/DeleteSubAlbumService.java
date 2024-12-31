@@ -1,7 +1,6 @@
 package cord.eoeo.momentwo.subAlbum.application.service;
 
 import cord.eoeo.momentwo.album.application.port.out.manager.AlbumS3ImageDeletePort;
-import cord.eoeo.momentwo.subAlbum.adapter.dto.SubAlbumDeleteRequestDto;
 import cord.eoeo.momentwo.subAlbum.advice.exception.NotDeleteSubAlbumException;
 import cord.eoeo.momentwo.subAlbum.application.aop.annotation.CheckAlbumAccessRules;
 import cord.eoeo.momentwo.subAlbum.application.port.in.DeleteSubAlbumUseCase;
@@ -9,6 +8,8 @@ import cord.eoeo.momentwo.subAlbum.application.port.out.manager.DeleteSubAlbumPo
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -19,15 +20,15 @@ public class DeleteSubAlbumService implements DeleteSubAlbumUseCase {
     @Override
     @CheckAlbumAccessRules
     @Transactional
-    public void deleteSubAlbums(SubAlbumDeleteRequestDto subAlbumDeleteRequestDto) {
-        if(subAlbumDeleteRequestDto.getSubAlbumIds().isEmpty()) {
+    public void deleteSubAlbums(Long albumId, List<Long> subAlbumIds) {
+        if(subAlbumIds.isEmpty()) {
             throw new NotDeleteSubAlbumException();
         }
 
         // S3 저장소 삭제
-        albumS3ImageDeletePort.s3ImageDelete(subAlbumDeleteRequestDto.getAlbumId());
+        albumS3ImageDeletePort.s3ImageDelete(albumId);
 
         // DB 데이터 삭제
-        deleteSubAlbumPort.deleteSubAlbum(subAlbumDeleteRequestDto.getSubAlbumIds());
+        deleteSubAlbumPort.deleteSubAlbum(subAlbumIds);
     }
 }

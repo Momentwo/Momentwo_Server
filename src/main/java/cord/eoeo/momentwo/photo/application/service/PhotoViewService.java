@@ -6,6 +6,7 @@ import cord.eoeo.momentwo.photo.advice.exception.NotFoundPhotoException;
 import cord.eoeo.momentwo.photo.application.port.in.PhotoViewUseCase;
 import cord.eoeo.momentwo.photo.application.port.out.PhotoPageRepository;
 import cord.eoeo.momentwo.photo.domain.Photo;
+import cord.eoeo.momentwo.subAlbum.advice.exception.NotFoundSubAlbumException;
 import cord.eoeo.momentwo.subAlbum.application.aop.annotation.CheckAlbumAccessRules;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -28,6 +29,10 @@ public class PhotoViewService implements PhotoViewUseCase {
                         PageRequest.of((int) (cursor / size), size),
                         cursor
                 );
+
+        if(photoList.isEmpty()) {
+            throw new NotFoundSubAlbumException();
+        }
 
         return new ImageViewListResponseDto().toDo(photoList);
     }
